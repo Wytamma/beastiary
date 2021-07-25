@@ -1,3 +1,5 @@
 /dist
 /site
 .DS_Store
+*.pyc
+.pytest_cache
