@@ -22,8 +22,8 @@ class Watcher:
         pass
 
     def run(self):
-        
-        for logfile in pool: 
+
+        for logfile in pool:
             with open(log_file_path, "r") as f:
                 while True:
                     headers_set = False
@@ -40,6 +40,8 @@ class Watcher:
                         key: float(sample) for key, sample in zip(headers, line.split())
                     }
                     print(data)
-                    sample = Sample(run_id=run.id, sample_id=int(data["Sample"]), data=data)
+                    sample = Sample(
+                        run_id=run.id, sample_id=int(data["Sample"]), data=data
+                    )
                     session.add(sample)
                     session.commit()
