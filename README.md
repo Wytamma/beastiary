@@ -1,6 +1,6 @@
 # Beastiary
 [![PyPi](https://img.shields.io/pypi/v/beastiary.svg)](https://pypi.org/project/beastiary/)
-[![docs](https://github.com/Wytamma/beastiary/actions/workflows/docs.yml/badge.svg)](https://github.com/Wytamma/beastiary/actions/workflows/docs.yml)
+[![docs](https://github.com/Wytamma/beastiary/actions/workflows/docs.yml/badge.svg)](https://beastiary.wytamma.com/)
 
 This is a replacement for tracer. It's feature feature is the real time aspect. Secondly it's modern looking. 3rd it has improved features. 
 
