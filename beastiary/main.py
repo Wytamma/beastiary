@@ -17,4 +17,3 @@ def test():
     test command
     """
     typer.echo("TESTING")
-
