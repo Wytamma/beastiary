@@ -1,4 +1,4 @@
-# Beastiary
+![beastiary logo](images/logo.png)
 [![PyPi](https://img.shields.io/pypi/v/beastiary.svg)](https://pypi.org/project/beastiary/)
 [![docs](https://github.com/Wytamma/beastiary/actions/workflows/docs.yml/badge.svg)](https://beastiary.wytamma.com/)
 
