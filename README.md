@@ -1,4 +1,4 @@
-![beastiary logo](images/logo.png)
+![beastiary logo](docs/images/logo.png)
 
 
 [![PyPi](https://img.shields.io/pypi/v/beastiary.svg)](https://pypi.org/project/beastiary/)
