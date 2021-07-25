@@ -1,4 +1,6 @@
 # Beastiary
+[![docs](https://github.com/Wytamma/beastiary/actions/workflows/docs.yml/badge.svg)](https://github.com/Wytamma/beastiary/actions/workflows/docs.yml)
+
 This is a replacement for tracer. It's feature feature is the real time aspect. Secondly it's modern looking. 3rd it has improved features. 
 
 
