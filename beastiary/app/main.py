@@ -1,5 +1,9 @@
+from os import error
 from fastapi import FastAPI
+from beastiary.watcher import Watcher
+import time
 
+watcher = Watcher()
 app = FastAPI()
 
 
@@ -10,6 +14,27 @@ async def root():
     # from flask import Flask, render_template, request, redirect, jsonify, \
     url_for, flash, session
 
+@app.get("/check/{path}")
+async def watch(path):
+    task = watcher.get(path)
+    if not task:
+        return {"message": "task not found"}
+    if task.done():
+        try:
+            task.result()
+            return {"message": "task ended"}
+        except Exception as e:
+            return {"message": str(e)} 
+    return {"message": "task running"}
+
+@app.get("/watch/{path}")
+async def watch(path):
+    task = watcher.watch(path)
+    print(watcher.tasks)
+    return {"message": path}
+
+    # from flask import Flask, render_template, request, redirect, jsonify, \
+    url_for, flash, session
 
 # import random
 # import logging

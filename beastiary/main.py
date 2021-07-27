@@ -21,4 +21,4 @@ def ui(host: str = typer.Argument("127.0.0.1"), port: str = typer.Argument(5000)
     """
     typer.echo("🐁 STARTING BEASTIARY 🐁")
     typer.launch("http://0.0.0.0:5000")
-    uvicorn.run(api, host=host, port=port)
+    uvicorn.run(api, host=host, port=port, log_level="warning")
