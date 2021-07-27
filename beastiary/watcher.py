@@ -9,6 +9,7 @@ class LogFile:
     task: coroutine = None
     # hash: str
 
+
 @dataclass
 class Watcher:
     pool: list = field(default_factory=list)

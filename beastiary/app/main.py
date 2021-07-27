@@ -14,6 +14,7 @@ async def root():
     # from flask import Flask, render_template, request, redirect, jsonify, \
     url_for, flash, session
 
+
 @app.get("/check/{path}")
 async def watch(path):
     task = watcher.get(path)
@@ -24,8 +25,9 @@ async def watch(path):
             task.result()
             return {"message": "task ended"}
         except Exception as e:
-            return {"message": str(e)} 
+            return {"message": str(e)}
     return {"message": "task running"}
+
 
 @app.get("/watch/{path}")
 async def watch(path):
@@ -35,6 +37,7 @@ async def watch(path):
 
     # from flask import Flask, render_template, request, redirect, jsonify, \
     url_for, flash, session
+
 
 # import random
 # import logging
