@@ -3,8 +3,13 @@ import uvicorn
 import subprocess
 
 from .app import app as api
+from beastiary.db.init_db import init_db
+from beastiary.db.session import SessionLocal
 
 app = typer.Typer()
+
+db = SessionLocal()
+init_db(db)
 
 
 @app.callback()

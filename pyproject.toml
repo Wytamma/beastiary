@@ -19,6 +19,7 @@ mkdocs-material = "^7.2.0"
 black = "^21.7b0"
 pytest-cov = "^2.12.1"
 pre-commit = "^2.13.0"
+SQLAlchemy = "^1.4.22"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
