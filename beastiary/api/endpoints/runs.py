@@ -1,27 +1,22 @@
 from typing import Any, List
-
+import os
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
-from app import crud, models, schemas
-from app.api import deps
+from beastiary import crud, schemas
+from beastiary.api import deps
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[schemas.Item])
-def read_items(
+@router.get("/", response_model=List[schemas.Run])
+def get_runs(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
-    Retrieve items.
+    Retrieve runs.
     """
-    if crud.user.is_superuser(current_user):
-        items = crud.item.get_multi(db, skip=skip, limit=limit)
-    else:
-        items = crud.item.get_multi_by_owner(
-            db=db, owner_id=current_user.id, skip=skip, limit=limit
-        )
-    return items
+    runs = crud.run.get_multi(db=db, skip=skip, limit=limit)
+    return runs

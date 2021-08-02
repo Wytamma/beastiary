@@ -1,3 +1,4 @@
+from beastiary.models import sample
 from dataclasses import dataclass, field
 from os import error
 from types import coroutine
@@ -20,7 +21,7 @@ class Watcher:
 
     def watch(self, log_file_path):
         # some checks
-        # check if it;s allready running
+        # check if it's allready running
         logfile = self.get(log_file_path)
         if logfile:
             if not logfile.task.done():
@@ -55,6 +56,8 @@ class Watcher:
                     key: float(sample)
                     for key, sample in zip(headers.split(), line.split())
                 }
+                sample = Sample(sample=data["sample"], data=data, run_id=1)
+                print(sample)
 
     def stop(self):
         for task in self.tasks:

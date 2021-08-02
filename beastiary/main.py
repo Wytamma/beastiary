@@ -1,8 +1,7 @@
 import typer
 import uvicorn
-import subprocess
 
-from .app import app as api
+from .api import app as api
 from beastiary.db.init_db import init_db
 from beastiary.db.session import SessionLocal
 

@@ -1,4 +1,5 @@
 from beastiary.db.session import SessionLocal
+from typing import Generator
 
 
 def get_db() -> Generator:
