@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from .base_class import Base
+from beastiary.db import base  # noqa: F401
 from .session import engine
 
 # make sure all SQL Alchemy models are imported (app.db.base) before initializing DB
@@ -8,4 +8,4 @@ from .session import engine
 
 
 def init_db(db: Session) -> None:
-    Base.metadata.create_all(bind=engine)
+    base.Base.metadata.create_all(bind=engine)

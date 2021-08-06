@@ -1,10 +1,14 @@
 from pydantic import BaseModel
 from pathlib import Path
+from typing import Optional
 
 
 # Shared properties
 class RunBase(BaseModel):
-    path: Path
+    path: str
+    headers_line: Optional[str]
+    last_byte: Optional[int]
+    first_byte: Optional[int]
 
 
 # Properties to receive on Run creation

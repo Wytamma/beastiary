@@ -1,7 +1,6 @@
 from os import error
 from fastapi import FastAPI
-from beastiary.watcher import Watcher
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, Response
 from beastiary.api.endpoints import runs, samples
 
 watcher = Watcher()
@@ -10,31 +9,20 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Welcome to the BEASTIARY"}
 
 
-@app.get("/check/{path}")
-async def watch(path):
-    task = watcher.get(path)
-    if not task:
-        return {"message": "task not found"}
-    if task.done():
-        try:
-            task.result()
-            return {"message": "task ended"}
-        except Exception as e:
-            return {"message": str(e)}
-    return {"message": "task running"}
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    if "/api/" in request.url.path and request.app.uuid:
+        uuid = request.query_params.get("uuid")
+        if uuid != request.app.uuid:
+            return Response(content={"detail": "Invalid UUID!"}, status_code=401)
+    response = await call_next(request)
+    return response
 
 
-@app.get("/watch/{path}")
-async def watch(path):
-    task = watcher.watch(path)
-    print(watcher.tasks)
-    return {"message": path}
-
-
-api_router = APIRouter()
+api_router = APIRouter(prefix="/api")
 api_router.include_router(samples.router, prefix="/samples", tags=["samples"])
 api_router.include_router(runs.router, prefix="/runs", tags=["runs"])
 app.include_router(api_router)

@@ -20,19 +20,6 @@ class SampleUpdate(SampleBase):
     pass
 
 
-# Properties shared by models stored in DB
-class SampleInDBBase(SampleBase):
-    id: int
-
-    class Config:
-        orm_mode = True
-
-
 # Properties to return to client
-class Sample(SampleInDBBase):
-    pass
-
-
-# Properties properties stored in DB
-class SampleInDB(SampleInDBBase):
+class Sample(SampleBase):
     pass
