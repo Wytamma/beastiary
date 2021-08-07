@@ -1,17 +1,18 @@
 [tool.poetry]
 name = "beastiary"
-version = "0.4.2"
+version = "0.5.0"
 description = ""
 authors = ["Wytamma Wirth <wytamma.wirth@me.com>"]
 readme = "PYPI-README.md"
 
 [tool.poetry.scripts]
-beastiary = "backend.beastiary.main:app"
+beastiary = "beastiary.main:app"
 
 [tool.poetry.dependencies]
 python = ">=3.6.2,<4.0"
 typer = {extras = ["all"], version = "^0.3.2"}
 fastapi = {extras = ["all"], version = "^0.67.0"}
+aiofiles = "<0.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

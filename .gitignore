@@ -5,3 +5,10 @@
 .pytest_cache
 .coverage
 coverage.xml
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+debug.log
+.idea

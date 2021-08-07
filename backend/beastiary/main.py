@@ -16,7 +16,7 @@ init_db(db)
 def main(
     debug: bool = typer.Option(False, help="Set debug mode."),
     host: str = typer.Argument("127.0.0.1"),
-    port: str = typer.Argument("5000"),
+    port: str = typer.Argument(5000),
 ):
     """
     Realtime and remote trace inspection with BEASTIARY.
@@ -25,9 +25,9 @@ def main(
     _uuid = str(uuid.uuid4())
     typer.echo(f"Go to http://{host}:{port}/?uuid={_uuid}")
     typer.echo(f"Enter uuid: {_uuid} if prompted.")
+    api.uuid = _uuid
+    log_level = "warning"
     if debug:
         api.uuid = None
-        uvicorn.run(api, host=host, port=port, log_level="debug")
-    else:
-        api.uuid = _uuid
-        uvicorn.run(api, host=host, port=port, log_level="warning")
+        log_level = "debug"
+    uvicorn.run(api, host=host, port=port, log_level=log_level)
