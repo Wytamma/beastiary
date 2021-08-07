@@ -12,28 +12,22 @@ db = SessionLocal()
 init_db(db)
 
 
-@app.callback()
-def main():
-    """
-    Real-time trace for BEAST
-    """
-
-
 @app.command()
-def ui(
+def main(
     debug: bool = typer.Option(False, help="Set debug mode."),
     host: str = typer.Argument("127.0.0.1"),
-    port: str = typer.Argument(5000),
+    port: str = typer.Argument("5000"),
 ):
     """
-    Start the application
+    Realtime and remote trace inspection with BEASTIARY.
     """
     typer.echo("🐁 STARTING BEASTIARY 🐁")
-    # typer.launch("http://0.0.0.0:5000")
+    _uuid = str(uuid.uuid4())
+    typer.echo(f"Go to http://{host}:{port}/?uuid={_uuid}")
+    typer.echo(f"Enter uuid: {_uuid} if prompted.")
     if debug:
         api.uuid = None
         uvicorn.run(api, host=host, port=port, log_level="debug")
     else:
-        api.uuid = str(uuid.uuid4())
-        typer.echo(f"UUID: {api.uuid}")
+        api.uuid = _uuid
         uvicorn.run(api, host=host, port=port, log_level="warning")

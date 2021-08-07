@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from fastapi import APIRouter, Request, Response
 from beastiary.api.endpoints import runs, samples
 
-watcher = Watcher()
 app = FastAPI()
 
 
