@@ -21,7 +21,7 @@ Plotly
 FastAPI that sends data from DB to the webapp and can be used to read samples from log flies.
 
 ## BD (MEMORY)
-Protected by the CRUD
+Protected by the CRUD.
 
 
 ## distribution 
