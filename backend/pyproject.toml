@@ -3,7 +3,7 @@ name = "beastiary"
 version = "0.4.0"
 description = ""
 authors = ["Wytamma Wirth <wytamma.wirth@me.com>"]
-readme = "../README.md"
+readme = "PYPI-README.md"
 
 [tool.poetry.scripts]
 beastiary = "backend.beastiary.main:app"
