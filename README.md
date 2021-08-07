@@ -6,7 +6,7 @@
 [![cov](https://codecov.io/gh/Wytamma/beastiary/branch/master/graph/badge.svg)](https://codecov.io/gh/Wytamma/beastiary)
 [![docs](https://github.com/Wytamma/beastiary/actions/workflows/docs.yml/badge.svg)](https://beastiary.wytamma.com/)
 
-This is a replacement for tracer. It's feature feature is the real time aspect. Secondly it's modern looking. 3rd it has improved features. 
+This is a real time version of tracer that can be run on remote servers (e.g. a HPC). Its goal is to be a beautiful and simple, yet power tool for Bayesian phylogenetics inference.
 
 
 ## CLI
@@ -14,7 +14,7 @@ Launch the app
 Can point to log file to autostart watcher
 
 ## Webapp 
-Vue
+Vue  
 Plotly
 
 ## Web API
@@ -23,7 +23,5 @@ FastAPI that sends data from DB to the webapp and can be used to read samples fr
 ## BD (MEMORY)
 Protected by the CRUD.
 
-
-## distribution 
-CLI vs app (just launches web browser)
-https://docs.python-guide.org/shipping/freezing/
+## Pistribution 
+Pypi
