@@ -18,8 +18,7 @@ Vue
 Plotly
 
 ## Web API
-FastAPI that sends data to and from DB and servers the webapp
-Can start file watchers
+FastAPI that sends data from DB to the webapp and can be used to read samples from log flies.
 
 ## Watcher 
 Python class that watches files and updates DB with changes.
