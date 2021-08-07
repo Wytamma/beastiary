@@ -70,16 +70,19 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
+        working-directory: ./backend
       #----------------------------------------------
       # install your root project, if required 
       #----------------------------------------------      
       - name: Install library
         run: poetry install --no-interaction
+        working-directory: ./backend
       #----------------------------------------------
       #    run test suite and output coverage file   
       #----------------------------------------------
       - name: Test with pytest
         run: poetry run pytest --cov=beastiary --cov-report=xml
+        working-directory: ./backend
       #----------------------------------------------
       #             upload coverage stats              
       # (requires CODECOV_TOKEN in repository secrets)   
@@ -87,5 +90,5 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v1
         with:
-          file: ./coverage.xml
+          file: ./backend/coverage.xml
           fail_ci_if_error: true

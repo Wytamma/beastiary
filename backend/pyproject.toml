@@ -3,10 +3,10 @@ name = "beastiary"
 version = "0.3.0"
 description = ""
 authors = ["Wytamma Wirth <wytamma.wirth@me.com>"]
-readme = "README.md"
+readme = "../README.md"
 
 [tool.poetry.scripts]
-beastiary = "beastiary.main:app"
+beastiary = "backend.beastiary.main:app"
 
 [tool.poetry.dependencies]
 python = ">=3.6.2,<4.0"
