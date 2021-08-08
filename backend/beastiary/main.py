@@ -22,12 +22,13 @@ def main(
     Realtime and remote trace inspection with BEASTIARY.
     """
     typer.echo("🐁 STARTING BEASTIARY 🐁")
-    _uuid = str(uuid.uuid4())
-    typer.echo(f"Go to http://{host}:{port}/?uuid={_uuid}")
-    typer.echo(f"Enter uuid: {_uuid} if prompted.")
-    api.uuid = _uuid
+    token = str(uuid.uuid4())
+    typer.echo(f"Go to http://{host}:{port}/?token={token}")
+    typer.echo(f"If prompted enter token: {token}")
+    api.token = token
     log_level = "warning"
+    api.debug = False
     if debug:
-        api.uuid = None
+        api.debug = True
         log_level = "debug"
     uvicorn.run(api, host=host, port=port, log_level=log_level)

@@ -1,8 +1,11 @@
 from os import error
+from typing import Any
 from fastapi import FastAPI
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Request
 from fastapi.staticfiles import StaticFiles
-from starlette.responses import FileResponse
+from starlette.responses import JSONResponse, FileResponse
+from starlette.middleware.cors import CORSMiddleware
+
 from beastiary.api.endpoints import runs, samples
 
 app = FastAPI()
@@ -11,6 +14,14 @@ app = FastAPI()
 @app.get("/")
 async def index():
     return FileResponse("beastiary/webapp-dist/index.html")
+
+
+@app.get("/api/security/test-token", tags=["security"])
+async def test_token(
+    *,
+    token: str = None,
+) -> Any:
+    return {"detail": f"{app.token}"}
 
 
 api_router = APIRouter(prefix="/api")
@@ -23,11 +34,11 @@ app.mount("/", StaticFiles(directory="beastiary/webapp-dist"))
 
 
 @app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    if "/api/" in request.url.path and request.app.uuid:
-        uuid = request.query_params.get("uuid")
-        if uuid != request.app.uuid:
-            return Response(content={"detail": "Invalid UUID!"}, status_code=401)
+async def auth_check(request: Request, call_next):
+    if "/api/" in request.url.path and not request.app.debug:
+        token = request.query_params.get("token")
+        if token != request.app.token:
+            return JSONResponse(content={"detail": "Invalid token!"}, status_code=401)
     response = await call_next(request)
     return response
 
@@ -38,3 +49,12 @@ async def add_custom_header(request: Request, call_next):
     if response.status_code == 404:
         return FileResponse("beastiary/webapp-dist/index.html")
     return response
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
