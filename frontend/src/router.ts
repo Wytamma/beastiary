@@ -29,6 +29,10 @@ export default new Router({
           component: () => import(/* webpackChunkName: "reset-password" */ './views/ResetPassword.vue'),
         },
         {
+          path: '404',
+          component: () => import(/* webpackChunkName: "reset-password" */ './views/404.vue'),
+        },
+        {
           path: 'main',
           component: () => import(/* webpackChunkName: "main" */ './views/main/Main.vue'),
           children: [
@@ -91,7 +95,7 @@ export default new Router({
       ],
     },
     {
-      path: '/*', redirect: '/',
+      path: '/*', redirect: '/404',
     },
   ],
 });

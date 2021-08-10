@@ -11,12 +11,9 @@ function authHeaders(token: string) {
 }
 
 export const api = {
-  async logInGetToken(username: string, password: string) {
-    const params = new URLSearchParams();
-    params.append('username', username);
-    params.append('password', password);
-
-    return axios.post(`${apiUrl}/api/v1/login/access-token`, params);
+  async getToken(token: string) {
+    console.log(token)
+    return axios.get(`${apiUrl}/api/security/token`, authHeaders(token));
   },
   async getMe(token: string) {
     return axios.get<IUserProfile>(`${apiUrl}/api/v1/users/me`, authHeaders(token));

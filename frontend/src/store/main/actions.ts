@@ -18,16 +18,17 @@ import { AppNotification, MainState } from './state';
 type MainContext = ActionContext<MainState, State>;
 
 export const actions = {
-    async actionLogIn(context: MainContext, payload: { username: string; password: string }) {
+    async actionCheckToken(context: MainContext, payload: { token: string }) {
         try {
-            const response = await api.logInGetToken(payload.username, payload.password);
-            const token = response.data.access_token;
+            const response = await api.getToken(payload.token);
+            const token = response.data;
+            console.log(token);
             if (token) {
                 saveLocalToken(token);
                 commitSetToken(context, token);
                 commitSetLoggedIn(context, true);
                 commitSetLogInError(context, false);
-                await dispatchGetUserProfile(context);
+                // await dispatchGetUserProfile(context);
                 await dispatchRouteLoggedIn(context);
                 commitAddNotification(context, { content: 'Logged in', color: 'success' });
             } else {
@@ -161,7 +162,7 @@ const { dispatch } = getStoreAccessors<MainState | any, State>('');
 export const dispatchCheckApiError = dispatch(actions.actionCheckApiError);
 export const dispatchCheckLoggedIn = dispatch(actions.actionCheckLoggedIn);
 export const dispatchGetUserProfile = dispatch(actions.actionGetUserProfile);
-export const dispatchLogIn = dispatch(actions.actionLogIn);
+export const dispatchCheckToken = dispatch(actions.actionCheckToken);
 export const dispatchLogOut = dispatch(actions.actionLogOut);
 export const dispatchUserLogOut = dispatch(actions.actionUserLogOut);
 export const dispatchRemoveLogIn = dispatch(actions.actionRemoveLogIn);
