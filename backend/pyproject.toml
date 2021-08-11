@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "beastiary"
-version = "0.5.0"
+version = "0.5.1"
 description = ""
 authors = ["Wytamma Wirth <wytamma.wirth@me.com>"]
 readme = "PYPI-README.md"
 
 [tool.poetry.scripts]
-beastiary = "beastiary.main:app"
+beastiary = "beastiary.cli:app"
 
 [tool.poetry.dependencies]
 python = ">=3.6.2,<4.0"

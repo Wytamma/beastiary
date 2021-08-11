@@ -49,7 +49,6 @@ def get_samples(
     run_id: int,
     limit: int = 100,
     get_all: bool = False,
-    token: str = None,
     db: Session = Depends(deps.get_db),
 ) -> Any:
     """

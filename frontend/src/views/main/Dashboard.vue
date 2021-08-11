@@ -1,37 +1,44 @@
 <template>
-  <v-container fluid>
-    <v-card class="ma-3 pa-3">
-      <v-card-title primary-title>
-        <div class="headline primary--text">Dashboard</div>
-      </v-card-title>
-      <v-card-text>
-        <div class="headline font-weight-light ma-5">Welcome {{greetedUser}}</div>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn to="/main/profile/view">View Profile</v-btn>
-        <v-btn to="/main/profile/edit">Edit Profile</v-btn>
-        <v-btn to="/main/profile/password">Change Password</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-container>
+      <v-layout fill-height>
+      <v-row
+        no-gutters
+      > 
+        <v-col cols="3">
+          <v-card
+            class="elevation-12 ma-2"
+            outlined
+          >
+            <v-toolbar dark color="primary">
+              <v-toolbar-title>Runs</v-toolbar-title>
+            </v-toolbar>
+            <v-card-text style="max-height: 300px;overflow:auto;" >
+                <RunsPanel />
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click.prevent="submit">Toggle</v-btn>
+              <v-btn @click.prevent="submit">Add</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <v-col cols="9">
+          <v-card>
+          </v-card>
+        </v-col>
+      </v-row>
+</v-layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Store } from 'vuex';
 import { readUserProfile } from '@/store/main/getters';
+import RunsPanel from '@/components/RunsPanel.vue';
 
-@Component
-export default class Dashboard extends Vue {
-  get greetedUser() {
-    const userProfile = readUserProfile(this.$store);
-    if (userProfile) {
-      if (userProfile.full_name) {
-        return userProfile.full_name;
-      } else {
-        return userProfile.email;
-      }
-    }
-  }
-}
+@Component({
+  components: {
+    RunsPanel,
+  },
+})
+export default class Dashboard extends Vue {}
 </script>

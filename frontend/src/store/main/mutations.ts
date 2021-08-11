@@ -14,9 +14,6 @@ export const mutations = {
     setLogInError(state: MainState, payload: boolean) {
         state.logInError = payload;
     },
-    setUserProfile(state: MainState, payload: IUserProfile) {
-        state.userProfile = payload;
-    },
     setDashboardMiniDrawer(state: MainState, payload: boolean) {
         state.dashboardMiniDrawer = payload;
     },
@@ -38,6 +35,5 @@ export const commitSetDashboardShowDrawer = commit(mutations.setDashboardShowDra
 export const commitSetLoggedIn = commit(mutations.setLoggedIn);
 export const commitSetLogInError = commit(mutations.setLogInError);
 export const commitSetToken = commit(mutations.setToken);
-export const commitSetUserProfile = commit(mutations.setUserProfile);
 export const commitAddNotification = commit(mutations.addNotification);
 export const commitRemoveNotification = commit(mutations.removeNotification);

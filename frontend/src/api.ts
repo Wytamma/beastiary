@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
 import { IUserProfile, IUserProfileUpdate, IUserProfileCreate } from './interfaces';
+import { Run } from './store/data/state';
 
 function authHeaders(token: string) {
   return {
@@ -12,31 +13,9 @@ function authHeaders(token: string) {
 
 export const api = {
   async getToken(token: string) {
-    console.log(token)
     return axios.get(`${apiUrl}/api/security/token`, authHeaders(token));
   },
-  async getMe(token: string) {
-    return axios.get<IUserProfile>(`${apiUrl}/api/v1/users/me`, authHeaders(token));
-  },
-  async updateMe(token: string, data: IUserProfileUpdate) {
-    return axios.put<IUserProfile>(`${apiUrl}/api/v1/users/me`, data, authHeaders(token));
-  },
-  async getUsers(token: string) {
-    return axios.get<IUserProfile[]>(`${apiUrl}/api/v1/users/`, authHeaders(token));
-  },
-  async updateUser(token: string, userId: number, data: IUserProfileUpdate) {
-    return axios.put(`${apiUrl}/api/v1/users/${userId}`, data, authHeaders(token));
-  },
-  async createUser(token: string, data: IUserProfileCreate) {
-    return axios.post(`${apiUrl}/api/v1/users/`, data, authHeaders(token));
-  },
-  async passwordRecovery(email: string) {
-    return axios.post(`${apiUrl}/api/v1/password-recovery/${email}`);
-  },
-  async resetPassword(password: string, token: string) {
-    return axios.post(`${apiUrl}/api/v1/reset-password/`, {
-      new_password: password,
-      token,
-    });
+  async getRuns(token: string) {
+    return axios.get<Run[]>(`${apiUrl}/api/runs/`, authHeaders(token));
   },
 };

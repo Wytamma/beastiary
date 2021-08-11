@@ -4,6 +4,7 @@ module.exports = {
   // Fix Vuex-typescript in prod: https://github.com/istrib/vuex-typescript/issues/13#issuecomment-409869231
 
   outputDir: process.env.NODE_ENV === 'production' ? path.resolve(__dirname, "../backend/beastiary/webapp-dist") : path.resolve(__dirname, "/dist"),
+
   configureWebpack: (config) => {
     if (process.env.NODE_ENV === 'production') {
       config.optimization.minimizer[0].options.terserOptions = Object.assign(
@@ -22,6 +23,7 @@ module.exports = {
       );
     }
   },
+
   chainWebpack: config => {
     config.module
       .rule('vue')
@@ -36,4 +38,8 @@ module.exports = {
         }
       }));
   },
+
+  transpileDependencies: [
+    'vuetify'
+  ]
 }

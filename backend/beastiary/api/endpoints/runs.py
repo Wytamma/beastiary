@@ -12,7 +12,6 @@ router = APIRouter()
 
 @router.get("/", response_model=List[schemas.Run])
 def get_runs(
-    token: str = None,
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -37,7 +36,6 @@ def get_headers(path):
 @router.post("/", response_model=schemas.Run)
 def create_run(
     *,
-    token: str = None,
     db: Session = Depends(deps.get_db),
     run_in: schemas.RunCreate,
 ) -> Any:
