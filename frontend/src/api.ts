@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { IUserProfile, IUserProfileUpdate, IUserProfileCreate } from './interfaces';
-import { Run } from './store/data/state';
+import { TraceCreate } from '@/interfaces';
+import { Trace } from './store/data/state';
 
 function authHeaders(token: string) {
   return {
@@ -15,7 +15,10 @@ export const api = {
   async getToken(token: string) {
     return axios.get(`${apiUrl}/api/security/token`, authHeaders(token));
   },
-  async getRuns(token: string) {
-    return axios.get<Run[]>(`${apiUrl}/api/runs/`, authHeaders(token));
+  async getTraces(token: string) {
+    return axios.get<Trace[]>(`${apiUrl}/api/traces/`, authHeaders(token));
+  },
+  async createTrace(token: string,  data: TraceCreate) {
+    return axios.post(`${apiUrl}/api/traces/`, data, authHeaders(token));
   },
 };

@@ -9,15 +9,14 @@
             outlined
           >
             <v-toolbar dark color="primary">
-              <v-toolbar-title>Runs</v-toolbar-title>
+              <v-toolbar-title>Traces</v-toolbar-title>
             </v-toolbar>
             <v-card-text style="max-height: 300px;overflow:auto;" >
-                <RunsPanel />
+                <TracesPanel />
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn @click.prevent="submit">Toggle</v-btn>
-              <v-btn @click.prevent="submit">Add</v-btn>
+              <AddTraceButton></AddTraceButton>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -33,11 +32,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Store } from 'vuex';
 import { readUserProfile } from '@/store/main/getters';
-import RunsPanel from '@/components/RunsPanel.vue';
+import TracesPanel from '@/components/TracesPanel.vue';
+import AddTraceButton from '@/components/AddTraceButton.vue';
 
 @Component({
   components: {
-    RunsPanel,
+    TracesPanel,
+    AddTraceButton,
   },
 })
 export default class Dashboard extends Vue {}

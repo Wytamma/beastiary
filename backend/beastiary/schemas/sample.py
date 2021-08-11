@@ -7,7 +7,7 @@ from pydantic import BaseModel
 class SampleBase(BaseModel):
     sample: int
     data: dict
-    run_id: int
+    trace_id: int
 
 
 # Properties to receive on Sample creation

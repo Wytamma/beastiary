@@ -1,5 +1,5 @@
 
-export interface Run {
+export interface Trace {
     path: string;
     headers_line: string;
     last_byte: number;
@@ -8,5 +8,5 @@ export interface Run {
 }
 
 export interface DataState {
-    runs: Run[];
+    traces: Trace[];
 }

@@ -3,9 +3,9 @@ import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 
 export const getters = {
-    runs: (state: DataState) => state.runs,
+    traces: (state: DataState) => state.traces,
 };
 
 const {read} = getStoreAccessors<DataState, State>('');
 
-export const readRuns = read(getters.runs);
+export const readTraces = read(getters.traces);

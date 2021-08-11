@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.responses import JSONResponse, FileResponse
 from starlette.middleware.cors import CORSMiddleware
 
-from beastiary.api.endpoints import runs, samples
+from beastiary.api.endpoints import traces, samples
 
 api = FastAPI()
 
@@ -23,7 +23,7 @@ async def test_token() -> Any:
 
 api_router = APIRouter(prefix="/api")
 api_router.include_router(samples.router, prefix="/samples", tags=["samples"])
-api_router.include_router(runs.router, prefix="/runs", tags=["runs"])
+api_router.include_router(traces.router, prefix="/traces", tags=["traces"])
 api.include_router(api_router)
 
 api.mount("/", StaticFiles(directory="beastiary/webapp-dist"))
@@ -50,7 +50,7 @@ async def auth_check(request: Request, call_next):
 @api.middleware("http")
 async def add_custom_header(request: Request, call_next):
     response = await call_next(request)
-    if response.status_code == 404:
+    if response.status_code == 404 and "/api/" not in request.url.path:
         return FileResponse("beastiary/webapp-dist/index.html")
     return response
 

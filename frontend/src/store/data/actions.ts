@@ -8,17 +8,33 @@ import { State } from '../state';
 import { commitAddNotification, commitRemoveNotification } from '../main/mutations';
 import { DataState } from './state';
 import { dispatchCheckApiError } from '../main/actions';
-import { commitSetRuns } from './mutations';
+import { commitSetTraces, commitSetTrace } from './mutations';
+import { TraceCreate } from '@/interfaces';
 
 type MainContext = ActionContext<DataState, State>;
 
 export const actions = {
-    async actionGetRuns(context: MainContext) {
+    async actionGetTraces(context: MainContext) {
         try {
-            const response = await api.getRuns(context.rootState.main.token);
+            const response = await api.getTraces(context.rootState.main.token);
             if (response) {
-                commitSetRuns(context, response.data);
+                commitSetTraces(context, response.data);
             }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+    async actionCreateTrace(context: MainContext, payload: TraceCreate) {
+        try {
+            const loadingNotification = { content: 'saving', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = (await Promise.all([
+                api.createTrace(context.rootState.main.token, payload),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitSetTrace(context, response.data);
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'Trace successfully created', color: 'success' });
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
@@ -27,5 +43,6 @@ export const actions = {
 
 const { dispatch } = getStoreAccessors<DataState | any, State>('');
 
-export const dispatchGetRuns = dispatch(actions.actionGetRuns);
+export const dispatchGetTraces = dispatch(actions.actionGetTraces);
+export const dispatchCreateTrace = dispatch(actions.actionCreateTrace);
 

@@ -4,7 +4,7 @@ import { actions } from './actions';
 import { DataState } from './state';
 
 const defaultState: DataState = {
-    runs: [],
+    traces: [],
 };
 
 export const dataModule = {

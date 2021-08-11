@@ -4,25 +4,25 @@ from typing import Optional
 
 
 # Shared properties
-class RunBase(BaseModel):
+class TraceBase(BaseModel):
     path: str
     headers_line: Optional[str]
     last_byte: Optional[int]
     first_byte: Optional[int]
 
 
-# Properties to receive on Run creation
-class RunCreate(RunBase):
+# Properties to receive on Trace creation
+class TraceCreate(TraceBase):
     pass
 
 
-# Properties to receive on Run update
-class RunUpdate(RunBase):
+# Properties to receive on Trace update
+class TraceUpdate(TraceBase):
     pass
 
 
 # Properties shared by models stored in DB
-class RunInDBBase(RunBase):
+class TraceInDBBase(TraceBase):
     id: int
 
     class Config:
@@ -30,10 +30,10 @@ class RunInDBBase(RunBase):
 
 
 # Properties to return to client
-class Run(RunInDBBase):
+class Trace(TraceInDBBase):
     pass
 
 
 # Properties properties stored in DB
-class RunInDB(RunInDBBase):
+class TraceInDB(TraceInDBBase):
     pass

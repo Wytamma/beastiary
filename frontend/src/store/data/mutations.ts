@@ -1,15 +1,19 @@
-import { DataState, Run } from './state';
+import { DataState, Trace } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 
 
 export const mutations = {
-    setRuns(state: DataState, payload: Run[]) {
-        state.runs = payload;
+    setTraces(state: DataState, payload: Trace[]) {
+        state.traces = payload;
+    },
+    setTrace(state: DataState, payload: Trace) {
+        state.traces.push(payload);
     },
 };
 
 const {commit} = getStoreAccessors<DataState | any, State>('');
 
-export const commitSetRuns = commit(mutations.setRuns);
+export const commitSetTraces = commit(mutations.setTraces);
+export const commitSetTrace = commit(mutations.setTrace);
 

@@ -11,8 +11,8 @@ from beastiary.api import deps
 router = APIRouter()
 
 
-def read_lines(run, starting_byte, limit=None):
-    with open(run.path, "r") as f:
+def read_lines(trace, starting_byte, limit=None):
+    with open(trace.path, "r") as f:
         f.seek(starting_byte, 0)
         if limit:
             lines = []
@@ -27,7 +27,7 @@ def read_lines(run, starting_byte, limit=None):
         return last_byte, lines
 
 
-def lines_to_samples(headers, lines, run_id):
+def lines_to_samples(headers, lines, trace_id):
     samples = []
     for line in lines:
         if not line:
@@ -38,7 +38,7 @@ def lines_to_samples(headers, lines, run_id):
         data = {key: float(value) for key, value in zip(headers, line.split())}
         sample["data"] = data
         sample["sample"] = data["sample"]
-        sample["run_id"] = run_id
+        sample["trace_id"] = trace_id
         samples.append(sample)
 
     return samples
@@ -46,7 +46,7 @@ def lines_to_samples(headers, lines, run_id):
 
 @router.get("/", response_model=List[schemas.Sample])
 def get_samples(
-    run_id: int,
+    trace_id: int,
     limit: int = 100,
     get_all: bool = False,
     db: Session = Depends(deps.get_db),
@@ -54,18 +54,18 @@ def get_samples(
     """
     Retrieve samples.
     """
-    run = crud.run.get(db, run_id)
-    if not run:
-        raise HTTPException(404, "Run not found!")
-    current_run_data = jsonable_encoder(run)
-    run_in = schemas.RunUpdate(**current_run_data)
+    trace = crud.trace.get(db, trace_id)
+    if not trace:
+        raise HTTPException(404, "Trace not found!")
+    current_trace_data = jsonable_encoder(trace)
+    trace_in = schemas.TraceUpdate(**current_trace_data)
     if get_all:
-        starting_byte = run.first_byte
+        starting_byte = trace.first_byte
     else:
-        starting_byte = run.last_byte
-    last_byte, lines = read_lines(run, starting_byte, limit=limit)
+        starting_byte = trace.last_byte
+    last_byte, lines = read_lines(trace, starting_byte, limit=limit)
     print(last_byte)
-    samples = lines_to_samples(run.headers_line.split(), lines, run.id)
-    run_in.last_byte = last_byte
-    crud.run.update(db, db_obj=run, obj_in=run_in)
+    samples = lines_to_samples(trace.headers_line.split(), lines, trace.id)
+    trace_in.last_byte = last_byte
+    crud.trace.update(db, db_obj=trace, obj_in=trace_in)
     return samples
