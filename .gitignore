@@ -12,3 +12,4 @@ dist-ssr
 *.local
 debug.log
 .idea
+__pycache__
