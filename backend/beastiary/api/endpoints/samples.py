@@ -64,7 +64,6 @@ def get_samples(
     else:
         starting_byte = trace.last_byte
     last_byte, lines = read_lines(trace, starting_byte, limit=limit)
-    print(last_byte)
     samples = lines_to_samples(trace.headers_line.split(), lines, trace.id)
     trace_in.last_byte = last_byte
     crud.trace.update(db, db_obj=trace, obj_in=trace_in)

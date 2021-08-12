@@ -18,7 +18,7 @@ async def index():
 
 @api.get("/api/security/token", tags=["security"])
 async def test_token() -> Any:
-    return {"data": api.token}
+    return {"token": api.token}
 
 
 api_router = APIRouter(prefix="/api")
@@ -32,7 +32,7 @@ api.mount("/", StaticFiles(directory="beastiary/webapp-dist"))
 @api.middleware("http")
 async def auth_check(request: Request, call_next):
     if "/api/" in request.url.path and request.app.security == True:
-        token = request.headers.get("Authorization").split()[1]
+        token = request.headers.get("Authorization")
         if not token:
             return JSONResponse(
                 content={"detail": "Authorization header not provided!"},
@@ -40,7 +40,7 @@ async def auth_check(request: Request, call_next):
             )
         else:
             token = token.split()[1]
-        print(token)
+        print("token", token)
         if token != request.app.token:
             return JSONResponse(content={"detail": "Invalid token!"}, status_code=401)
     response = await call_next(request)

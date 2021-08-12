@@ -45,7 +45,6 @@ def create_trace(
     try:
         first_byte, headers = get_headers(trace_in.path)
     except FileNotFoundError as e:
-        print(e.strerror)
         raise HTTPException(404, detail=e.strerror)
     headers = headers.split()
     headers[0] = "sample"

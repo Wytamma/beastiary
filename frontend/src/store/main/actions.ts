@@ -20,7 +20,7 @@ export const actions = {
     async actionCheckToken(context: MainContext, payload: { token: string }) {
         try {
             const response = await api.getToken(payload.token);
-            const token = response.data;
+            const token = response.data.token;
             console.log(token);
             if (token) {
                 saveLocalToken(token);
@@ -83,7 +83,7 @@ export const actions = {
     },
     actionRouteLoggedIn(context: MainContext) {
         if (router.currentRoute.path === '/login' || router.currentRoute.path === '/') {
-            router.push('/main');
+            router.push('/main/dashboard');
         }
     },
     async removeNotification(context: MainContext, payload: { notification: AppNotification, timeout: number }) {
