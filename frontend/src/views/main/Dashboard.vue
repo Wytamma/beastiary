@@ -9,11 +9,25 @@
             outlined
           >
             <v-toolbar dark color="primary">
-              <v-toolbar-title>Traces</v-toolbar-title>
+              <v-toolbar-title>
+                Traces
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+                <v-btn
+                  icon
+                  @click="show = !show"
+                >
+                <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+              </v-btn>
             </v-toolbar>
+            <v-expand-transition>
+            <div  v-show="show">
             <v-card-text style="max-height: 300px;overflow:auto;" >
                 <TracesPanel />
             </v-card-text>
+            </div>
+            </v-expand-transition>
+            
             <v-card-actions>
               <v-spacer></v-spacer>
               <AddTraceButton></AddTraceButton>
@@ -41,5 +55,7 @@ import AddTraceButton from '@/components/AddTraceButton.vue';
     AddTraceButton,
   },
 })
-export default class Dashboard extends Vue {}
+export default class Dashboard extends Vue {
+  public show: boolean = true
+}
 </script>
