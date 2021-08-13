@@ -6,9 +6,6 @@ from typing import Optional
 # Shared properties
 class TraceBase(BaseModel):
     path: str
-    headers_line: Optional[str]
-    last_byte: Optional[int]
-    first_byte: Optional[int]
 
 
 # Properties to receive on Trace creation
@@ -24,6 +21,8 @@ class TraceUpdate(TraceBase):
 # Properties shared by models stored in DB
 class TraceInDBBase(TraceBase):
     id: int
+    headers_line: str
+    first_byte: int
 
     class Config:
         orm_mode = True

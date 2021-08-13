@@ -28,7 +28,9 @@ api.include_router(api_router)
 
 api.mount("/", StaticFiles(directory="beastiary/webapp-dist"))
 
-
+# replace with https://tiangolo.medium.com/nice-a6eafd9a7bca
+# probably need some switch to run it off
+# auto_error: bool = False
 @api.middleware("http")
 async def auth_check(request: Request, call_next):
     if "/api/" in request.url.path and request.app.security == True:

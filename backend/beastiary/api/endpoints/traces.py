@@ -47,9 +47,9 @@ def create_trace(
     except FileNotFoundError as e:
         raise HTTPException(404, detail=e.strerror)
     headers = headers.split()
-    headers[0] = "sample"
-    trace_in.headers_line = " ".join(headers)
-    trace_in.first_byte = first_byte
-    trace_in.last_byte = first_byte
-    trace = crud.trace.create(db=db, obj_in=trace_in)
+    headers[0] = "state"
+    headers_line = " ".join(headers)
+    trace = crud.trace.create(
+        db=db, obj_in=trace_in, headers_line=headers_line, first_byte=first_byte
+    )
     return trace

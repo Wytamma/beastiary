@@ -5,14 +5,14 @@ from pydantic import BaseModel
 
 # Shared properties
 class SampleBase(BaseModel):
-    sample: int
-    data: dict
-    trace_id: int
+    state: Optional[int] = None
+    data: Optional[dict] = None
 
 
 # Properties to receive on Sample creation
 class SampleCreate(SampleBase):
-    pass
+    state: int
+    data: dict
 
 
 # Properties to receive on Sample update
@@ -20,6 +20,16 @@ class SampleUpdate(SampleBase):
     pass
 
 
+# Properties shared by models stored in DB
+class SampleInDBBase(SampleBase):
+    id: int
+    trace_id: int
+    row_byte: Optional[int] = None
+
+    class Config:
+        orm_mode = True
+
+
 # Properties to return to client
-class Sample(SampleBase):
+class Sample(SampleInDBBase):
     pass

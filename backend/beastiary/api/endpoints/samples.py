@@ -11,15 +11,10 @@ from beastiary.api import deps
 router = APIRouter()
 
 
-def read_lines(trace, starting_byte, limit=None):
+def read_lines(trace, starting_byte):
     with open(trace.path, "r") as f:
         f.seek(starting_byte, 0)
-        if limit:
-            lines = []
-            for _ in range(limit):
-                lines.append(f.readline())
-        else:
-            lines = f.readlines()
+        lines = f.readlines()
         if lines:
             last_byte = f.tell() + 2
         else:
@@ -27,7 +22,7 @@ def read_lines(trace, starting_byte, limit=None):
         return last_byte, lines
 
 
-def lines_to_samples(headers, lines, trace_id):
+def lines_to_SampleCreate(headers, lines):
     samples = []
     for line in lines:
         if not line:
@@ -37,18 +32,25 @@ def lines_to_samples(headers, lines, trace_id):
         sample = {}
         data = {key: float(value) for key, value in zip(headers, line.split())}
         sample["data"] = data
-        sample["sample"] = data["sample"]
-        sample["trace_id"] = trace_id
-        samples.append(sample)
-
+        sample["state"] = data["state"]
+        samples.append(schemas.sample.SampleCreate(**sample))
     return samples
+
+
+def check_for_new_samples(db, trace, starting_byte):
+    last_byte, lines = read_lines(trace, starting_byte=starting_byte)
+    in_samples = lines_to_SampleCreate(trace.headers_line.split(), lines)
+    if in_samples:
+        crud.sample.create_multi_with_trace(
+            db, objs_in=in_samples, trace_id=trace.id, last_row_byte=last_byte
+        )
 
 
 @router.get("/", response_model=List[schemas.Sample])
 def get_samples(
     trace_id: int,
+    skip: int = 0,
     limit: int = 100,
-    get_all: bool = False,
     db: Session = Depends(deps.get_db),
 ) -> Any:
     """
@@ -57,14 +59,24 @@ def get_samples(
     trace = crud.trace.get(db, trace_id)
     if not trace:
         raise HTTPException(404, "Trace not found!")
-    current_trace_data = jsonable_encoder(trace)
-    trace_in = schemas.TraceUpdate(**current_trace_data)
-    if get_all:
-        starting_byte = trace.first_byte
-    else:
-        starting_byte = trace.last_byte
-    last_byte, lines = read_lines(trace, starting_byte, limit=limit)
-    samples = lines_to_samples(trace.headers_line.split(), lines, trace.id)
-    trace_in.last_byte = last_byte
-    crud.trace.update(db, db_obj=trace, obj_in=trace_in)
+
+    samples = crud.sample.get_multi_by_trace(
+        db, trace_id=trace.id, skip=skip, limit=limit
+    )
+
+    if len(samples) < limit:
+        # check for new samples
+        if len(samples) == 0:
+            starting_byte = trace.first_byte
+        else:
+            starting_byte = samples[-1].row_byte
+        try:
+            check_for_new_samples(db, trace=trace, starting_byte=starting_byte)
+        except Exception as e:
+            raise e
+        # get samples
+        samples = crud.sample.get_multi_by_trace(
+            db, trace_id=trace.id, skip=skip, limit=limit
+        )
+
     return samples
