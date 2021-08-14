@@ -19,7 +19,7 @@ def read_lines(trace):
         if lines:
             last_byte = f.tell() + 2
         else:
-            last_byte = starting_byte
+            last_byte = trace.last_byte
         return last_byte, lines
 
 
@@ -49,7 +49,7 @@ def check_for_new_samples(db, trace):
     if in_samples:
         crud.sample.create_multi_with_trace(db, objs_in=in_samples, trace_id=trace.id)
     # update the trace byte
-    crud.trace.update(db, db_obj=trace, obj_in={"last_byte": last_byte})
+    return crud.trace.update(db, db_obj=trace, obj_in={"last_byte": last_byte})
 
 
 @router.get("/", response_model=List[schemas.Sample])
@@ -73,7 +73,8 @@ def get_samples(
     if len(samples) < limit:
         logger.info(f"Checking for new samples in {trace.path}.")
         try:
-            check_for_new_samples(db, trace=trace)
+            trace = check_for_new_samples(db, trace=trace)
+            print(trace.last_byte)
         except Exception as e:
             raise e
         # get samples

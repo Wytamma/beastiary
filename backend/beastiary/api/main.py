@@ -6,6 +6,7 @@ from fastapi.logger import logger
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import JSONResponse, FileResponse
 from starlette.middleware.cors import CORSMiddleware
+from starlette.datastructures import URL
 
 import logging
 
@@ -49,7 +50,6 @@ async def auth_check(request: Request, call_next):
             )
         else:
             token = token.split()[1]
-        print("token", token)
         if token != request.app.token:
             return JSONResponse(content={"detail": "Invalid token!"}, status_code=401)
     response = await call_next(request)

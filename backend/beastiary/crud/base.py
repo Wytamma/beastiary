@@ -44,13 +44,16 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db_obj: ModelType,
         obj_in: Union[UpdateSchemaType, Dict[str, Any]]
     ) -> ModelType:
+        db.refresh(db_obj)
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
             update_data = obj_in.dict(exclude_unset=True)
         for field in obj_data:
+            print(field)
             if field in update_data:
+                print(field, update_data[field])
                 setattr(db_obj, field, update_data[field])
         db.add(db_obj)
         db.commit()

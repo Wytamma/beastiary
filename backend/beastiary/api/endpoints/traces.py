@@ -22,6 +22,17 @@ def get_traces(
     return traces
 
 
+@router.get("/{trace_id}", response_model=schemas.Trace)
+def get_trace(trace_id, db: Session = Depends(deps.get_db)) -> Any:
+    """
+    Retrieve traces.
+    """
+    trace = crud.trace.get(db=db, id=trace_id)
+    if not trace:
+        raise HTTPException(404, "Trace not found!")
+    return trace
+
+
 def get_headers(path):
     with open(path, "r") as f:
         headers_set = False
@@ -45,7 +56,7 @@ def create_trace(
     try:
         last_byte, headers = get_headers(trace_in.path)
     except FileNotFoundError as e:
-        raise HTTPException(404, detail=e.strerror)
+        raise HTTPException(404, detail="Could not find log file!")
     headers = headers.split()
     headers[0] = "state"
     headers_line = " ".join(headers)

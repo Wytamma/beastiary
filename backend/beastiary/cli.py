@@ -17,6 +17,7 @@ init_db(db)
 def main(
     debug: bool = typer.Option(False, help="Set debug mode."),
     security: bool = typer.Option(True, help="Turn off token requirement."),
+    testing: bool = typer.Option(False, help="Only for testing."),
     token: str = typer.Option(str(uuid.uuid4())),
     host: str = typer.Option("127.0.0.1"),
     port: str = typer.Option(5000),
@@ -34,4 +35,5 @@ def main(
         api.security = True
     if debug:
         log_level = "debug"
-    uvicorn.run(api, host=host, port=port, log_level=log_level)
+    if not testing:
+        uvicorn.run(api, host=host, port=port, log_level=log_level)
