@@ -6,7 +6,7 @@
     </v-toolbar>
     <v-expand-transition>
       <div >
-        <v-card-text style="max-height: 400px ;overflow: auto">
+        <v-card-text style="max-height: 350px ;overflow: auto">
           <v-list dense >
             <v-list-item-group
               color="primary"

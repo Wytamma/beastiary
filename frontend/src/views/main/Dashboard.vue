@@ -3,8 +3,8 @@
       <v-row
         no-gutters
       > 
-        <v-col cols="3">
-          <v-row no-gutters>
+        <v-col cols="3" class="">
+          <v-row no-gutters class="">
             <v-col>
               <TracesPanel />
             </v-col>
@@ -16,7 +16,9 @@
           </v-row>
         </v-col>
         <v-col cols="9">
+          <div class="ma-4">
           <Plotly v-if="activeTrace" :data="plotData" :layout="layout" :display-mode-bar="false"></Plotly>
+          </div>
         </v-col>
       </v-row>
 </v-layout>
@@ -44,16 +46,9 @@ export default class Dashboard extends Vue {
     let trace = readActiveTrace(this.$store);
     let param = readActiveParam(this.$store)
     if (trace && param){
-      let y = {};
-      trace.parameters[param].forEach(obj => {
-        Object.keys(obj).forEach(key => {
-          y[key] = (y[key] || []).concat([obj[key]]);
-        });
-      });
-      console.log([y])
       return [{
-        x: y['state'],
-        y: y['value'],
+        x: trace.parameters[param].map(function(row) { return row['state']; }),
+        y: trace.parameters[param].map(function(row) { return row['value']; }),
         type:"scatter"
       }]
     } else {
