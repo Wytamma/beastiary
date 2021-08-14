@@ -8,8 +8,9 @@ import { State } from '../state';
 import { commitAddNotification, commitRemoveNotification } from '../main/mutations';
 import { DataState } from './state';
 import { dispatchCheckApiError } from '../main/actions';
-import { commitSetTraces, commitSetTrace } from './mutations';
-import { TraceCreate } from '@/interfaces';
+import { commitSetTraces, commitSetTrace, commitSetActiveTrace, commitSetSamples, commitSetActiveParam } from './mutations';
+import { TraceCreate, Trace } from '@/interfaces';
+import { readTraces } from './getters'
 
 type MainContext = ActionContext<DataState, State>;
 
@@ -39,10 +40,45 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
     },
+    async actionSetActiveTrace(context: MainContext, payload: Trace) {
+        commitSetActiveTrace(context, payload);
+    },
+    async actionSetActiveParam(context: MainContext, payload: string) {
+        commitSetActiveParam(context, payload);
+    },
+    async actionGetSamples(context: MainContext, payload: {trace: Trace, skip?: number, limit?: number}) {
+        let trace = payload.trace
+        let skip = payload.skip ? payload.skip : 0
+        let limit = payload.limit ? payload.limit : 0
+        try {
+            const loadingNotification = { content: 'Loading samples...', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = await api.getSamples(context.rootState.main.token, trace, skip, limit);
+            if (response) {
+                commitSetSamples(context, {trace: trace, data: response.data});
+            }
+            commitRemoveNotification(context, loadingNotification);
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+    async actionLoadAllSamplesAllTraces(context: MainContext) {
+        let traces = readTraces(context)
+        for (let index = 0; index < traces.length; index++) {
+            const trace = traces[index];
+            await dispatchGetSamples(context, {trace:trace})
+        }
+    },
+
 };
 
 const { dispatch } = getStoreAccessors<DataState | any, State>('');
 
 export const dispatchGetTraces = dispatch(actions.actionGetTraces);
 export const dispatchCreateTrace = dispatch(actions.actionCreateTrace);
+export const dispatchSetActiveTrace = dispatch(actions.actionSetActiveTrace);
+export const dispatchGetSamples = dispatch(actions.actionGetSamples);
+export const dispatchLoadAllSamplesAllTraces = dispatch(actions.actionLoadAllSamplesAllTraces);
+export const dispatchSetActiveParam = dispatch(actions.actionSetActiveParam);
+
 

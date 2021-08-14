@@ -1,5 +1,5 @@
 <template>
-<v-content>
+<v-content fill-height>
   <v-layout fill-height >
     <v-navigation-drawer persistent v-model="showDrawer" fixed app>
       <v-layout column fill-height>
@@ -88,7 +88,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 
 import { appName } from '@/env';
-import { readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess } from '@/store/main/getters';
+import { readDashboardMiniDrawer, readDashboardShowDrawer } from '@/store/main/getters';
 import { commitSetDashboardShowDrawer, commitSetDashboardMiniDrawer } from '@/store/main/mutations';
 import { dispatchUserLogOut } from '@/store/main/actions';
 
@@ -136,10 +136,6 @@ export default class Main extends Vue {
       this.$store,
       !readDashboardMiniDrawer(this.$store),
     );
-  }
-
-  public get hasAdminAccess() {
-    return readHasAdminAccess(this.$store);
   }
 
   public async logout() {

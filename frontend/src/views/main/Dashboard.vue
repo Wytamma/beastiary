@@ -4,39 +4,19 @@
         no-gutters
       > 
         <v-col cols="3">
-          <v-card
-            class="elevation-12 ma-2"
-            outlined
-          >
-            <v-toolbar dark color="primary">
-              <v-toolbar-title>
-                Traces
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-                <v-btn
-                  icon
-                  @click="show = !show"
-                >
-                <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-expand-transition>
-            <div  v-show="show">
-            <v-card-text style="max-height: 300px;overflow:auto;" >
-                <TracesPanel />
-            </v-card-text>
-            </div>
-            </v-expand-transition>
-            
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <AddTraceButton></AddTraceButton>
-            </v-card-actions>
-          </v-card>
+          <v-row no-gutters>
+            <v-col>
+              <TracesPanel />
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-col>
+              <ParamsPanel />
+            </v-col>
+          </v-row>
         </v-col>
         <v-col cols="9">
-          <v-card>
-          </v-card>
+          <Plotly v-if="activeTrace" :data="plotData" :layout="layout" :display-mode-bar="false"></Plotly>
         </v-col>
       </v-row>
 </v-layout>
@@ -44,18 +24,47 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import { readUserProfile } from '@/store/main/getters';
+import { Plotly } from 'vue-plotly'
 import TracesPanel from '@/components/TracesPanel.vue';
-import AddTraceButton from '@/components/AddTraceButton.vue';
+import ParamsPanel from '@/components/ParamsPanel.vue';
+import { readActiveParam, readActiveTrace } from '@/store/data/getters';
 
 @Component({
   components: {
     TracesPanel,
-    AddTraceButton,
+    ParamsPanel,
+    Plotly,
   },
 })
 export default class Dashboard extends Vue {
-  public show: boolean = true
+  get layout () {
+      return {title: this.activeParam}
+  }
+  get plotData() {
+    let trace = readActiveTrace(this.$store);
+    let param = readActiveParam(this.$store)
+    if (trace && param){
+      let y = {};
+      trace.parameters[param].forEach(obj => {
+        Object.keys(obj).forEach(key => {
+          y[key] = (y[key] || []).concat([obj[key]]);
+        });
+      });
+      console.log([y])
+      return [{
+        x: y['state'],
+        y: y['value'],
+        type:"scatter"
+      }]
+    } else {
+      return {}
+    }
+  }
+  get activeTrace() {
+        return readActiveTrace(this.$store);
+  }
+  get activeParam() {
+    return readActiveParam(this.$store)
+  }
 }
 </script>

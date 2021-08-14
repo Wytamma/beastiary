@@ -1,12 +1,7 @@
-
-export interface Trace {
-    path: string;
-    headers_line: string;
-    last_byte: number;
-    first_byte: number;
-    id: number;
-}
+import { Trace } from "@/interfaces";
 
 export interface DataState {
     traces: Trace[];
+    activeTraceID: number | null;
+    activeParam: string | null
 }

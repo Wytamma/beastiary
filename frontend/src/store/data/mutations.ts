@@ -1,19 +1,69 @@
-import { DataState, Trace } from './state';
+import { DataState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
+import { Trace, SetSample, inSample, Data } from '@/interfaces';
+   
+function formatData(samples:inSample[]) {
+    let parameters: { [key: string]: Data[] } = {}
+    for (let index = 0; index < samples.length; index++) {
+        const row = samples[index].data;
+        const state = row['state'];
+        for (const param in row) {
+            if (index == 0) {
+                parameters[param] = []
+            }
+            parameters[param].push({ state: state, value: row[param] })
+        }
+        
+    }
 
+    return parameters
+}
 
 export const mutations = {
     setTraces(state: DataState, payload: Trace[]) {
+        for (let index = 0; index < payload.length; index++) {
+            const trace = payload[index];
+            if (!trace.parameters) {
+                trace.parameters = {}
+            }
+        }
         state.traces = payload;
     },
     setTrace(state: DataState, payload: Trace) {
+        if (!payload.parameters) {
+            payload.parameters = {}
+        }
         state.traces.push(payload);
     },
+    setActiveTrace(state: DataState, payload: Trace) {
+        state.activeTraceID = payload.id
+    },
+    setActiveParam(state: DataState, payload: string) {
+        state.activeParam = payload
+    },
+    setSetSamples(state: DataState, payload: SetSample) {
+        let trace_id = payload['trace'].id
+        let data = formatData(payload['data'])
+        let trace = state.traces.find(trace => trace.id == trace_id)
+        if (trace) {
+            if (!trace.parameters) {
+                trace.parameters = {}
+            }
+            for (const paramName in data) {
+
+                trace.parameters[paramName] = data[paramName]
+                    
+            }
+        }
+    }
 };
 
 const {commit} = getStoreAccessors<DataState | any, State>('');
 
 export const commitSetTraces = commit(mutations.setTraces);
 export const commitSetTrace = commit(mutations.setTrace);
+export const commitSetActiveTrace = commit(mutations.setActiveTrace);
+export const commitSetSamples = commit(mutations.setSetSamples);
+export const commitSetActiveParam = commit(mutations.setActiveParam);
 

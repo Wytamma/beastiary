@@ -21,7 +21,6 @@ export const actions = {
         try {
             const response = await api.getToken(payload.token);
             const token = response.data.token;
-            console.log(token);
             if (token) {
                 saveLocalToken(token);
                 commitSetToken(context, token);

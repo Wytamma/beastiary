@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { TraceCreate } from '@/interfaces';
-import { Trace } from './store/data/state';
+import { TraceCreate, Trace, inSample } from '@/interfaces';
+import { config } from 'vue/types/umd';
 
 function authHeaders(token: string) {
   return {
@@ -19,6 +19,11 @@ export const api = {
     return axios.get<Trace[]>(`${apiUrl}/api/traces/`, authHeaders(token));
   },
   async createTrace(token: string,  data: TraceCreate) {
-    return axios.post(`${apiUrl}/api/traces/`, data, authHeaders(token));
+    return axios.post<Trace>(`${apiUrl}/api/traces/`, data, authHeaders(token));
+  },
+  async getSamples(token: string, trace: Trace, skip: number = 0, limit: number = 100) {
+    let options = authHeaders(token)
+    options['params'] = {trace_id: trace.id, skip: skip, limit: limit}
+    return axios.get<inSample[]>(`${apiUrl}/api/samples/`, options);
   },
 };

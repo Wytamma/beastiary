@@ -8,20 +8,7 @@
 
 This is a real time version of tracer that can be run on remote servers (e.g. a HPC). Its goal is to be a beautiful and simple, yet power tool for Bayesian phylogenetic inference.
 
-
-## CLI
-Launch the app
-Can point to log file to autostart watcher
-
-## Webapp 
-Vue  
-Plotly
-
-## Web API
-FastAPI that sends data from DB to the webapp and can be used to read samples from log flies.
-
-## BD (MEMORY)
-Protected by the CRUD.
-
-## Pistribution 
-Pypi
+## Installation
+```bash
+pip install beastiary
+```
