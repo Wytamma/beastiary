@@ -43,13 +43,13 @@ def create_trace(
     """
     # get headers
     try:
-        first_byte, headers = get_headers(trace_in.path)
+        last_byte, headers = get_headers(trace_in.path)
     except FileNotFoundError as e:
         raise HTTPException(404, detail=e.strerror)
     headers = headers.split()
     headers[0] = "state"
     headers_line = " ".join(headers)
     trace = crud.trace.create(
-        db=db, obj_in=trace_in, headers_line=headers_line, first_byte=first_byte
+        db=db, obj_in=trace_in, headers_line=headers_line, last_byte=last_byte
     )
     return trace

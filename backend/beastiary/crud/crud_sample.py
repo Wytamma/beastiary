@@ -10,27 +10,21 @@ from beastiary.schemas.sample import SampleCreate, SampleUpdate
 
 class CRUDSample(CRUDBase[Sample, SampleCreate, SampleUpdate]):
     def create_with_trace(
-        self, db: Session, *, obj_in: SampleCreate, trace_id: int, row_byte: int = None
+        self, db: Session, *, obj_in: SampleCreate, trace_id: int
     ) -> Sample:
         obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data, trace_id=trace_id, row_byte=row_byte)
+        db_obj = self.model(**obj_in_data, trace_id=trace_id)
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
         return db_obj
 
     def create_multi_with_trace(
-        self,
-        db: Session,
-        *,
-        objs_in: List[SampleCreate],
-        trace_id: int,
-        last_row_byte: int
+        self, db: Session, *, objs_in: List[SampleCreate], trace_id: int
     ) -> Sample:
         objs_in_data = [jsonable_encoder(obj_in) for obj_in in objs_in]
         for obj_in in objs_in_data:
             obj_in.update({"trace_id": trace_id})
-        objs_in_data[-1]["row_byte"] = last_row_byte
         db_objs = [self.model(**obj_in_data) for obj_in_data in objs_in_data]
         db.add_all(db_objs)
         db.commit()

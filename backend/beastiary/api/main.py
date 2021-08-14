@@ -2,13 +2,20 @@ from os import error
 from typing import Any
 from fastapi import FastAPI
 from fastapi import APIRouter, Request
+from fastapi.logger import logger
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import JSONResponse, FileResponse
 from starlette.middleware.cors import CORSMiddleware
 
+import logging
+
 from beastiary.api.endpoints import traces, samples
 
 api = FastAPI()
+
+gunicorn_logger = logging.getLogger("gunicorn.error")
+logger.handlers = gunicorn_logger.handlers
+logger.setLevel(gunicorn_logger.level)
 
 
 @api.get("/")

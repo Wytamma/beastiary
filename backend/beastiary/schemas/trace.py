@@ -22,7 +22,7 @@ class TraceUpdate(TraceBase):
 class TraceInDBBase(TraceBase):
     id: int
     headers_line: str
-    first_byte: int
+    last_byte: int
 
     class Config:
         orm_mode = True

@@ -24,7 +24,6 @@ class SampleUpdate(SampleBase):
 class SampleInDBBase(SampleBase):
     id: int
     trace_id: int
-    row_byte: Optional[int] = None
 
     class Config:
         orm_mode = True

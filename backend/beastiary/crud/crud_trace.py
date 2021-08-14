@@ -10,11 +10,11 @@ from beastiary.schemas.trace import TraceCreate, TraceUpdate
 
 class CRUDTrace(CRUDBase[Trace, TraceCreate, TraceUpdate]):
     def create(
-        self, db: Session, *, obj_in: TraceCreate, headers_line: str, first_byte: int
+        self, db: Session, *, obj_in: TraceCreate, headers_line: str, last_byte: int
     ) -> Trace:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(
-            **obj_in_data, headers_line=headers_line, first_byte=first_byte
+            **obj_in_data, headers_line=headers_line, last_byte=last_byte
         )
         db.add(db_obj)
         db.commit()

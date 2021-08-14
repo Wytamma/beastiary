@@ -9,5 +9,5 @@ class Trace(Base):
     id = Column(Integer, primary_key=True)
     path = Column(String)
     headers_line = Column(String)
-    first_byte = Column(Integer)
+    last_byte = Column(Integer)
     samples = relationship("Sample", back_populates="trace")
