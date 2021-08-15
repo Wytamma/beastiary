@@ -74,7 +74,6 @@ def get_samples(
         logger.info(f"Checking for new samples in {trace.path}.")
         try:
             trace = check_for_new_samples(db, trace=trace)
-            print(trace.last_byte)
         except Exception as e:
             raise e
         # get samples

@@ -51,9 +51,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         else:
             update_data = obj_in.dict(exclude_unset=True)
         for field in obj_data:
-            print(field)
             if field in update_data:
-                print(field, update_data[field])
                 setattr(db_obj, field, update_data[field])
         db.add(db_obj)
         db.commit()
