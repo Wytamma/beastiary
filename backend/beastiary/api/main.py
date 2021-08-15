@@ -1,4 +1,4 @@
-from os import error
+from os import error, path
 from typing import Any
 from fastapi import FastAPI
 from fastapi import APIRouter, Request
@@ -19,9 +19,14 @@ logger.handlers = gunicorn_logger.handlers
 logger.setLevel(gunicorn_logger.level)
 
 
+file_path = path.abspath(path.dirname(__file__))
+webapp_path = path.join(file_path, "../webapp-dist/")
+index_path = path.join(file_path, "../webapp-dist/index.html")
+
+
 @api.get("/")
 async def index():
-    return FileResponse("beastiary/webapp-dist/index.html")
+    return FileResponse(index_path)
 
 
 @api.get("/api/security/token", tags=["security"])
@@ -34,7 +39,7 @@ api_router.include_router(samples.router, prefix="/samples", tags=["samples"])
 api_router.include_router(traces.router, prefix="/traces", tags=["traces"])
 api.include_router(api_router)
 
-api.mount("/", StaticFiles(directory="beastiary/webapp-dist"))
+api.mount("/", StaticFiles(directory=webapp_path))
 
 # replace with https://tiangolo.medium.com/nice-a6eafd9a7bca
 # probably need some switch to run it off
@@ -60,7 +65,7 @@ async def auth_check(request: Request, call_next):
 async def add_custom_header(request: Request, call_next):
     response = await call_next(request)
     if response.status_code == 404 and "/api/" not in request.url.path:
-        return FileResponse("beastiary/webapp-dist/index.html")
+        return FileResponse(index_path)
     return response
 
 
