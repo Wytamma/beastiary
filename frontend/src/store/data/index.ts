@@ -6,7 +6,7 @@ import { DataState } from './state';
 const defaultState: DataState = {
     traces: [],
     activeTraceID: null,
-    activeParam: null,
+    activeParam: 'state',
 };
 
 export const dataModule = {

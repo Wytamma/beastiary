@@ -49,7 +49,7 @@ export const actions = {
     async actionGetSamples(context: MainContext, payload: {trace: Trace, skip?: number, limit?: number}) {
         let trace = payload.trace
         let skip = payload.skip ? payload.skip : 0
-        let limit = payload.limit ? payload.limit : 0
+        let limit = payload.limit ? payload.limit : 100
         try {
             const loadingNotification = { content: 'Loading samples...', showProgress: true };
             commitAddNotification(context, loadingNotification);
@@ -59,6 +59,7 @@ export const actions = {
             }
             commitRemoveNotification(context, loadingNotification);
         } catch (error) {
+            console.log(error)
             await dispatchCheckApiError(context, error);
         }
     },

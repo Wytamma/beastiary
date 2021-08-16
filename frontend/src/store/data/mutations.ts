@@ -47,13 +47,12 @@ export const mutations = {
         let data = formatData(payload['data'])
         let trace = state.traces.find(trace => trace.id == trace_id)
         if (trace) {
-            if (!trace.parameters) {
-                trace.parameters = {}
-            }
-            for (const paramName in data) {
-
-                trace.parameters[paramName] = data[paramName]
-                    
+            if (Object.keys(trace.parameters).length === 0) {
+                trace.parameters = data
+            } else {
+                for (const paramName in data) {
+                    trace.parameters[paramName] = trace.parameters[paramName].concat(data[paramName])
+                }
             }
         }
     }

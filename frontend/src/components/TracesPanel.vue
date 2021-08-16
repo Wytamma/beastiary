@@ -14,7 +14,6 @@
             <v-list-item-group
               color="primary"
               v-model="activeTraces"
-              active-class="1"
             >
               <v-list-item
                 v-for="(trace, i) in traces"
