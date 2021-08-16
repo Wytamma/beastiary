@@ -1,9 +1,7 @@
 from typing import Any, List
 import os
 from fastapi import APIRouter, Depends, HTTPException, Path
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-from uvicorn.main import run
 
 from beastiary import crud, schemas
 from beastiary.api import deps
@@ -17,7 +15,9 @@ def read_lines(trace):
         f.seek(trace.last_byte, 0)
         lines = f.readlines()
         if lines:
-            last_byte = f.tell() + 2
+            last_byte = f.tell()
+            # if lines[-1].endswith('\n'):
+            #     last_byte += 2 #
         else:
             last_byte = trace.last_byte
         return last_byte, lines
@@ -69,9 +69,10 @@ def get_samples(
     samples = crud.sample.get_multi_by_trace(
         db, trace_id=trace.id, skip=skip, limit=limit
     )
-
+    logger.debug(f"{len(samples)} found, {limit} samples requested")
     if len(samples) < limit:
-        logger.info(f"Checking for new samples in {trace.path}.")
+
+        logger.debug(f"Checking for new samples in {trace.path}")
         try:
             trace = check_for_new_samples(db, trace=trace)
         except Exception as e:
@@ -80,5 +81,5 @@ def get_samples(
         samples = crud.sample.get_multi_by_trace(
             db, trace_id=trace.id, skip=skip, limit=limit
         )
-
+    logger.debug(f"Returning {len(samples)} samples")
     return samples

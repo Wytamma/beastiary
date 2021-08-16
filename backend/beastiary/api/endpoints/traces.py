@@ -1,3 +1,4 @@
+from beastiary.api.core import add_trace
 from beastiary.schemas import sample
 from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException
@@ -33,16 +34,6 @@ def get_trace(trace_id, db: Session = Depends(deps.get_db)) -> Any:
     return trace
 
 
-def get_headers(path):
-    with open(path, "r") as f:
-        headers_set = False
-        while True:
-            line = f.readline()
-            if line.startswith("#"):
-                continue
-            return f.tell(), line
-
-
 @router.post("/", response_model=schemas.Trace)
 def create_trace(
     *,
@@ -52,15 +43,9 @@ def create_trace(
     """
     Create new trace.
     """
-    # get headers
     try:
-        last_byte, headers = get_headers(trace_in.path)
+        trace = add_trace(db, trace_in)
     except FileNotFoundError as e:
         raise HTTPException(404, detail="Could not find log file!")
-    headers = headers.split()
-    headers[0] = "state"
-    headers_line = " ".join(headers)
-    trace = crud.trace.create(
-        db=db, obj_in=trace_in, headers_line=headers_line, last_byte=last_byte
-    )
+    # get samples
     return trace
