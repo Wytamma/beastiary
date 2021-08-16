@@ -57,10 +57,11 @@ export default class Dashboard extends Vue {
         margin: {
           l: 80,
           r: 80,
-          b: 160,
+          b: 30,
           t: 20,
           pad: 0
-        } 
+        },
+        height:220
       }
   }
   get traceData() {
