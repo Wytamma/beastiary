@@ -17,7 +17,8 @@
         </v-col>
         <v-col cols="9">
           <div class="ma-4">
-          <Plotly v-if="activeTrace" :data="plotData" :layout="layout" :display-mode-bar="false"></Plotly>
+          <Plotly v-if="activeTrace" :data="traceData" :layout="traceLayout" :display-mode-bar="false"></Plotly>
+          <Plotly v-if="activeTrace" :data="histData" :layout="histLayout" :display-mode-bar="false" class="mt-0"></Plotly>
           </div>
         </v-col>
       </v-row>
@@ -39,10 +40,30 @@ import { readActiveParam, readActiveTrace } from '@/store/data/getters';
   },
 })
 export default class Dashboard extends Vue {
-  get layout () {
-      return {title: this.activeParam}
+  get traceLayout () {
+      return {
+        title: this.activeParam,
+        margin: {
+          l: 80,
+          r: 80,
+          b: 80,
+          t: 100,
+          pad: 0
+        } 
+      }
   }
-  get plotData() {
+  get histLayout () {
+    return {
+        margin: {
+          l: 80,
+          r: 80,
+          b: 160,
+          t: 20,
+          pad: 0
+        } 
+      }
+  }
+  get traceData() {
     let trace = readActiveTrace(this.$store);
     let param = readActiveParam(this.$store)
     if (trace && param){
@@ -50,6 +71,18 @@ export default class Dashboard extends Vue {
         x: trace.parameters[param].map(function(row) { return row['state']; }),
         y: trace.parameters[param].map(function(row) { return row['value']; }),
         type:"scatter"
+      }]
+    } else {
+      return {}
+    }
+  }
+    get histData() {
+    let trace = readActiveTrace(this.$store);
+    let param = readActiveParam(this.$store)
+    if (trace && param){
+      return [{
+        x: trace.parameters[param].map(function(row) { return row['value']; }),
+        type:"histogram"
       }]
     } else {
       return {}
