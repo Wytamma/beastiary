@@ -8,6 +8,7 @@ function authHeaders(token: string) {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    params: {},
   };
 }
 
@@ -22,8 +23,8 @@ export const api = {
     return axios.post<Trace>(`${apiUrl}/api/traces/`, data, authHeaders(token));
   },
   async getSamples(token: string, trace: Trace, skip: number = 0, limit: number = 100) {
-    let options = authHeaders(token)
-    options['params'] = {trace_id: trace.id, skip: skip, limit: limit}
+    const options = authHeaders(token);
+    options.params = {trace_id: trace.id, skip, limit};
     return axios.get<inSample[]>(`${apiUrl}/api/samples/`, options);
   },
 };

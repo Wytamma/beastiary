@@ -42,13 +42,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 import {
   dispatchGetTraces,
   dispatchSetActiveTrace,
   dispatchGetSamples,
-} from "@/store/data/actions";
-import { readTraces } from "@/store/data/getters";
+} from '@/store/data/actions';
+import { readTraces } from '@/store/data/getters';
 import AddTraceButton from '@/components/AddTraceButton.vue';
 @Component({
   components: {
@@ -57,23 +57,23 @@ import AddTraceButton from '@/components/AddTraceButton.vue';
 })
 export default class TracesPanel extends Vue {
   public activeTraces = [];
-  public show: boolean = true
+  public show: boolean = true;
   get traces() {
     return readTraces(this.$store);
   }
   public async setAcitveTrace(trace) {
-    let skip = 'state' in trace.parameters ? trace.parameters.state.length : 0
-    await dispatchGetSamples(this.$store, {trace:trace, skip:skip, limit:1000000})
+    const skip = 'state' in trace.parameters ? trace.parameters.state.length : 0;
+    await dispatchGetSamples(this.$store, {trace, skip, limit: 1000000});
     await dispatchSetActiveTrace(this.$store, trace);
-    
-    
+
+
   }
   public async mounted() {
     await dispatchGetTraces(this.$store);
-    //await dispatchLoadAllSamplesAllTraces(this.$store)
+    // await dispatchLoadAllSamplesAllTraces(this.$store)
   }
   public fileName(path) {
-    return path.substring(path.lastIndexOf("/") + 1);
+    return path.substring(path.lastIndexOf('/') + 1);
   }
 }
 </script>

@@ -35,11 +35,11 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { readParamsOfActiveTrace, readActiveTrace } from '@/store/data/getters';
-import { dispatchSetActiveParam } from "@/store/data/actions";
+import { dispatchSetActiveParam } from '@/store/data/actions';
 
 @Component
 export default class ParamsPanel extends Vue {
-    //public parameters: Array<string> = []
+    // public parameters: Array<string> = []
     get activeTrace() {
         return readActiveTrace(this.$store);
     }
@@ -51,8 +51,8 @@ export default class ParamsPanel extends Vue {
       await dispatchSetActiveParam(this.$store, param);
     }
     @Watch('activeParams', { deep: true })
-    onChildChanged() {
-      //this.parameters = this.$store.getters.paramsOfActiveTrace
+    public onChildChanged() {
+      // this.parameters = this.$store.getters.paramsOfActiveTrace
     }
 }
 </script>

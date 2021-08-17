@@ -13,11 +13,11 @@ export interface Trace {
 export interface Data {
     state: number;
     value: number;
-} 
+}
 
 export interface Parameter {
     name: string;
-    data: Data[]
+    data: Data[];
 }
 
 export interface inSample {

@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { Plotly } from 'vue-plotly'
+import { Plotly } from 'vue-plotly';
 import TracesPanel from '@/components/TracesPanel.vue';
 import ParamsPanel from '@/components/ParamsPanel.vue';
 import { readActiveParam, readActiveTrace } from '@/store/data/getters';
@@ -40,60 +40,64 @@ import { readActiveParam, readActiveTrace } from '@/store/data/getters';
   },
 })
 export default class Dashboard extends Vue {
-  get traceLayout () {
+  get traceLayout() {
       return {
-        title: this.activeParam,
+        plot_bgcolor: 'rgba(0, 0, 0, 0)',
+        paper_bgcolor: 'rgba(0, 0, 0, 0)',
         margin: {
           l: 80,
           r: 80,
           b: 80,
-          t: 100,
-          pad: 0
-        } 
-      }
+          t: 20,
+          pad: 0,
+        },
+        height: 400,
+      };
   }
-  get histLayout () {
+  get histLayout() {
     return {
+        plot_bgcolor: 'rgba(0, 0, 0, 0)',
+        paper_bgcolor: 'rgba(0, 0, 0, 0)',
         margin: {
           l: 80,
           r: 80,
           b: 30,
           t: 20,
-          pad: 0
+          pad: 0,
         },
-        height:220
-      }
+        height: 220,
+      };
   }
   get traceData() {
-    let trace = readActiveTrace(this.$store);
-    let param = readActiveParam(this.$store)
-    if (trace && param){
+    const trace = readActiveTrace(this.$store);
+    const param = readActiveParam(this.$store);
+    if (trace && param) {
       return [{
-        x: trace.parameters[param].map(function(row) { return row['state']; }),
-        y: trace.parameters[param].map(function(row) { return row['value']; }),
-        type:"scatter"
-      }]
+        x: trace.parameters[param].map((row) =>  row.state),
+        y: trace.parameters[param].map((row) =>  row.value),
+        type: 'scatter',
+      }];
     } else {
-      return {}
+      return {};
     }
   }
     get histData() {
-    let trace = readActiveTrace(this.$store);
-    let param = readActiveParam(this.$store)
-    if (trace && param){
+    const trace = readActiveTrace(this.$store);
+    const param = readActiveParam(this.$store);
+    if (trace && param) {
       return [{
-        x: trace.parameters[param].map(function(row) { return row['value']; }),
-        type:"histogram"
-      }]
+        x: trace.parameters[param].map((row) =>  row.value),
+        type: 'histogram',
+      }];
     } else {
-      return {}
+      return {};
     }
   }
   get activeTrace() {
         return readActiveTrace(this.$store);
   }
   get activeParam() {
-    return readActiveParam(this.$store)
+    return readActiveParam(this.$store);
   }
 }
 </script>

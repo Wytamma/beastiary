@@ -57,6 +57,12 @@
       <v-app-bar-nav-icon @click.stop="switchShowDrawer"></v-app-bar-nav-icon>
       <v-app-bar-title v-text="appName"></v-app-bar-title >
       <v-spacer></v-spacer>
+      <v-switch
+          v-model="$vuetify.theme.dark"
+          hide-details
+          inset
+          color="blue darken-4"
+      ></v-switch>
       <v-menu bottom left offset-y>
         <template v-slot:activator="{ on }">
           <v-btn v-on="on" icon>

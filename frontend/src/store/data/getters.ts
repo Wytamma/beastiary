@@ -4,14 +4,14 @@ import { State } from '../state';
 
 export const getters = {
     traces: (state: DataState) => state.traces,
-    activeTrace: (state: DataState) => state.activeTraceID ? state.traces.find(trace => trace.id == state.activeTraceID) : null,
+    activeTrace: (state: DataState) => state.activeTraceID ? state.traces.find((trace) => trace.id == state.activeTraceID) : null,
     paramsOfActiveTrace: (state: DataState) => {
         if (state.activeTraceID) {
-            let activeTrace = state.traces.find(trace => trace.id == state.activeTraceID)
+            const activeTrace = state.traces.find((trace) => trace.id == state.activeTraceID);
             if (activeTrace && activeTrace.parameters) {
-                return Object.keys(activeTrace.parameters)
+                return Object.keys(activeTrace.parameters);
             } else {
-                return null
+                return null;
             }
         }
     },

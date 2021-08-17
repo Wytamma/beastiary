@@ -10,7 +10,7 @@ import { DataState } from './state';
 import { dispatchCheckApiError } from '../main/actions';
 import { commitSetTraces, commitSetTrace, commitSetActiveTrace, commitSetSamples, commitSetActiveParam } from './mutations';
 import { TraceCreate, Trace } from '@/interfaces';
-import { readTraces } from './getters'
+import { readTraces } from './getters';
 
 type MainContext = ActionContext<DataState, State>;
 
@@ -47,27 +47,27 @@ export const actions = {
         commitSetActiveParam(context, payload);
     },
     async actionGetSamples(context: MainContext, payload: {trace: Trace, skip?: number, limit?: number}) {
-        let trace = payload.trace
-        let skip = payload.skip ? payload.skip : 0
-        let limit = payload.limit ? payload.limit : 100
+        const trace = payload.trace;
+        const skip = payload.skip ? payload.skip : 0;
+        const limit = payload.limit ? payload.limit : 100;
         try {
             const loadingNotification = { content: 'Loading samples...', showProgress: true };
             commitAddNotification(context, loadingNotification);
             const response = await api.getSamples(context.rootState.main.token, trace, skip, limit);
             if (response) {
-                commitSetSamples(context, {trace: trace, data: response.data});
+                commitSetSamples(context, {trace, data: response.data});
             }
             commitRemoveNotification(context, loadingNotification);
         } catch (error) {
-            console.log(error)
+            console.log(error);
             await dispatchCheckApiError(context, error);
         }
     },
     async actionLoadAllSamplesAllTraces(context: MainContext) {
-        let traces = readTraces(context)
+        const traces = readTraces(context);
         for (let index = 0; index < traces.length; index++) {
             const trace = traces[index];
-            await dispatchGetSamples(context, {trace:trace})
+            await dispatchGetSamples(context, {trace});
         }
     },
 
