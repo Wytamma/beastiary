@@ -14,19 +14,14 @@ pip install beastiary
 ```
 
 ## Use
-To start beastiary use the `beastiary` command. This will start the beastiary webapp on http://127.0.0.1:5000/ by default. 
+To start beastiary use the `beastiary` command. This will start the beastiary server. 
+
 ```bash
 beastiary
 ```
 
-Log files can be added at start up by passing them as command line arguments.
-```bash
-beastiary path/to/BEAST.log
-```
+The server will start on [http://127.0.0.1:5000/](http://127.0.0.1:5000/) by default. Every time the server starts it will generate a unique id that can be used to log into the webapp. 
 
-By default beastiary will generate a unique uuid used to log in to the webapp. This can be disabled using the `--no-security` option. 
-```bash
-beastiary --no-security
-```
+Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/) and log in with the ID. 
 
 ![](docs/images/screen_shot.png)
