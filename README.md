@@ -28,3 +28,5 @@ By default beastiary will generate a unique uuid used to log in to the webapp. T
 ```bash
 beastiary --no-security
 ```
+
+![](docs/images/screen_shot.png)

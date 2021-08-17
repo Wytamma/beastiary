@@ -12,7 +12,11 @@ import logging
 
 from beastiary.api.endpoints import traces, samples
 
-api = FastAPI()
+api = FastAPI(
+    title="Beastiary",
+    description="Realtime and remote trace inspection",
+    version="0.8.2",
+)
 
 gunicorn_logger = logging.getLogger("gunicorn.error")
 logger.handlers = gunicorn_logger.handlers
