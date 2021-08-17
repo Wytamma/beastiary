@@ -1,3 +1,32 @@
 site_name: Beastiary
 theme:
   name: material
+  logo: images/logo_cage_white.svg
+repo_name: wytamma/beastiary
+repo_url: https://github.com/wytamma/beastiary
+nav:
+- Home: index.md
+- Tutorial - User Guide:
+  - tutorial/index.md
+  - tutorial/first-steps.md
+markdown_extensions:
+- toc:
+    permalink: true
+- markdown.extensions.codehilite:
+    guess_lang: false
+- admonition
+- codehilite
+- extra
+- pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_div_format ''
+- pymdownx.tabbed
+extra_css:
+- css/termynal.css
+- css/custom.css
+extra_javascript:
+- https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js
+- js/termynal.js
+- js/custom.js
