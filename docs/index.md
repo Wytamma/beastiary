@@ -46,6 +46,6 @@ Add a log file using the `ADD` button.
 
 ![](images/add_screen_shot.png)
 
-Explore the traces of different parameters by clocking on them. 
+Explore the traces of different parameters. 
 
 ![](images/screen_shot.png)
