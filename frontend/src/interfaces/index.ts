@@ -12,7 +12,7 @@ export interface Trace {
 
 export interface Data {
     state: number;
-    value: number;
+    value: number | null;
 }
 
 export interface Parameter {
@@ -28,7 +28,7 @@ export interface inSample {
 }
 
 export interface inSampleData {
-    [key: string]: number;
+    [key: string]: number | null;
 }
 
 export interface SetSample {

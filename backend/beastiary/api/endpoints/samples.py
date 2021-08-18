@@ -1,5 +1,5 @@
 from typing import Any, List
-import os
+import math
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 
@@ -35,6 +35,8 @@ def lines_to_SampleCreate(headers, lines):
             value = float(value)
             if value.is_integer():
                 value = int(value)
+            elif math.isnan(value):
+                value = None
             data[header] = value
         sample_in = {}
         sample_in["data"] = data

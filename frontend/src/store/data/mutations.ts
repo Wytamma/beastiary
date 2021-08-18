@@ -7,7 +7,7 @@ function formatData(samples: inSample[]) {
     const parameters: { [key: string]: Data[] } = {};
     for (let index = 0; index < samples.length; index++) {
         const row = samples[index].data;
-        const state = row.state;
+        const state = samples[index].state;
         for (const param in row) {
             if (index == 0) {
                 parameters[param] = [];
