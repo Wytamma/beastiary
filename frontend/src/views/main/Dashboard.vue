@@ -28,8 +28,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Plotly } from 'vue-plotly';
-import TracesPanel from '@/components/TracesPanel.vue';
-import ParamsPanel from '@/components/ParamsPanel.vue';
+import TracesPanel from '@/components/data/TracesPanel.vue';
+import ParamsPanel from '@/components/data/ParamsPanel.vue';
 import { readActiveParam, readActiveTrace } from '@/store/data/getters';
 
 @Component({

@@ -20,18 +20,18 @@ export interface Parameter {
     data: Data[];
 }
 
-export interface inSample {
+export interface InSample {
     id: number;
     trace_id: number;
     state: number;
-    data: inSampleData;
+    data: InSampleData;
 }
 
-export interface inSampleData {
+export interface InSampleData {
     [key: string]: number | null;
 }
 
 export interface SetSample {
     trace: Trace;
-    data: inSample[];
+    data: InSample[];
 }

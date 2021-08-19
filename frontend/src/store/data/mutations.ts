@@ -1,18 +1,20 @@
 import { DataState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
-import { Trace, SetSample, inSample, Data } from '@/interfaces';
+import { Trace, SetSample, InSample, Data } from '@/interfaces';
 
-function formatData(samples: inSample[]) {
+function formatData(samples: InSample[]) {
     const parameters: { [key: string]: Data[] } = {};
     for (let index = 0; index < samples.length; index++) {
         const row = samples[index].data;
         const state = samples[index].state;
         for (const param in row) {
-            if (index == 0) {
-                parameters[param] = [];
+            if (param) {
+                if (index === 0) {
+                    parameters[param] = [];
+                }
+                parameters[param].push({ state, value: row[param] });
             }
-            parameters[param].push({ state, value: row[param] });
         }
 
     }
@@ -44,13 +46,15 @@ export const mutations = {
     setSetSamples(state: DataState, payload: SetSample) {
         const traceId = payload.trace.id;
         const data = formatData(payload.data);
-        const trace = state.traces.find((t) => t.id == traceId);
+        const trace = state.traces.find((t) => t.id === traceId);
         if (trace) {
             if (Object.keys(trace.parameters).length === 0) {
                 trace.parameters = data;
             } else {
                 for (const paramName in data) {
-                    trace.parameters[paramName] = trace.parameters[paramName].concat(data[paramName]);
+                    if (paramName) {
+                        trace.parameters[paramName] = trace.parameters[paramName].concat(data[paramName]);
+                    }
                 }
             }
         }

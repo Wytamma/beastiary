@@ -65,9 +65,10 @@ export const actions = {
     },
     async actionLoadAllSamplesAllTraces(context: MainContext) {
         const traces = readTraces(context);
-        for (let index = 0; index < traces.length; index++) {
-            const trace = traces[index];
-            await dispatchGetSamples(context, {trace});
+        for (const trace of traces) {
+            if (trace) {
+                await dispatchGetSamples(context, {trace});
+            }
         }
     },
 

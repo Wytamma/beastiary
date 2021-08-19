@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { TraceCreate, Trace, inSample } from '@/interfaces';
+import { TraceCreate, Trace, InSample } from '@/interfaces';
 import { config } from 'vue/types/umd';
 
 function authHeaders(token: string) {
@@ -25,6 +25,6 @@ export const api = {
   async getSamples(token: string, trace: Trace, skip: number = 0, limit: number = 100) {
     const options = authHeaders(token);
     options.params = {trace_id: trace.id, skip, limit};
-    return axios.get<inSample[]>(`${apiUrl}/api/samples/`, options);
+    return axios.get<InSample[]>(`${apiUrl}/api/samples/`, options);
   },
 };
