@@ -37,7 +37,7 @@ def main(
     Realtime and remote trace inspection with BEASTIARY.
     """
     msg = typer.style("STARTING BEASTIARY", fg=typer.colors.BLUE, bold=True)
-    typer.echo(f"\n🐁 {msg} 🐁\n")
+    typer.echo(f"\n🐙🐁 {msg} 🐁🐙\n")
     if log_files:
         typer.echo(f"Adding log files:")
         for path in log_files:

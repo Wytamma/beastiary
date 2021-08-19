@@ -5,7 +5,7 @@ To start beastiary use the `beastiary` command. This will start the beastiary se
 ```console
 $ beastiary
 
-🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁
+🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
 
 Go to: <span style="color: green;">http://127.0.0.1:5000/login?token=8e02d06b-d30e-4a89-8476-fb22712a31b3</span>
 If prompted enter token: 8e02d06b-d30e-4a89-8476-fb22712a31b3
