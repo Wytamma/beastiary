@@ -50,6 +50,7 @@ import {
 } from '@/store/data/actions';
 import { readTraces } from '@/store/data/getters';
 import AddTraceButton from '@/components/data/AddTraceButton.vue';
+
 @Component({
   components: {
     AddTraceButton,
