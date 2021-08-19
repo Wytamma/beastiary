@@ -8,6 +8,14 @@
 
 This is a real time version of tracer that can be run on remote servers (e.g. a HPC). Its goal is to be a beautiful and simple, yet power tool for Bayesian phylogenetic inference.
 
+---
+
+**Documentation**: <a href="https://beastiary.wytamma.com" target="_blank">https://beastiary.wytamma.com</a>
+
+**Source Code**: <a href="https://github.com/Wytamma/beastiaryi" target="_blank">https://github.com/Wytamma/beastiary</a>
+
+---
+
 ## Installation
 ```bash
 pip install beastiary
