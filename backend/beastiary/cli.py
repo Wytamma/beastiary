@@ -1,17 +1,20 @@
-from beastiary import schemas
-from beastiary.api.core import add_trace
-from fastapi.params import Security
+import errno
+import os
+import pkg_resources
+import uuid
 import typer
 import uvicorn
 
-from .api import api
-from beastiary.db.init_db import init_db
-from beastiary.db.session import SessionLocal
-import uuid
 from pathlib import Path
 from typing import List, Optional
-import errno
-import os
+from fastapi.params import Security
+
+from beastiary.api.core import add_trace
+from beastiary.api import api
+from beastiary.db.init_db import init_db
+from beastiary.db.session import SessionLocal
+from beastiary import schemas
+
 
 app = typer.Typer()
 
@@ -26,16 +29,23 @@ def main(
         metavar="[LOG_FILE]...",
         help="Optional path to log file(s) to add at start up.",
     ),
-    debug: bool = typer.Option(False, help="Set debug mode."),
+    token: str = typer.Option(str(uuid.uuid4()), "--token", "-t"),
+    host: str = typer.Option("127.0.0.1", "--host", "-h"),
+    port: str = typer.Option(5000, "--port", "-p"),
+    version: bool = typer.Option(
+        False, "--version", "-v", help="Display version number."
+    ),
     security: bool = typer.Option(True, help="Turn off token requirement."),
-    token: str = typer.Option(str(uuid.uuid4())),
-    host: str = typer.Option("127.0.0.1"),
-    port: str = typer.Option(5000),
+    debug: bool = typer.Option(False, help="Set debug mode."),
     testing: bool = typer.Option(False, help="Only for testing.", hidden=True),
 ):
     """
     Realtime and remote trace inspection with BEASTIARY.
     """
+    if version:
+        return typer.echo(
+            f"Beastiary {pkg_resources.get_distribution('beastiary').version}"
+        )
     msg = typer.style("STARTING BEASTIARY", fg=typer.colors.BLUE, bold=True)
     typer.echo(f"\n🐙🐁 {msg} 🐁🐙\n")
     if log_files:
