@@ -80,9 +80,9 @@ jobs:
       #----------------------------------------------
       #    run mypy   
       #----------------------------------------------
-      - name: Test with mypy
-        run: poetry run mypy --install-types && poetry run mypy .
-        working-directory: ./backend
+      # - name: Test with mypy
+      #   run: poetry run mypy --install-types && poetry run mypy .
+      #   working-directory: ./backend
       #----------------------------------------------
       #    run test suite and output coverage file   
       #----------------------------------------------
