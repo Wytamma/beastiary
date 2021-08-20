@@ -38,14 +38,13 @@ def main(
     security: bool = typer.Option(True, help="Turn off token requirement."),
     debug: bool = typer.Option(False, help="Set debug mode."),
     testing: bool = typer.Option(False, help="Only for testing.", hidden=True),
-):
+) -> None:
     """
     Realtime and remote trace inspection with BEASTIARY.
     """
     if version:
-        return typer.echo(
-            f"Beastiary {pkg_resources.get_distribution('beastiary').version}"
-        )
+        typer.echo(f"Beastiary {pkg_resources.get_distribution('beastiary').version}")
+        typer.Exit()
     msg = typer.style("STARTING BEASTIARY", fg=typer.colors.BLUE, bold=True)
     typer.echo(f"\n🐙🐁 {msg} 🐁🐙\n")
     if log_files:
@@ -62,11 +61,9 @@ def main(
     typer.echo(f"Go to: {url}")
     token_echo = typer.style(token, fg=typer.colors.GREEN, bold=False)
     typer.echo(f"If prompted enter token: {token}")
-    api.token = token
     log_level = "warning"
-    api.security = False
     if security:
-        api.security = True
+        setattr(api, "security", True)
     if debug:
         log_level = "debug"
     if not testing:

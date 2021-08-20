@@ -21,7 +21,7 @@ class CRUDSample(CRUDBase[Sample, SampleCreate, SampleUpdate]):
 
     def create_multi_with_trace(
         self, db: Session, *, objs_in: List[SampleCreate], trace_id: int
-    ) -> Sample:
+    ) -> List[Sample]:
         objs_in_data = [jsonable_encoder(obj_in) for obj_in in objs_in]
         for obj_in in objs_in_data:
             obj_in.update({"trace_id": trace_id})

@@ -17,7 +17,7 @@ trace = crud.trace.create(
 )
 
 
-def test_read_no_trace_id():
+def test_read_no_trace_id() -> None:
     response = client.get("/api/samples/", headers=headers)
     assert response.status_code == 422
     assert response.json() == {
@@ -31,12 +31,12 @@ def test_read_no_trace_id():
     }
 
 
-def test_no_trace():
+def test_no_trace() -> None:
     response = client.get("/api/samples/?trace_id=100", headers=headers)
     assert response.status_code == 404
 
 
-def test_get_sample():
+def test_get_sample() -> None:
     response = client.get("/api/samples/?trace_id=1", headers=headers)
     assert response.status_code == 200
     json = response.json()
@@ -44,7 +44,7 @@ def test_get_sample():
     assert json[0]["data"] == first_sample["data"]
 
 
-def test_get_sample_limit():
+def test_get_sample_limit() -> None:
     response = client.get("/api/samples/?trace_id=1&limit=1", headers=headers)
     assert response.status_code == 200
     json = response.json()

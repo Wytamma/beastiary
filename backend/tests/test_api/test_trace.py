@@ -11,13 +11,13 @@ init_db(db)
 client = TestClient(app)
 
 
-def test_read_wrong_trace_id():
+def test_read_wrong_trace_id() -> None:
     response = client.get("/api/traces/42", headers=headers)
     assert response.status_code == 404
     assert response.json() == {"detail": "Trace not found!"}
 
 
-def test_get_trace():
+def test_get_trace() -> None:
     try:
         crud.trace.remove(db=db, id=1)
     except:
@@ -38,7 +38,7 @@ def test_get_trace():
     }
 
 
-def test_get_trace():
+def test_get_traces() -> None:
     try:
         crud.trace.remove(db=db, id=1)
     except:
@@ -69,7 +69,7 @@ def test_get_trace():
         crud.trace.remove(db=db, id=trace["id"])
 
 
-def test_add_trace():
+def test_add_trace() -> None:
     response = client.post(
         "/api/traces/", headers=headers, json={"path": "tests/data/hcv_coal.log"}
     )
@@ -78,7 +78,7 @@ def test_add_trace():
     assert json["path"] == "tests/data/hcv_coal.log"
 
 
-def test_add_trace_wrong_path():
+def test_add_trace_wrong_path() -> None:
     response = client.post(
         "/api/traces/", headers=headers, json={"path": "tests/data/fake.log"}
     )

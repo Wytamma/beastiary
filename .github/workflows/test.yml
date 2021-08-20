@@ -78,6 +78,12 @@ jobs:
         run: poetry install --no-interaction
         working-directory: ./backend
       #----------------------------------------------
+      #    run mypy   
+      #----------------------------------------------
+      - name: Test with mypy
+        run: poetry run mypy .
+        working-directory: ./backend
+      #----------------------------------------------
       #    run test suite and output coverage file   
       #----------------------------------------------
       - name: Test with pytest

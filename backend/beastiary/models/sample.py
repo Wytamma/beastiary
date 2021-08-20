@@ -5,6 +5,9 @@ from sqlalchemy.orm import relationship
 
 from beastiary.db.base_class import Base
 
+if TYPE_CHECKING:
+    from beastiary.models.trace import Trace
+
 
 class Sample(Base):
     id = Column(Integer, primary_key=True)

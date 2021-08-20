@@ -5,7 +5,7 @@ from typing import Optional
 
 # Shared properties
 class TraceBase(BaseModel):
-    path: str
+    path: Path
 
 
 # Properties to receive on Trace creation

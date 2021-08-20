@@ -1,5 +1,7 @@
-from typing import Any, List
+from typing import Any, List, Tuple
 import math
+from beastiary.models.trace import Trace
+from beastiary.schemas.sample import SampleCreate
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 
@@ -10,7 +12,9 @@ from beastiary.log import logger
 router = APIRouter()
 
 
-def read_lines(trace):
+def read_lines(trace: Trace) -> Tuple[int, list]:
+    if not trace.path:
+        raise ValueError("Path must be set.")
     with open(trace.path, "r") as f:
         f.seek(trace.last_byte, 0)
         lines = f.readlines()
@@ -23,7 +27,7 @@ def read_lines(trace):
         return last_byte, lines
 
 
-def lines_to_SampleCreate(headers, lines):
+def lines_to_SampleCreate(headers: list, lines: list) -> List[SampleCreate]:
     samples = []
     for line in lines:
         if not line:
@@ -45,13 +49,13 @@ def lines_to_SampleCreate(headers, lines):
     return samples
 
 
-def check_for_new_samples(db, trace):
+def check_for_new_samples(db: Session, trace: Trace) -> None:
     last_byte, lines = read_lines(trace)
     in_samples = lines_to_SampleCreate(trace.headers_line.split(), lines)
     if in_samples:
         crud.sample.create_multi_with_trace(db, objs_in=in_samples, trace_id=trace.id)
     # update the trace byte
-    return crud.trace.update(db, db_obj=trace, obj_in={"last_byte": last_byte})
+    crud.trace.update(db, db_obj=trace, obj_in={"last_byte": last_byte})
 
 
 @router.get("/", response_model=List[schemas.Sample])
@@ -76,7 +80,7 @@ def get_samples(
 
         logger.debug(f"Checking for new samples in {trace.path}")
         try:
-            trace = check_for_new_samples(db, trace=trace)
+            check_for_new_samples(db, trace=trace)
         except Exception as e:
             raise e
         # get samples

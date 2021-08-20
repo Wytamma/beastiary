@@ -13,3 +13,4 @@ dist-ssr
 debug.log
 .idea
 __pycache__
+.mypy_cache

@@ -1,4 +1,5 @@
 from beastiary.api.core import add_trace
+from beastiary.models.trace import Trace
 from beastiary.schemas import sample
 from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException
@@ -15,7 +16,7 @@ def get_traces(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-) -> Any:
+) -> List[Trace]:
     """
     Retrieve traces.
     """
@@ -24,7 +25,7 @@ def get_traces(
 
 
 @router.get("/{trace_id}", response_model=schemas.Trace)
-def get_trace(trace_id, db: Session = Depends(deps.get_db)) -> Any:
+def get_trace(trace_id: int, db: Session = Depends(deps.get_db)) -> Trace:
     """
     Retrieve traces.
     """
@@ -39,7 +40,7 @@ def create_trace(
     *,
     db: Session = Depends(deps.get_db),
     trace_in: schemas.TraceCreate,
-) -> Any:
+) -> Trace:
     """
     Create new trace.
     """

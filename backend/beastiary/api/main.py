@@ -1,5 +1,5 @@
 from os import error, path
-from typing import Any
+from typing import Any, Optional, Callable
 from fastapi import FastAPI
 from fastapi import APIRouter, Request
 from fastapi.logger import logger
@@ -12,11 +12,22 @@ import logging
 
 from beastiary.api.endpoints import traces, samples
 
-api = FastAPI(
-    title="Beastiary",
-    description="Realtime and remote trace inspection",
-    version="0.8.2",
-)
+
+class BeastiaryAPI(FastAPI):
+    def __init__(
+        self,
+        title: str = "Beastiary",
+        description: str = "Realtime and remote trace inspection",
+        version: str = "0.8.2",
+    ) -> None:
+        super().__init__(
+            title=title, description=description, version=version
+        )  # Initialise FastAPI super class
+        self.token: Optional[str] = None
+        self.security: bool = True
+
+
+api = BeastiaryAPI()
 
 gunicorn_logger = logging.getLogger("gunicorn.error")
 logger.handlers = gunicorn_logger.handlers
@@ -29,7 +40,7 @@ index_path = path.join(file_path, "../webapp-dist/index.html")
 
 
 @api.get("/")
-async def index():
+async def index() -> FileResponse:
     return FileResponse(index_path)
 
 
@@ -49,7 +60,7 @@ api.mount("/", StaticFiles(directory=webapp_path))
 # probably need some switch to run it off
 # auto_error: bool = False
 @api.middleware("http")
-async def auth_check(request: Request, call_next):
+async def auth_check(request: Request, call_next: Callable) -> Any:
     if "/api/" in request.url.path and request.app.security == True:
         token = request.headers.get("Authorization")
         if not token:
@@ -66,7 +77,7 @@ async def auth_check(request: Request, call_next):
 
 
 @api.middleware("http")
-async def add_custom_header(request: Request, call_next):
+async def add_custom_header(request: Request, call_next: Callable) -> Any:
     response = await call_next(request)
     if response.status_code == 404 and "/api/" not in request.url.path:
         return FileResponse(index_path)
