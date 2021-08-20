@@ -58,12 +58,14 @@ def main(
     url = typer.style(
         f"http://{host}:{port}/login?token={token}", fg=typer.colors.GREEN, bold=False
     )
-    typer.echo(f"Go to: {url}")
-    token_echo = typer.style(token, fg=typer.colors.GREEN, bold=False)
+    typer.echo(f"Go to: {url}\n")
     typer.echo(f"If prompted enter token: {token}")
+    setattr(api, "token", token)
+    if not security:
+        warning = typer.style("WARNING", fg=typer.colors.YELLOW, bold=True)
+        typer.echo(f"{warning}: Security disabled!")
+        setattr(api, "security", False)
     log_level = "warning"
-    if security:
-        setattr(api, "security", True)
     if debug:
         log_level = "debug"
     if not testing:
