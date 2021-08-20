@@ -13,7 +13,6 @@
           <v-list dense v-if="traces.length">
             <v-list-item-group
               color="primary"
-              v-model="activeTraces"
             >
               <v-list-item
                 v-for="(trace, i) in traces"
@@ -22,9 +21,29 @@
               >
                 <template>
                   <v-list-item-content>
-                    <v-list-item-title>{{
-                      fileName(trace.path)
-                    }}</v-list-item-title>
+                    <v-list-item-title style="white-space: normal;">
+                      
+                      {{fileName(trace.path)}}
+                      
+                    </v-list-item-title>
+                    <v-list-item-content>
+                      <v-chip-group
+                          column
+                        >
+                          <v-tooltip v-if="Object.keys(trace.parameters).length > 0" color="black" bottom>
+                            <template #activator="{ on }">
+                                <v-chip color="cyan" text-color="white" v-on="on" small> {{trace.parameters.state[trace.parameters.state.length - 1].state}} </v-chip>
+                            </template>
+                            <span>Length</span>
+                          </v-tooltip>
+                          <v-tooltip v-if="Object.keys(trace.parameters).length > 0" color="black" bottom>
+                            <template #activator="{ on }">
+                                <v-chip color="green" text-color="white" v-on="on" small> {{trace.parameters.state.length}} </v-chip>
+                            </template>
+                            <span>Samples</span>
+                          </v-tooltip>
+                      </v-chip-group>            
+                    </v-list-item-content>
                   </v-list-item-content>
                 </template>
               </v-list-item>
