@@ -52,7 +52,9 @@ export const actions = {
         const limit = payload.limit ? payload.limit : 100;
         try {
             const loadingNotification = { content: 'Loading samples...', showProgress: true };
-            commitAddNotification(context, loadingNotification);
+            if (skip === 0) {
+                commitAddNotification(context, loadingNotification);
+            }
             const response = await api.getSamples(context.rootState.main.token, trace, skip, limit);
             if (response) {
                 commitSetSamples(context, {trace, data: response.data});

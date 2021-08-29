@@ -78,19 +78,31 @@ import AddTraceButton from '@/components/data/AddTraceButton.vue';
 export default class TracesPanel extends Vue {
   public activeTraces = [];
   public show: boolean = true;
+  public interval?: number;
+
   get traces() {
     return readTraces(this.$store);
   }
   public async setAcitveTrace(trace) {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
     const skip = 'state' in trace.parameters ? trace.parameters.state.length : 0;
     await dispatchGetSamples(this.$store, {trace, skip, limit: 1000000});
     await dispatchSetActiveTrace(this.$store, trace);
-
+    this.interval = setInterval(() =>  {
+      const intervalSkip = 'state' in trace.parameters ? trace.parameters.state.length : 0;
+      dispatchGetSamples(this.$store, {trace, skip: intervalSkip, limit: 1000});
+      dispatchSetActiveTrace(this.$store, trace);
+    }, 1000);
 
   }
   public async mounted() {
     await dispatchGetTraces(this.$store);
     // await dispatchLoadAllSamplesAllTraces(this.$store)
+  }
+  public async beforeDestroy() {
+    clearInterval(this.interval);
   }
   public fileName(path) {
     return path.substring(path.lastIndexOf('/') + 1);

@@ -63,23 +63,6 @@
           inset
           color="blue darken-4"
       ></v-switch>
-      <v-menu bottom left offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn v-on="on" icon>
-          <v-icon>more_vert</v-icon>
-        </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="logout">
-            <v-list-item-content>
-              <v-list-item-title>Logout</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-icon>close</v-icon>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
-      </v-menu>
     </v-app-bar>
     <router-view></router-view>
     <v-footer class="pa-3" fixed app>
