@@ -29,12 +29,12 @@ def main(
         metavar="[LOG_FILE]...",
         help="Optional path to log file(s) to add at start up.",
     ),
-    token: str = typer.Option(str(uuid.uuid4()), "--token", "-t"),
-    host: str = typer.Option("127.0.0.1", "--host", "-h"),
-    port: str = typer.Option(5000, "--port", "-p"),
     version: bool = typer.Option(
         False, "--version", "-v", help="Display version number."
     ),
+    token: str = typer.Option(str(uuid.uuid4()), "--token", "-t"),
+    host: str = typer.Option("127.0.0.1", "--host"),
+    port: str = typer.Option(5000, "--port"),
     security: bool = typer.Option(True, help="Turn off token requirement."),
     debug: bool = typer.Option(False, help="Set debug mode."),
     testing: bool = typer.Option(False, help="Only for testing.", hidden=True),
@@ -44,7 +44,7 @@ def main(
     """
     if version:
         typer.echo(f"Beastiary {pkg_resources.get_distribution('beastiary').version}")
-        typer.Exit()
+        return typer.Exit()
     msg = typer.style("STARTING BEASTIARY", fg=typer.colors.BLUE, bold=True)
     typer.echo(f"\n🐙🐁 {msg} 🐁🐙\n")
     if log_files:
