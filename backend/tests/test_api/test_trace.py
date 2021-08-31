@@ -1,14 +1,18 @@
 from fastapi.testclient import TestClient
-from .utils import app, headers, headers_line, last_byte, first_sample
+from .utils import app, headers
 from beastiary import crud
-from beastiary.schemas import TraceCreate, sample
+from beastiary.schemas import TraceCreate
 from beastiary.db.session import SessionLocal
 from beastiary.db.init_db import init_db
+from beastiary.api.core import get_headers
 
 db = SessionLocal()
 init_db(db)
 
 client = TestClient(app)
+
+path = "tests/data/hcv_coal.log"
+last_byte, headers_line = get_headers(path=path)
 
 
 def test_read_wrong_trace_id() -> None:
@@ -22,42 +26,40 @@ def test_get_trace() -> None:
         crud.trace.remove(db=db, id=1)
     except:
         pass
-    crud.trace.create(
+    trace = crud.trace.create(
         db,
-        obj_in=TraceCreate(path="tests/data/hcv_coal.log"),
+        obj_in=TraceCreate(path=path),
         headers_line=headers_line,
         last_byte=last_byte,
     )
-    response = client.get("/api/traces/1", headers=headers)
+    response = client.get(f"/api/traces/{trace.id}", headers=headers)
     assert response.status_code == 200
     assert response.json() == {
-        "path": "tests/data/hcv_coal.log",
-        "id": 1,
+        "path": path,
+        "id": trace.id,
         "headers_line": "state posterior likelihood prior treeLikelihood TreeHeight freqParameter.1 freqParameter.2 freqParameter.3 freqParameter.4 rateAC rateAG rateAT rateCG rateGT gammaShape BayesianSkyline bPopSizes.1 bPopSizes.2 bPopSizes.3 bPopSizes.4 bGroupSizes.1 bGroupSizes.2 bGroupSizes.3 bGroupSizes.4",
         "last_byte": 6479,
     }
 
 
 def test_get_traces() -> None:
-    try:
-        crud.trace.remove(db=db, id=1)
-    except:
-        pass
+    for trace in crud.trace.get_multi(db=db):
+        crud.trace.remove(db=db, id=trace.id)
     crud.trace.create(
         db,
-        obj_in=TraceCreate(path="tests/data/hcv_coal.log"),
+        obj_in=TraceCreate(path=path),
         headers_line=headers_line,
         last_byte=last_byte,
     )
     crud.trace.create(
         db,
-        obj_in=TraceCreate(path="tests/data/hcv_coal.log"),
+        obj_in=TraceCreate(path=path),
         headers_line=headers_line,
         last_byte=last_byte,
     )
     crud.trace.create(
         db,
-        obj_in=TraceCreate(path="tests/data/hcv_coal.log"),
+        obj_in=TraceCreate(path=path),
         headers_line=headers_line,
         last_byte=last_byte,
     )
@@ -70,12 +72,10 @@ def test_get_traces() -> None:
 
 
 def test_add_trace() -> None:
-    response = client.post(
-        "/api/traces/", headers=headers, json={"path": "tests/data/hcv_coal.log"}
-    )
+    response = client.post("/api/traces/", headers=headers, json={"path": path})
     assert response.status_code == 200
     json = response.json()
-    assert json["path"] == "tests/data/hcv_coal.log"
+    assert json["path"] == path
 
 
 def test_add_trace_wrong_path() -> None:

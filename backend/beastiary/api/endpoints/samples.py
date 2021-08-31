@@ -20,8 +20,6 @@ def read_lines(trace: Trace) -> Tuple[int, list]:
         lines = f.readlines()
         if lines:
             last_byte = f.tell()
-            # if lines[-1].endswith('\n'):
-            #     last_byte += 2 #
         else:
             last_byte = trace.last_byte
         return last_byte, lines
@@ -39,7 +37,7 @@ def lines_to_SampleCreate(headers: list, lines: list) -> List[SampleCreate]:
             value = float(value)
             if value.is_integer():
                 value = int(value)
-            elif math.isnan(value):
+            elif math.isnan(value) or math.isinf(value):
                 value = None
             data[header] = value
         sample_in = {}
