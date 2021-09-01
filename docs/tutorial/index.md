@@ -38,5 +38,5 @@ This will also install all of the required dependencies.
     If you are installing beastiary on a shared environment (e.g. a HPC) you may want to install will the --user flag.
 
     ```
-    pip install --user beastiary
+    pip3 install --user beastiary
     ```
