@@ -22,10 +22,11 @@
                 <template>
                   <v-list-item-content>
                     <v-list-item-title style="white-space: normal;">
-                      
                       {{fileName(trace.path)}}
-                      
                     </v-list-item-title>
+                    <v-list-item-subtitle style="white-space: normal;">
+                      {{trace.path}}
+                    </v-list-item-subtitle>
                     <v-list-item-content>
                       <v-chip-group
                           column
