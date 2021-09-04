@@ -41,15 +41,6 @@
               <v-list-item-title>Logout</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="switchMiniDrawer">
-            <v-list-item-action>
-              <v-icon v-html="miniDrawer ? 'chevron_right' : 'chevron_left'"></v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Collapse</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
         </v-list>
       </v-layout>
     </v-navigation-drawer>
@@ -74,12 +65,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 import { appName } from '@/env';
-import { readDashboardMiniDrawer, readDashboardShowDrawer } from '@/store/main/getters';
-import { commitSetDashboardShowDrawer, commitSetDashboardMiniDrawer } from '@/store/main/mutations';
 import { dispatchUserLogOut } from '@/store/main/actions';
+import { readDashboardMiniDrawer, readDashboardShowDrawer } from '@/store/main/getters';
+import { commitSetDashboardMiniDrawer, commitSetDashboardShowDrawer } from '@/store/main/mutations';
 
 const routeGuardMain = async (to, from, next) => {
   if (to.path === '/main') {

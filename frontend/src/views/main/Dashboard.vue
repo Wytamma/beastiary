@@ -10,19 +10,9 @@
             
             <v-spacer></v-spacer>
             <AddTraceButton/>
-            </v-toolbar>
-            <v-divider></v-divider>
+          </v-toolbar>
+          <v-divider v-if="traces.length > 0"></v-divider>
           <TraceList />
-          <!-- <v-row no-gutters class="">
-            <v-col>
-              <TracesPanel />
-            </v-col>
-          </v-row>
-          <v-row no-gutters>
-            <v-col>
-              <ParamsPanel />
-            </v-col>
-          </v-row> -->
         </v-col>
         <v-col cols="8" class="pl-0">
           <div  v-if="activeTrace" class="my-4">
@@ -31,20 +21,19 @@
           </div>
         </v-col>
 </v-layout>
-</v-content >
 </template>
 
 <script lang="ts">
 import '@/assets/css/custom.css';
 
-import { Component, Vue } from 'vue-property-decorator';
-import TraceList from '@/components/data/TraceList.vue';
-import ParamsPanel from '@/components/data/ParamsPanel.vue';
-import Histogram from '@/components/data/graphs/Histogram.vue';
 import AddTraceButton from '@/components/data/AddTraceButton.vue';
+import Histogram from '@/components/data/graphs/Histogram.vue';
 import Trace from '@/components/data/graphs/Trace.vue';
-import { readActiveTrace } from '@/store/data/getters';
+import ParamsPanel from '@/components/data/ParamsPanel.vue';
+import TraceList from '@/components/data/TraceList.vue';
+import { readActiveTrace, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
+import { Component, Vue } from 'vue-property-decorator';
 @Component({
   components: {
     TraceList,
@@ -58,6 +47,9 @@ import { Plotly } from 'vue-plotly';
 export default class Dashboard extends Vue {
   get activeTrace() {
     return readActiveTrace(this.$store);
-}
+  }
+  get traces() {
+    return readTraces(this.$store);
+  }
 }
 </script>

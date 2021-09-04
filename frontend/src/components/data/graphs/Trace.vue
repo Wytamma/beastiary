@@ -5,10 +5,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
 import { readActiveParam, readActiveTrace } from '@/store/data/getters';
-import { Plotly } from 'vue-plotly';
 import { readBurnIn } from '@/store/data/getters';
+import { Plotly } from 'vue-plotly';
+import { Component, Vue } from 'vue-property-decorator';
 @Component({
   components: {
     Plotly,
@@ -34,7 +34,7 @@ export default class Histogram extends Vue {
     const param = readActiveParam(this.$store);
     const burnIn = readBurnIn(this.$store) / 100;
     if (trace && param) {
-      
+
       return [{
         x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.state),
         y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),

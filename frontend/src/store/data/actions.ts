@@ -1,16 +1,23 @@
 import { api } from '@/api';
+import { Trace, TraceCreate } from '@/interfaces';
 import router from '@/router';
 import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { ActionContext } from 'vuex';
-import { State } from '../state';
-import { commitAddNotification, commitRemoveNotification } from '../main/mutations';
-import { DataState } from './state';
 import { dispatchCheckApiError } from '../main/actions';
-import { commitSetTraces, commitSetTrace, commitSetActiveTrace, commitSetSamples, commitSetActiveParam, commitSetBurnIn } from './mutations';
-import { TraceCreate, Trace } from '@/interfaces';
+import { commitAddNotification, commitRemoveNotification } from '../main/mutations';
+import { State } from '../state';
 import { readTraces } from './getters';
+import {
+    commitSetActiveParam,
+    commitSetActiveTrace,
+    commitSetBurnIn,
+    commitSetSamples,
+    commitSetTrace,
+    commitSetTraces,
+} from './mutations';
+import { DataState } from './state';
 
 type MainContext = ActionContext<DataState, State>;
 
@@ -22,7 +29,9 @@ export const actions = {
                 commitSetTraces(context, response.data);
             }
         } catch (error) {
+            console.log(error)
             await dispatchCheckApiError(context, error);
+            
         }
     },
     async actionCreateTrace(context: MainContext, payload: TraceCreate) {

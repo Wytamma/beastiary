@@ -1,7 +1,7 @@
-import { DataState } from './state';
+import { Data, InSample, SetSample, Trace } from '@/interfaces';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
-import { Trace, SetSample, InSample, Data } from '@/interfaces';
+import { DataState } from './state';
 
 function formatData(samples: InSample[]) {
     const parameters: { [key: string]: Data[] } = {};

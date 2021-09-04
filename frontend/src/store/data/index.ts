@@ -1,6 +1,6 @@
-import { mutations } from './mutations';
-import { getters } from './getters';
 import { actions } from './actions';
+import { getters } from './getters';
+import { mutations } from './mutations';
 import { DataState } from './state';
 
 const defaultState: DataState = {

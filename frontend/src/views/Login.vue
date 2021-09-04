@@ -30,10 +30,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
 import { appName } from '@/env';
-import { readLoginError } from '@/store/main/getters';
 import { dispatchCheckToken } from '@/store/main/actions';
+import { readLoginError } from '@/store/main/getters';
+import { Component, Vue } from 'vue-property-decorator';
 
 
 @Component

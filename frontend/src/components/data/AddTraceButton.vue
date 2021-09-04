@@ -54,8 +54,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
 import { dispatchCreateTrace } from '@/store/data/actions';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class AddTraceButton extends Vue {

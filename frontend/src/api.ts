@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { apiUrl } from '@/env';
-import { TraceCreate, Trace, InSample } from '@/interfaces';
+import { InSample, Trace, TraceCreate } from '@/interfaces';
+import axios from 'axios';
 import { config } from 'vue/types/umd';
 
 function authHeaders(token: string) {

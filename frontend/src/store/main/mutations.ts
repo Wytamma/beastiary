@@ -1,6 +1,6 @@
-import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
+import { AppNotification, MainState } from './state';
 
 
 export const mutations = {

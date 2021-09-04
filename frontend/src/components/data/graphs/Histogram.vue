@@ -3,10 +3,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
 import { readActiveParam, readActiveTrace } from '@/store/data/getters';
-import { Plotly } from 'vue-plotly';
 import { readBurnIn } from '@/store/data/getters';
+import { Plotly } from 'vue-plotly';
+import { Component, Vue } from 'vue-property-decorator';
 @Component({
   components: {
     Plotly,
