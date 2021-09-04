@@ -8,10 +8,15 @@
         <v-btn
           color="primary"
           dark
+          fab
+          elevation="2"
+          x-small
           v-bind="attrs"
           v-on="on"
         >
-          Add
+          <v-icon dark>
+            mdi-plus
+          </v-icon>
         </v-btn>
       </template>
       <v-card>

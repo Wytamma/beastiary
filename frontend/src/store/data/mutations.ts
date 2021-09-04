@@ -43,6 +43,9 @@ export const mutations = {
     setActiveParam(state: DataState, payload: string) {
         state.activeParam = payload;
     },
+    setBurnIn(state: DataState, payload: number) {
+        state.burnIn = payload;
+    },
     setSetSamples(state: DataState, payload: SetSample) {
         const traceId = payload.trace.id;
         const data = formatData(payload.data);
@@ -68,4 +71,5 @@ export const commitSetTrace = commit(mutations.setTrace);
 export const commitSetActiveTrace = commit(mutations.setActiveTrace);
 export const commitSetSamples = commit(mutations.setSetSamples);
 export const commitSetActiveParam = commit(mutations.setActiveParam);
+export const commitSetBurnIn = commit(mutations.setBurnIn);
 

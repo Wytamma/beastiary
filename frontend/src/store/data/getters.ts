@@ -18,10 +18,12 @@ export const getters = {
         }
     },
     activeParam: (state: DataState) => state.activeParam,
+    burnIn: (state: DataState) => state.burnIn,
 };
 const {read} = getStoreAccessors<DataState, State>('');
 
 export const readTraces = read(getters.traces);
+export const readBurnIn = read(getters.burnIn);
 export const readParamsOfActiveTrace = read(getters.paramsOfActiveTrace);
 export const readActiveTrace = read(getters.activeTrace);
 export const readActiveParam = read(getters.activeParam);

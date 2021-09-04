@@ -1,35 +1,26 @@
 <template>
-      <v-card style="overflow: auto" class="elevation-12 ma-2 mt-2" outlined v-if="activeTrace">
-    <v-toolbar dark color="primary">
-      <v-toolbar-title> Parameters </v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
-    <v-expand-transition>
-      <div >
-        <v-card-text style="max-height: 350px ;overflow: auto">
-          <v-list dense >
-            <v-list-item-group
-              color="primary"
-            >
-              <v-list-item
-                v-for="(param, i) in parameters"
-                :key="i"
-                @click="setActiveParam(param)"
-              >
-                <template>
-                  <v-list-item-content>
-                    <v-list-item-title>{{
-                      param
-                    }}</v-list-item-title>
-                  </v-list-item-content>
-                </template>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-card-text>
-      </div>
-    </v-expand-transition>
-  </v-card>
+    <v-list-item-group style="height:400px; overflow:auto" class="mb-0" dense two-line v-model="selectedItem">
+        <div v-for="(param, i) in parameters"
+          :key="i"
+          @click="setActiveParam(param)">
+          
+          <!-- <v-divider class="mx-4" v-if="i > 0" ></v-divider> -->
+        <v-list-item >
+          <template v-slot:default="{ active }">
+          <v-list-item-action>
+              <v-checkbox :input-value="active"></v-checkbox>
+            </v-list-item-action>
+            <!-- <v-list-item-action>
+              <v-icon>mdi-phone</v-icon>
+            </v-list-item-action> -->
+            <v-list-item-content class="mb-0">
+              <v-list-item-title>{{param}}</v-list-item-title>
+              
+            </v-list-item-content>
+           </template>
+        </v-list-item>
+        </div>
+    </v-list-item-group>
 </template>
 
 <script lang="ts">

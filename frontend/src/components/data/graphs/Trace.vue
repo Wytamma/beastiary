@@ -1,6 +1,6 @@
 <template>
 <div>
-    <Plotly v-if="activeTrace" :data="traceData" :layout="layout" :display-mode-bar="false"></Plotly>
+    <Plotly :data="traceData" :layout="layout" :display-mode-bar="false"></Plotly>
 </div>
 </template>
 
@@ -8,6 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { readActiveParam, readActiveTrace } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
+import { readBurnIn } from '@/store/data/getters';
 @Component({
   components: {
     Plotly,
@@ -31,10 +32,12 @@ export default class Histogram extends Vue {
   get traceData() {
     const trace = readActiveTrace(this.$store);
     const param = readActiveParam(this.$store);
+    const burnIn = readBurnIn(this.$store) / 100;
     if (trace && param) {
+      
       return [{
-        x: trace.parameters[param].map((row) =>  row.state),
-        y: trace.parameters[param].map((row) =>  row.value),
+        x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.state),
+        y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
         type: 'scatter',
       }];
     } else {

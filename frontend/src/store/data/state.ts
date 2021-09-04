@@ -4,4 +4,5 @@ export interface DataState {
     traces: Trace[];
     activeTraceID: number | null;
     activeParam: string | null;
+    burnIn: number;
 }

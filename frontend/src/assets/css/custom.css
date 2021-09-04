@@ -1,0 +1,5 @@
+.wrap-text {
+    -webkit-line-clamp: unset !important;
+    word-wrap: break-word;
+    white-space: normal;
+  }

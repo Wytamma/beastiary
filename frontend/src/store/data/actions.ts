@@ -8,7 +8,7 @@ import { State } from '../state';
 import { commitAddNotification, commitRemoveNotification } from '../main/mutations';
 import { DataState } from './state';
 import { dispatchCheckApiError } from '../main/actions';
-import { commitSetTraces, commitSetTrace, commitSetActiveTrace, commitSetSamples, commitSetActiveParam } from './mutations';
+import { commitSetTraces, commitSetTrace, commitSetActiveTrace, commitSetSamples, commitSetActiveParam, commitSetBurnIn } from './mutations';
 import { TraceCreate, Trace } from '@/interfaces';
 import { readTraces } from './getters';
 
@@ -73,6 +73,9 @@ export const actions = {
             }
         }
     },
+    async actionSetBurnIn(context: MainContext, payload: number) {
+        commitSetBurnIn(context, payload);
+    },
 
 };
 
@@ -84,5 +87,6 @@ export const dispatchSetActiveTrace = dispatch(actions.actionSetActiveTrace);
 export const dispatchGetSamples = dispatch(actions.actionGetSamples);
 export const dispatchLoadAllSamplesAllTraces = dispatch(actions.actionLoadAllSamplesAllTraces);
 export const dispatchSetActiveParam = dispatch(actions.actionSetActiveParam);
+export const dispatchSetBurnIn = dispatch(actions.actionSetBurnIn);
 
 
