@@ -38,13 +38,21 @@ export const mutations = {
         state.traces.push(payload);
     },
     setActiveTrace(state: DataState, payload: Trace) {
-        state.activeTraceID = payload.id;
+        if (payload) {
+            state.activeTraceID = payload.id;
+        } else {
+            state.activeTraceID = null
+        }
+        
     },
     setActiveParam(state: DataState, payload: string) {
         state.activeParam = payload;
     },
     setBurnIn(state: DataState, payload: number) {
         state.burnIn = payload;
+    },
+    setLoadingSamples(state: DataState, payload: boolean) {
+        state.loadingSamples = payload;
     },
     setSetSamples(state: DataState, payload: SetSample) {
         const traceId = payload.trace.id;
@@ -56,7 +64,7 @@ export const mutations = {
             } else {
                 for (const paramName in data) {
                     if (paramName) {
-                        trace.parameters[paramName] = trace.parameters[paramName].concat(data[paramName]);
+                        trace.parameters[paramName] = trace.parameters[paramName].concat(data[paramName]).sort((a,b) => a.state - b.state);
                     }
                 }
             }
@@ -72,4 +80,5 @@ export const commitSetActiveTrace = commit(mutations.setActiveTrace);
 export const commitSetSamples = commit(mutations.setSetSamples);
 export const commitSetActiveParam = commit(mutations.setActiveParam);
 export const commitSetBurnIn = commit(mutations.setBurnIn);
+export const commitSetLoadingSamples = commit(mutations.setLoadingSamples);
 

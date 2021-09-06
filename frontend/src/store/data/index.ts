@@ -8,6 +8,7 @@ const defaultState: DataState = {
     activeTraceID: null,
     activeParam: 'state',
     burnIn: 10,
+    loadingSamples: false,
 };
 
 export const dataModule = {

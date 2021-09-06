@@ -5,4 +5,5 @@ export interface DataState {
     activeTraceID: number | null;
     activeParam: string | null;
     burnIn: number;
+    loadingSamples: boolean;
 }

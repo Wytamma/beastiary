@@ -16,6 +16,7 @@ import {
     commitSetSamples,
     commitSetTrace,
     commitSetTraces,
+    commitSetLoadingSamples,
 } from './mutations';
 import { DataState } from './state';
 
@@ -55,23 +56,29 @@ export const actions = {
     async actionSetActiveParam(context: MainContext, payload: string) {
         commitSetActiveParam(context, payload);
     },
-    async actionGetSamples(context: MainContext, payload: {trace: Trace, skip?: number, limit?: number}) {
+    async actionGetSamples(context: MainContext, payload: {trace: Trace, skip?: number, limit?: number, all?: boolean}) {
         const trace = payload.trace;
         const skip = payload.skip ? payload.skip : 0;
         const limit = payload.limit ? payload.limit : 100;
+        const all = payload.all ? payload.all : false;
+        const loadingNotification = { content: 'Loading samples...', showProgress: true };
         try {
-            const loadingNotification = { content: 'Loading samples...', showProgress: true };
             if (skip === 0) {
                 commitAddNotification(context, loadingNotification);
             }
             const response = await api.getSamples(context.rootState.main.token, trace, skip, limit);
+            if (all === true && response.data.length === limit) {
+                // if you get back what you request go again 
+                await dispatchGetSamples(context, {trace: trace, skip: skip + limit, limit: limit, all: true});
+            }
             if (response) {
                 commitSetSamples(context, {trace, data: response.data});
             }
-            commitRemoveNotification(context, loadingNotification);
         } catch (error) {
             console.log(error);
             await dispatchCheckApiError(context, error);
+        } finally {
+            commitRemoveNotification(context, loadingNotification);
         }
     },
     async actionLoadAllSamplesAllTraces(context: MainContext) {
@@ -85,7 +92,9 @@ export const actions = {
     async actionSetBurnIn(context: MainContext, payload: number) {
         commitSetBurnIn(context, payload);
     },
-
+    async actionSetLoadingSamples(context: MainContext, payload: boolean) {
+        commitSetLoadingSamples(context, payload);
+    },
 };
 
 const { dispatch } = getStoreAccessors<DataState | any, State>('');
@@ -97,5 +106,6 @@ export const dispatchGetSamples = dispatch(actions.actionGetSamples);
 export const dispatchLoadAllSamplesAllTraces = dispatch(actions.actionLoadAllSamplesAllTraces);
 export const dispatchSetActiveParam = dispatch(actions.actionSetActiveParam);
 export const dispatchSetBurnIn = dispatch(actions.actionSetBurnIn);
+export const dispatchSetLoadingSamples = dispatch(actions.actionSetLoadingSamples);
 
 

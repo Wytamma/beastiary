@@ -65,33 +65,29 @@
             </v-list-item-content>
 
           </template>
+          <div v-if="activeTrace && activeTrace.id === trace.id" >
           <v-col class=" mr-4 mb-0">
-            <div>Burn-in (%)</div>
+            <div>Burn-in {{burnIn}}%</div>
             <v-slider
+              v-on:end="setBurnIn"
               v-model="burnIn"
               class="align-center"
               :max="100"
               :min="0"
               hide-details
-            >
-              <template v-slot:append>
-                <v-text-field
-                  v-model="burnIn"
-                  class="mt-0 pt-0"
-                  hide-details
-                  single-line
-                  :min="0"
-                  :max="100"
-                  type="number"
-                  style="width: 45px"
-                ></v-text-field>
-              </template>
+            > 
               </v-slider>
           </v-col>
           <v-divider></v-divider>
           
-          <ParamsPanel/>
-
+          <ParamsPanel />
+          </div>
+          <div v-else class="text-center my-4">
+             <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </div>
           </v-list-group>
           </v-list>
           </v-list>
@@ -105,9 +101,10 @@ import {
   dispatchGetSamples,
   dispatchGetTraces,
   dispatchSetActiveTrace,
-  dispatchSetBurnIn
+  dispatchSetBurnIn,
+  dispatchSetLoadingSamples,
 } from "@/store/data/actions";
-import { readBurnIn, readTraces } from "@/store/data/getters";
+import { readBurnIn, readTraces, readLoadingSamples, readActiveTrace } from "@/store/data/getters";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -120,17 +117,31 @@ export default class TraceList extends Vue {
   public activeTraces = [];
   public show: boolean = true;
   public interval?: number;
+  public burnIn: number = 10;
 
   get traces() {
     return readTraces(this.$store);
   }
 
-  get burnIn() {
-    return readBurnIn(this.$store);
+  get activeTrace() {
+    return readActiveTrace(this.$store)
   }
 
-  set burnIn(value) {
+  public setBurnIn(value) {
     dispatchSetBurnIn(this.$store, value);
+  }
+
+  public async createInterval (trace) {
+    this.interval = setInterval( async () => {
+      const skip = "state" in trace.parameters ? trace.parameters.state.length : 0;
+      if (!readLoadingSamples(this.$store)) {
+            await dispatchGetSamples(this.$store, {
+            trace,
+            skip: skip,
+            limit: 100
+          });
+      await dispatchSetActiveTrace(this.$store, trace);
+      }}, 2000);
   }
 
   public async setAcitveTrace(trace) {
@@ -139,18 +150,11 @@ export default class TraceList extends Vue {
     }
     const skip =
       "state" in trace.parameters ? trace.parameters.state.length : 0;
-    await dispatchGetSamples(this.$store, { trace, skip, limit: 1000000 });
-    await dispatchSetActiveTrace(this.$store, trace);
-    this.interval = setInterval(() => {
-      const intervalSkip =
-        "state" in trace.parameters ? trace.parameters.state.length : 0;
-      dispatchGetSamples(this.$store, {
-        trace,
-        skip: intervalSkip,
-        limit: 1000
-      });
-      dispatchSetActiveTrace(this.$store, trace);
-    }, 5000);
+      dispatchSetLoadingSamples(this.$store, true)
+      await dispatchGetSamples(this.$store, { trace, skip, limit: 2000, all: true });
+      await dispatchSetActiveTrace(this.$store, trace);
+      dispatchSetLoadingSamples(this.$store, false)
+      await this.createInterval(trace)
   }
   public async mounted() {
     await dispatchGetTraces(this.$store);
