@@ -63,7 +63,7 @@ api.mount("/", StaticFiles(directory=webapp_path))
 async def auth_check(request: Request, call_next: Callable) -> Any:
     if "/api/" in request.url.path and request.app.security == True:
         token = request.headers.get("Authorization")
-        if not token:
+        if not token or len(token.split()) < 2:
             return JSONResponse(
                 content={"detail": "Authorization header not provided!"},
                 status_code=401,
