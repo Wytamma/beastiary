@@ -65,6 +65,7 @@ export default class AddTraceButton extends Vue {
     public submit() {
       dispatchCreateTrace(this.$store, {path: this.path});
       this.dialog = false;
+
     }
 }
 </script>

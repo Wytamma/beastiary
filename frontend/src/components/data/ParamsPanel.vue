@@ -1,5 +1,6 @@
 <template>
-    <v-list-item-group style="height:400px; overflow:auto" class="mb-0" dense>
+  <v-list dense>
+    <v-list-item-group style="height:400px; overflow:auto" class="mb-0" >
         <div v-for="(param, i) in parameters"
           :key="i"
           @click="setActiveParam(param)">
@@ -17,10 +18,10 @@
             <v-list-item-action>
               <v-checkbox :input-value="active"></v-checkbox>
             </v-list-item-action>
-            <v-list-item-content class="mb-0">
+            <v-list-item-content class="my-0">
               <v-list-item-title>{{param}}</v-list-item-title>
             </v-list-item-content>
-            <v-list-item-icon>
+            <v-list-item-icon class="mt-3 d-flex align-center ">
               <v-tooltip color="black" bottom>
                 <template #activator="{ on }">
                     <v-chip v-on="on" small>{{paramMean(param)}}</v-chip>
@@ -34,6 +35,7 @@
         </div>
         
     </v-list-item-group>
+  </v-list>
 </template>
 
 <script lang="ts">
@@ -57,7 +59,6 @@ export default class ParamsPanel extends Vue {
       const trace = this.activeTrace;
       const burnIn = readBurnIn(this.$store) / 100;
       if (trace) {
-          console.log(trace.id, param)
           const data = trace.parameters[param].slice(
                 trace.parameters.state.length * burnIn,
                 ).map((row) =>  row.value)

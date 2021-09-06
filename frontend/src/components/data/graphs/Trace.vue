@@ -17,16 +17,21 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class Histogram extends Vue {
   get layout() {
     return {
+      grid: {pattern: 'dependent'},
+      xaxis: {domain: [0, 0.7], showgrid: true, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
+      yaxis: {showgrid: true, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
+      yaxis2: {showgrid: true, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
+      xaxis2: {domain: [0.73, 1], showline: false, zeroline: false, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
+      showlegend:false,
       plot_bgcolor: 'rgba(0, 0, 0, 0)',
       paper_bgcolor: 'rgba(0, 0, 0, 0)',
       margin: {
-        l: 80,
-        r: 80,
-        b: 80,
-        t: 20,
+        l: 50,
+        r: 30,
+        b: 30,
+        t: 10,
         pad: 0,
       },
-      height: 400,
     };
   }
   get traceData() {
@@ -39,6 +44,13 @@ export default class Histogram extends Vue {
         x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.state),
         y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
         type: 'scatter',
+        opacity: 0.8,
+      }, {
+        y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
+        type: 'histogram',
+        xaxis: 'x2',
+        yaxis: 'y1',
+        opacity: 0.6,
       }];
     } else {
       return {};

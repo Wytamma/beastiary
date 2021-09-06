@@ -56,17 +56,12 @@
       ></v-switch>
     </v-app-bar>
     <router-view></router-view>
-    <v-footer class="pa-3" fixed app>
-      <v-spacer></v-spacer>
-      <span>&copy; {{appName}}</span>
-    </v-footer>
   </v-layout>
 </v-content>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-
 import { appName } from '@/env';
 import { dispatchUserLogOut } from '@/store/main/actions';
 import { readDashboardMiniDrawer, readDashboardShowDrawer } from '@/store/main/getters';

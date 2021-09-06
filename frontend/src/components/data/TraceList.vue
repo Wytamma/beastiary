@@ -88,9 +88,11 @@
               color="primary"
             ></v-progress-circular>
           </div>
+          <v-divider></v-divider>
           </v-list-group>
           </v-list>
           </v-list>
+          
     </v-layout>
 </template>
 

@@ -21,13 +21,13 @@ export default class Histogram extends Vue {
             plot_bgcolor: 'rgba(0, 0, 0, 0)',
             paper_bgcolor: 'rgba(0, 0, 0, 0)',
             margin: {
-            l: 80,
-            r: 80,
-            b: 30,
+            l: 40,
+            r: 40,
+            b: 80,
             t: 20,
             pad: 0,
             },
-            height: 220,
+            height: 500,
         };
     }
     get HistogramData() {
@@ -36,7 +36,7 @@ export default class Histogram extends Vue {
     const burnIn = readBurnIn(this.$store) / 100;
     if (trace && param) {
       return [{
-        x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
+        y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
         type: 'histogram',
       }];
     } else {
