@@ -61,11 +61,11 @@ export default class ParamsPanel extends Vue {
       if (trace) {
           const data = trace.parameters[param].slice(
                 trace.parameters.state.length * burnIn,
-                ).map((row) =>  row.value);
-
-          if (data != null) {
-            return format(mean(data), {precision: 4});
-          }
+                ).map((row) =>  row.value).filter(v => v); // nulls (inf etc) not in mean
+            if (data) {
+              // @ts-ignore: No overload matches this call error
+              return format(mean(data), {precision: 4});
+            }
       }
       return null;
     }
