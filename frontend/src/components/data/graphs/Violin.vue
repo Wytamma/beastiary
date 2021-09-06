@@ -20,8 +20,8 @@ export default class Violin extends Vue {
         return {
             plot_bgcolor: 'rgba(0, 0, 0, 0)',
             paper_bgcolor: 'rgba(0, 0, 0, 0)',
-            yaxis: {showticklabels: false, zeroline: false,},
-            xaxis: { zeroline: false, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
+            yaxis: {showticklabels: false, zeroline: false},
+            xaxis: { zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
             margin: {
             l: 50,
             r: 30,
@@ -37,21 +37,21 @@ export default class Violin extends Vue {
     const param = readActiveParam(this.$store);
     const burnIn = readBurnIn(this.$store) / 100;
     if (trace && param) {
-        //console.log(Object.keys(trace.parameters).map( param => trace.parameters[param].map((row) =>  row.value)))
+        // console.log(Object.keys(trace.parameters).map( param => trace.parameters[param].map((row) =>  row.value)))
       return [{
         x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
         type: 'violin',
         points: 'none',
         box: {
-            visible: true
+            visible: true,
         },
         boxpoints: false,
         line: {
-            color: 'black'
+            color: 'black',
         },
         opacity: 0.6,
         meanline: {
-            visible: true
+            visible: true,
         },
         fillcolor: '#8dd3c7',
       }];

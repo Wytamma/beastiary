@@ -36,9 +36,9 @@ import Violin from '@/components/data/graphs/Violin.vue';
 import ParamsPanel from '@/components/data/ParamsPanel.vue';
 import TraceList from '@/components/data/TraceList.vue';
 import { readActiveTrace, readTraces } from '@/store/data/getters';
+import { readActiveParam } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Vue } from 'vue-property-decorator';
-import { readActiveParam } from '@/store/data/getters';
 
 @Component({
   components: {
@@ -59,7 +59,7 @@ export default class Dashboard extends Vue {
   get traces() {
     return readTraces(this.$store);
   }
-  get activeParam () {
+  get activeParam() {
     return readActiveParam(this.$store);
   }
 

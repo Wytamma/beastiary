@@ -18,11 +18,11 @@ export default class Histogram extends Vue {
   get layout() {
     return {
       grid: {pattern: 'dependent'},
-      xaxis: {domain: [0, 0.7], showgrid: true, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
-      yaxis: {showgrid: true, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
-      yaxis2: {showgrid: true, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
-      xaxis2: {domain: [0.73, 1], showline: false, zeroline: false, color: this.$vuetify.theme.dark ? "white" : "#2c3e50"},
-      showlegend:false,
+      xaxis: {domain: [0, 0.7], showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
+      yaxis: {showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
+      yaxis2: {showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
+      xaxis2: {domain: [0.73, 1], showline: false, zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
+      showlegend: false,
       plot_bgcolor: 'rgba(0, 0, 0, 0)',
       paper_bgcolor: 'rgba(0, 0, 0, 0)',
       margin: {

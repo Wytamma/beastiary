@@ -1,7 +1,6 @@
 import { api } from '@/api';
 import { Trace, TraceCreate } from '@/interfaces';
 import router from '@/router';
-import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { ActionContext } from 'vuex';
@@ -13,10 +12,10 @@ import {
     commitSetActiveParam,
     commitSetActiveTrace,
     commitSetBurnIn,
+    commitSetLoadingSamples,
     commitSetSamples,
     commitSetTrace,
     commitSetTraces,
-    commitSetLoadingSamples,
 } from './mutations';
 import { DataState } from './state';
 
@@ -30,9 +29,9 @@ export const actions = {
                 commitSetTraces(context, response.data);
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
             await dispatchCheckApiError(context, error);
-            
+
         }
     },
     async actionCreateTrace(context: MainContext, payload: TraceCreate) {
@@ -56,7 +55,12 @@ export const actions = {
     async actionSetActiveParam(context: MainContext, payload: string) {
         commitSetActiveParam(context, payload);
     },
-    async actionGetSamples(context: MainContext, payload: {trace: Trace, skip?: number, limit?: number, all?: boolean}) {
+    async actionGetSamples(
+        context: MainContext,
+        payload: {trace: Trace,
+            skip?: number,
+            limit?: number,
+            all?: boolean}) {
         const trace = payload.trace;
         const skip = payload.skip ? payload.skip : 0;
         const limit = payload.limit ? payload.limit : 100;
@@ -68,8 +72,8 @@ export const actions = {
             }
             const response = await api.getSamples(context.rootState.main.token, trace, skip, limit);
             if (all === true && response.data.length === limit) {
-                // if you get back what you request go again 
-                await dispatchGetSamples(context, {trace: trace, skip: skip + limit, limit: limit, all: true});
+                // if you get back what you request go again
+                await dispatchGetSamples(context, {trace, skip: skip + limit, limit, all: true});
             }
             if (response) {
                 commitSetSamples(context, {trace, data: response.data});

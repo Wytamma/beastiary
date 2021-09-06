@@ -97,23 +97,23 @@
 </template>
 
 <script lang="ts">
-import AddTraceButton from "@/components/data/AddTraceButton.vue";
-import ParamsPanel from "@/components/data/ParamsPanel.vue";
+import AddTraceButton from '@/components/data/AddTraceButton.vue';
+import ParamsPanel from '@/components/data/ParamsPanel.vue';
 import {
   dispatchGetSamples,
   dispatchGetTraces,
   dispatchSetActiveTrace,
   dispatchSetBurnIn,
   dispatchSetLoadingSamples,
-} from "@/store/data/actions";
-import { readBurnIn, readTraces, readLoadingSamples, readActiveTrace } from "@/store/data/getters";
-import { Component, Vue } from "vue-property-decorator";
+} from '@/store/data/actions';
+import { readActiveTrace, readBurnIn, readLoadingSamples, readTraces } from '@/store/data/getters';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {
     AddTraceButton,
-    ParamsPanel
-  }
+    ParamsPanel,
+  },
 })
 export default class TraceList extends Vue {
   public activeTraces = [];
@@ -126,23 +126,23 @@ export default class TraceList extends Vue {
   }
 
   get activeTrace() {
-    return readActiveTrace(this.$store)
+    return readActiveTrace(this.$store);
   }
 
   public setBurnIn(value) {
     dispatchSetBurnIn(this.$store, value);
   }
 
-  public async createInterval (trace) {
+  public async createInterval(trace) {
     this.interval = setInterval( async () => {
-      const skip = "state" in trace.parameters ? trace.parameters.state.length : 0;
+      const skip = 'state' in trace.parameters ? trace.parameters.state.length : 0;
       if (!readLoadingSamples(this.$store)) {
             await dispatchGetSamples(this.$store, {
             trace,
-            skip: skip,
-            limit: 100
+            skip,
+            limit: 100,
           });
-      await dispatchSetActiveTrace(this.$store, trace);
+            await dispatchSetActiveTrace(this.$store, trace);
       }}, 2000);
   }
 
@@ -151,12 +151,12 @@ export default class TraceList extends Vue {
       clearInterval(this.interval);
     }
     const skip =
-      "state" in trace.parameters ? trace.parameters.state.length : 0;
-      dispatchSetLoadingSamples(this.$store, true)
-      await dispatchGetSamples(this.$store, { trace, skip, limit: 2000, all: true });
-      await dispatchSetActiveTrace(this.$store, trace);
-      dispatchSetLoadingSamples(this.$store, false)
-      await this.createInterval(trace)
+      'state' in trace.parameters ? trace.parameters.state.length : 0;
+    dispatchSetLoadingSamples(this.$store, true);
+    await dispatchGetSamples(this.$store, { trace, skip, limit: 2000, all: true });
+    await dispatchSetActiveTrace(this.$store, trace);
+    dispatchSetLoadingSamples(this.$store, false);
+    await this.createInterval(trace);
   }
   public async mounted() {
     await dispatchGetTraces(this.$store);
@@ -166,7 +166,7 @@ export default class TraceList extends Vue {
     clearInterval(this.interval);
   }
   public fileName(path) {
-    return path.substring(path.lastIndexOf("/") + 1);
+    return path.substring(path.lastIndexOf('/') + 1);
   }
 }
 </script>

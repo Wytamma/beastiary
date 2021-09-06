@@ -41,9 +41,9 @@ export const mutations = {
         if (payload) {
             state.activeTraceID = payload.id;
         } else {
-            state.activeTraceID = null
+            state.activeTraceID = null;
         }
-        
+
     },
     setActiveParam(state: DataState, payload: string) {
         state.activeParam = payload;
@@ -64,7 +64,9 @@ export const mutations = {
             } else {
                 for (const paramName in data) {
                     if (paramName) {
-                        trace.parameters[paramName] = trace.parameters[paramName].concat(data[paramName]).sort((a,b) => a.state - b.state);
+                        trace.parameters[paramName] = trace.parameters[paramName].concat(
+                            data[paramName]).sort((a, b) => a.state - b.state,
+                        );
                     }
                 }
             }

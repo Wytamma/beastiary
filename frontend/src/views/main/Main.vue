@@ -61,11 +61,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
 import { appName } from '@/env';
 import { dispatchUserLogOut } from '@/store/main/actions';
 import { readDashboardMiniDrawer, readDashboardShowDrawer } from '@/store/main/getters';
 import { commitSetDashboardMiniDrawer, commitSetDashboardShowDrawer } from '@/store/main/mutations';
+import { Component, Vue } from 'vue-property-decorator';
 
 const routeGuardMain = async (to, from, next) => {
   if (to.path === '/main') {

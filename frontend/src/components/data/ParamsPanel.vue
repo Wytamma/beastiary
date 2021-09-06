@@ -47,7 +47,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 @Component
 export default class ParamsPanel extends Vue {
     public isActive = false;
-    
+
     get activeTrace() {
         return readActiveTrace(this.$store);
     }
@@ -61,7 +61,7 @@ export default class ParamsPanel extends Vue {
       if (trace) {
           const data = trace.parameters[param].slice(
                 trace.parameters.state.length * burnIn,
-                ).map((row) =>  row.value)
+                ).map((row) =>  row.value);
 
           if (data != null) {
             return format(mean(data), {precision: 4});
