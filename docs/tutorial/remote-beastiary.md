@@ -3,7 +3,7 @@ One of the main use cases of beastiary is accessing files on a remote server e.g
 
 ## SSH tunnel
 
-To connect to beastiary on the HPC we must first establish an SSH tunnel so that the port beastiary is running on can be forwarded to our local machine. We will accomplish this using the `-L` ssh flag. Connect to the HPC using your normal `ssh` command, but add `-L 5000:localhost:5000`. The `-L` flag tells ssh to forward requests to port 5000 on your local machine to port 5000 on the HPC. 
+To connect to beastiary on the HPC we must first establish an SSH tunnel so that the port beastiary is running on can be connected to our local machine. We will accomplish this using the `-L` ssh flag. Connect to the HPC using your normal `ssh` command, but add `-L 5000:localhost:5000`. The `-L` flag tells ssh to forward requests to port 5000 on your local machine to port 5000 on the HPC. 
 
 <div class="termy">
 
