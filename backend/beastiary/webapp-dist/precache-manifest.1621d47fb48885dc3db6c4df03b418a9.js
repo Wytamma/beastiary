@@ -28,12 +28,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/main~main-dashboard.7a0daa79.css"
   },
   {
-    "revision": "0bc4e3193b84234c687639403517fc77",
+    "revision": "a1b420df59e3fbf50568a900899def92",
     "url": "/index.html"
   },
   {
-    "revision": "78468169451862e078de",
-    "url": "/js/app.51224260.js"
+    "revision": "b55866105abb7e2d8e10",
+    "url": "/js/app.0be27718.js"
   },
   {
     "revision": "3a2073ec5bd4d195a0c6",
