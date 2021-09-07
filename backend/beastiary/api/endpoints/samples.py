@@ -68,11 +68,12 @@ def get_samples(
     """
     trace = crud.trace.get(db, trace_id)
     if not trace:
-        raise HTTPException(404, "Trace not found!")
+        raise HTTPException(404, detail="Trace not found!")
 
     samples = crud.sample.get_multi_by_trace(
         db, trace_id=trace.id, skip=skip, limit=limit
     )
+
     logger.debug(f"{len(samples)} found, {limit} samples requested")
     if len(samples) < limit:
 
@@ -80,7 +81,7 @@ def get_samples(
         try:
             check_for_new_samples(db, trace=trace)
         except Exception as e:
-            raise e
+            raise HTTPException(500, detail=f"Could read samples in {trace.path}")
         # get samples
         samples = crud.sample.get_multi_by_trace(
             db, trace_id=trace.id, skip=skip, limit=limit

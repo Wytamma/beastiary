@@ -48,5 +48,7 @@ def create_trace(
         trace = add_trace(db, trace_in)
     except FileNotFoundError as e:
         raise HTTPException(404, detail="Could not find log file!")
+    except Exception as e:
+        raise HTTPException(500, detail=f"Could not add {trace_in.path}")
     # get samples
     return trace

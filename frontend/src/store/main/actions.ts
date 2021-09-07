@@ -83,7 +83,7 @@ export const actions = {
             commitAddNotification(context, { content: payload.response!.data.detail, color: 'error', notFound: true});
         }
         if (payload.response!.status === 500) {
-            commitAddNotification(context, { content: payload.response!.data, color: 'error' });
+            commitAddNotification(context, { content: payload.response!.data.detail, color: 'error', notFound: true});
         }
     },
     actionRouteLoggedIn(context: MainContext) {
