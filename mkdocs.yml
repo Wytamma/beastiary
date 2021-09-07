@@ -9,7 +9,9 @@ nav:
 - Tutorial - User Guide:
   - tutorial/index.md
   - tutorial/first-steps.md
+  - tutorial/logs-from-the-command-line.md
   - tutorial/google-colab.md
+  
 markdown_extensions:
 - toc:
     permalink: true
