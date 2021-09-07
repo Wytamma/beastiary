@@ -38,11 +38,7 @@ export const actions = {
         const loadingNotification = { content: 'saving', showProgress: true };
         commitAddNotification(context, loadingNotification);
         try {
-            
-            const response = (await Promise.all([
-                api.createTrace(context.rootState.main.token, payload),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
-            ]))[0];
+            const response = await api.createTrace(context.rootState.main.token, payload)
             console.log(response)
             commitSetTrace(context, response.data);
             commitRemoveNotification(context, loadingNotification);
