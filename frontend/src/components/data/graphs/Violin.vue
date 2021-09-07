@@ -38,8 +38,9 @@ export default class Violin extends Vue {
     const burnIn = readBurnIn(this.$store) / 100;
     if (trace && param) {
         // console.log(Object.keys(trace.parameters).map( param => trace.parameters[param].map((row) =>  row.value)))
+        const data = trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value)
       return [{
-        x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
+        x: data,
         type: 'violin',
         points: 'none',
         box: {

@@ -18,6 +18,7 @@
           :key="i"
           @click="setAcitveTrace(trace)"
           color="primary"
+          v-bind:disabled="isloading"
         >
           <template v-slot:activator>
             <v-list-item-content class="mb-0">
@@ -78,7 +79,7 @@
             > 
               </v-slider>
           </v-col>
-          <v-divider></v-divider>
+          <v-divider class="my-0"></v-divider>
           
           <ParamsPanel />
           </div>
@@ -129,6 +130,10 @@ export default class TraceList extends Vue {
     return readActiveTrace(this.$store);
   }
 
+  get isloading() {
+    return readLoadingSamples(this.$store)
+  }
+
   public setBurnIn(value) {
     dispatchSetBurnIn(this.$store, value);
   }
@@ -147,17 +152,26 @@ export default class TraceList extends Vue {
   }
 
   public async setAcitveTrace(trace) {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
     const skip =
       'state' in trace.parameters ? trace.parameters.state.length : 0;
-    dispatchSetLoadingSamples(this.$store, true);
-    await dispatchGetSamples(this.$store, { trace, skip, limit: 2000, all: true });
-    await dispatchSetActiveTrace(this.$store, trace);
-    dispatchSetLoadingSamples(this.$store, false);
-    await this.createInterval(trace);
-  }
+    if (this.activeTrace === null || ( this.activeTrace && !(this.activeTrace.id === trace.id))) {
+      // have just started or part way though loading 
+      if (!readLoadingSamples(this.$store)) {
+        dispatchSetLoadingSamples(this.$store, true);
+        // not loading and no active so load
+        if (this.interval) {
+          clearInterval(this.interval);
+        }
+        await dispatchGetSamples(this.$store, { trace, skip, limit: 2000, all: true });
+        await dispatchSetActiveTrace(this.$store, trace);
+        dispatchSetLoadingSamples(this.$store, false);
+        await this.createInterval(trace);
+      } // if it is loading do nothing 
+
+    }
+      
+  } 
+
   public async mounted() {
     await dispatchGetTraces(this.$store);
     // await dispatchLoadAllSamplesAllTraces(this.$store)

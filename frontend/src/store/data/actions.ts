@@ -17,7 +17,9 @@ import {
     commitSetTrace,
     commitSetTraces,
 } from './mutations';
+import { readActiveParam } from '@/store/data/getters';
 import { DataState } from './state';
+import { setDifference } from 'mathjs';
 
 type MainContext = ActionContext<DataState, State>;
 
@@ -29,7 +31,6 @@ export const actions = {
                 commitSetTraces(context, response.data);
             }
         } catch (error) {
-            console.log(error);
             await dispatchCheckApiError(context, error);
 
         }
@@ -39,7 +40,6 @@ export const actions = {
         commitAddNotification(context, loadingNotification);
         try {
             const response = await api.createTrace(context.rootState.main.token, payload)
-            console.log(response)
             commitSetTrace(context, response.data);
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Trace successfully created', color: 'success' });
@@ -50,6 +50,11 @@ export const actions = {
     },
     async actionSetActiveTrace(context: MainContext, payload: Trace) {
         commitSetActiveTrace(context, payload);
+        const param = readActiveParam(context)
+        const headers = payload.headers_line.split(' ')
+        if ( param === null || headers.includes(param) === false) {
+            commitSetActiveParam(context, headers[1])
+        }
     },
     async actionSetActiveParam(context: MainContext, payload: string) {
         commitSetActiveParam(context, payload);
@@ -78,7 +83,6 @@ export const actions = {
                 commitSetSamples(context, {trace, data: response.data});
             }
         } catch (error) {
-            console.log(error);
             await dispatchCheckApiError(context, error);
         } finally {
             commitRemoveNotification(context, loadingNotification);

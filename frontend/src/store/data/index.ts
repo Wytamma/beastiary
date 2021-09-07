@@ -6,7 +6,7 @@ import { DataState } from './state';
 const defaultState: DataState = {
     traces: [],
     activeTraceID: null,
-    activeParam: 'posterior',
+    activeParam: null,
     burnIn: 10,
     loadingSamples: false,
 };

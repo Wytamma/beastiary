@@ -1,6 +1,6 @@
 <template>
-  <v-list dense>
-    <v-list-item-group style="height:400px; overflow:auto" class="mb-0" >
+  <v-list dense class="my-0 py-0">
+    <v-list-item-group style="height:400px; overflow:auto"  >
         <div v-for="(param, i) in parameters"
           :key="i"
           @click="setActiveParam(param)">
@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { dispatchSetActiveParam } from '@/store/data/actions';
-import { readActiveTrace, readBurnIn, readParamsOfActiveTrace } from '@/store/data/getters';
+import { readActiveTrace, readBurnIn, readParamsOfActiveTrace, readActiveParam } from '@/store/data/getters';
 import { format, mean } from 'mathjs';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
@@ -54,6 +54,9 @@ export default class ParamsPanel extends Vue {
     get parameters() {
         return readParamsOfActiveTrace(this.$store);
     }
+    get activeParam() {
+        return readActiveParam(this.$store)
+    }
 
     public paramMean(param) {
       const trace = this.activeTrace;
@@ -61,8 +64,8 @@ export default class ParamsPanel extends Vue {
       if (trace) {
           const data = trace.parameters[param].slice(
                 trace.parameters.state.length * burnIn,
-                ).map((row) =>  row.value).filter(v => v); // nulls (inf etc) not in mean
-            if (data) {
+                ).map((row) =>  row.value).filter(Boolean); // nulls (inf etc) not in mean
+            if (data.length > 0) {
               // @ts-ignore: No overload matches this call error
               return format(mean(data), {precision: 4});
             }
