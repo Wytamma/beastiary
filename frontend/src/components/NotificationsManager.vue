@@ -52,7 +52,7 @@ export default class NotificationsManager extends Vue {
         if (notification) {
             this.currentNotification = notification;
             this.showProgress = notification.showProgress || false;
-            this.notFound = notification.notFound || false
+            this.notFound = notification.notFound || false;
             this.show = true;
         } else {
             this.currentNotification = false;

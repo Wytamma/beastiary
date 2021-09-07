@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { dispatchSetActiveParam } from '@/store/data/actions';
-import { readActiveTrace, readBurnIn, readParamsOfActiveTrace, readActiveParam } from '@/store/data/getters';
+import { readActiveParam, readActiveTrace, readBurnIn, readParamsOfActiveTrace } from '@/store/data/getters';
 import { format, mean } from 'mathjs';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
@@ -55,7 +55,7 @@ export default class ParamsPanel extends Vue {
         return readParamsOfActiveTrace(this.$store);
     }
     get activeParam() {
-        return readActiveParam(this.$store)
+        return readActiveParam(this.$store);
     }
 
     public paramMean(param) {
@@ -65,7 +65,7 @@ export default class ParamsPanel extends Vue {
           const data = trace.parameters[param].slice(
                 trace.parameters.state.length * burnIn,
                 ).map((row) =>  row.value).filter(Boolean); // nulls (inf etc) not in mean
-            if (data.length > 0) {
+          if (data.length > 0) {
               // @ts-ignore: No overload matches this call error
               return format(mean(data), {precision: 4});
             }

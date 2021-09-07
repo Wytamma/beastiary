@@ -1,7 +1,9 @@
 import { api } from '@/api';
 import { Trace, TraceCreate } from '@/interfaces';
 import router from '@/router';
+import { readActiveParam } from '@/store/data/getters';
 import { AxiosError } from 'axios';
+import { setDifference } from 'mathjs';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { ActionContext } from 'vuex';
 import { dispatchCheckApiError } from '../main/actions';
@@ -17,9 +19,7 @@ import {
     commitSetTrace,
     commitSetTraces,
 } from './mutations';
-import { readActiveParam } from '@/store/data/getters';
 import { DataState } from './state';
-import { setDifference } from 'mathjs';
 
 type MainContext = ActionContext<DataState, State>;
 
@@ -39,7 +39,7 @@ export const actions = {
         const loadingNotification = { content: 'saving', showProgress: true };
         commitAddNotification(context, loadingNotification);
         try {
-            const response = await api.createTrace(context.rootState.main.token, payload)
+            const response = await api.createTrace(context.rootState.main.token, payload);
             commitSetTrace(context, response.data);
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Trace successfully created', color: 'success' });
@@ -50,10 +50,10 @@ export const actions = {
     },
     async actionSetActiveTrace(context: MainContext, payload: Trace) {
         commitSetActiveTrace(context, payload);
-        const param = readActiveParam(context)
-        const headers = payload.headers_line.split(' ')
+        const param = readActiveParam(context);
+        const headers = payload.headers_line.split(' ');
         if ( param === null || headers.includes(param) === false) {
-            commitSetActiveParam(context, headers[1])
+            commitSetActiveParam(context, headers[1]);
         }
     },
     async actionSetActiveParam(context: MainContext, payload: string) {

@@ -131,7 +131,7 @@ export default class TraceList extends Vue {
   }
 
   get isloading() {
-    return readLoadingSamples(this.$store)
+    return readLoadingSamples(this.$store);
   }
 
   public setBurnIn(value) {
@@ -155,7 +155,7 @@ export default class TraceList extends Vue {
     const skip =
       'state' in trace.parameters ? trace.parameters.state.length : 0;
     if (this.activeTrace === null || ( this.activeTrace && !(this.activeTrace.id === trace.id))) {
-      // have just started or part way though loading 
+      // have just started or part way though loading
       if (!readLoadingSamples(this.$store)) {
         dispatchSetLoadingSamples(this.$store, true);
         // not loading and no active so load
@@ -166,11 +166,11 @@ export default class TraceList extends Vue {
         await dispatchSetActiveTrace(this.$store, trace);
         dispatchSetLoadingSamples(this.$store, false);
         await this.createInterval(trace);
-      } // if it is loading do nothing 
+      } // if it is loading do nothing
 
     }
-      
-  } 
+
+  }
 
   public async mounted() {
     await dispatchGetTraces(this.$store);
