@@ -22,6 +22,11 @@ Welcome to Spartan, the general purpose High Performance Computer system.
     ```
     ssh -L 5001:localhost:5001 wytamma@spartan.hpc.unimelb.edu.au
     ```
+    Then start beastiary using the desired port.
+        ```
+    beastiary --port 5001
+    ```
+
 
 
 ## Start beastiary 
