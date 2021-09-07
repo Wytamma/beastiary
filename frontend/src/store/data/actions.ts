@@ -35,17 +35,20 @@ export const actions = {
         }
     },
     async actionCreateTrace(context: MainContext, payload: TraceCreate) {
+        const loadingNotification = { content: 'saving', showProgress: true };
+        commitAddNotification(context, loadingNotification);
         try {
-            const loadingNotification = { content: 'saving', showProgress: true };
-            commitAddNotification(context, loadingNotification);
+            
             const response = (await Promise.all([
                 api.createTrace(context.rootState.main.token, payload),
                 await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
             ]))[0];
+            console.log(response)
             commitSetTrace(context, response.data);
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Trace successfully created', color: 'success' });
         } catch (error) {
+            commitRemoveNotification(context, loadingNotification);
             await dispatchCheckApiError(context, error);
         }
     },

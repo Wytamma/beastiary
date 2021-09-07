@@ -2,6 +2,7 @@ export interface AppNotification {
     content: string;
     color?: string;
     showProgress?: boolean;
+    notFound?: boolean;
 }
 
 export interface MainState {

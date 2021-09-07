@@ -1,8 +1,12 @@
 <template>
-    <div>
-        <v-snackbar :color="currentNotificationColor" v-model="show">
-            <v-progress-circular class="ma-2" indeterminate v-show="showProgress"></v-progress-circular>{{ currentNotificationContent }}
+    <div >
+        <v-snackbar  :color="currentNotificationColor" v-model="show">
+        <div class="d-flex justify-space-between align-center " >
+            <v-progress-circular class="ma-1" indeterminate v-show="showProgress"></v-progress-circular>
+            <v-icon large class="ma-1" v-show="notFound">mdi-cancel</v-icon>
+            {{ currentNotificationContent }}
             <v-btn text @click.native="close">Close</v-btn>
+        </div>
         </v-snackbar>
     </div>
 </template>
@@ -18,6 +22,7 @@ export default class NotificationsManager extends Vue {
     public show: boolean = false;
     public text: string = '';
     public showProgress: boolean = false;
+    public notFound: boolean = false;
     public currentNotification: AppNotification | false = false;
 
     public async hide() {
@@ -47,6 +52,7 @@ export default class NotificationsManager extends Vue {
         if (notification) {
             this.currentNotification = notification;
             this.showProgress = notification.showProgress || false;
+            this.notFound = notification.notFound || false
             this.show = true;
         } else {
             this.currentNotification = false;

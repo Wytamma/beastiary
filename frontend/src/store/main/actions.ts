@@ -79,6 +79,12 @@ export const actions = {
         if (payload.response!.status === 401) {
             await dispatchLogOut(context);
         }
+        if (payload.response!.status === 404) {
+            commitAddNotification(context, { content: payload.response!.data.detail, color: 'error', notFound: true});
+        }
+        if (payload.response!.status === 500) {
+            commitAddNotification(context, { content: payload.response!.data, color: 'error' });
+        }
     },
     actionRouteLoggedIn(context: MainContext) {
         if (router.currentRoute.path === '/login' || router.currentRoute.path === '/') {
