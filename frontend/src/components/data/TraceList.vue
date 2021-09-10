@@ -82,7 +82,7 @@
             </v-list-item-content>
 
           </template>
-          <div v-if="activeTraceIDs.includes(trace.id)">
+          <div v-show="activeTraceIDs.includes(trace.id)">
             <v-col class=" mr-4 mb-0">
               <div>Burn-in {{burnIn}}%</div>
               <v-slider
@@ -100,7 +100,7 @@
             
             <ParamsPanel :trace="trace" />
           </div>
-          <div v-else class="text-center my-4">
+          <div v-show="!activeTraceIDs.includes(trace.id)" class="text-center my-4">
              <v-progress-circular
               indeterminate
               color="primary"
