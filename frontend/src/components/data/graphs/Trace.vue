@@ -78,7 +78,6 @@ export default class Histogram extends Vue {
             marker: {color: colours[count]},
             hovertemplate: '%{y}',
             showlegend: false,
-            legendgroup: trace.id,
           });
           data.push({
             y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
@@ -89,7 +88,6 @@ export default class Histogram extends Vue {
             name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             marker: {color: colours[count]},
             hovertemplate: '%{y}',
-            legendgroup: trace.id,
             bingroup: '1',
           });
           count++;

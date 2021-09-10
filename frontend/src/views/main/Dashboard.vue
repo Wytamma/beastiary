@@ -1,5 +1,5 @@
 <template>
-      <v-layout fill-height  style=" overflow-y: hidden;">
+      <v-layout fill-height  style=" overflow: hidden;">
       <v-row>
         <v-col cols="4" class="pr-0 pl-6 mb-4 mt-2">
           <v-toolbar
