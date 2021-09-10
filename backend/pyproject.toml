@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "beastiary"
-version = "0.9.6"
+version = "0.9.7"
 description = ""
 authors = ["Wytamma Wirth <wytamma.wirth@me.com>"]
 readme = "PYPI-README.md"
