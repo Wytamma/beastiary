@@ -1,9 +1,6 @@
-import { Trace } from '@/interfaces';
+import { Traces } from '@/interfaces';
 
 export interface DataState {
-    traces: Trace[];
-    activeTraceID: number | null;
-    activeParam: string | null;
-    burnIn: number;
+    traces: Traces;
     loadingSamples: boolean;
 }

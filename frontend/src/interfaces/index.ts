@@ -8,7 +8,15 @@ export interface Trace {
     headers_line: string;
     last_byte: number;
     parameters: {[key: string]: Data[]};
+    activeParams: string[];
+    isActive: boolean;
+    burnIn: number;
 }
+
+export interface Traces {
+    [id: number]: Trace;
+}
+
 
 export interface Data {
     state: number;

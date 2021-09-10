@@ -1,34 +1,34 @@
 <template>
   <v-list dense class="my-0 py-0">
-    <v-list-item-group style="height:400px; overflow:auto"  >
-        <div v-for="(param, i) in parameters"
-          :key="i"
-          @click="setActiveParam(param)">
-          
+    <v-list-item-group style="height:400px; overflow:auto" >
+      <div v-for="(data, param) in trace.parameters"
+          :key="param"
+          >
           <!-- <v-divider class="mx-4" v-if="i > 0" ></v-divider> -->
-         <v-lazy
-        v-model="isActive"
+      <v-lazy
         :options="{
           threshold: .9
         }"
         transition="fade-transition"
+        
+        :value="param"
       >
         <v-list-item >
-          <template v-slot:default="{ active }">
+          <template>
             <v-list-item-action>
-              <v-checkbox :input-value="active"></v-checkbox>
+              <v-checkbox v-model="activeParams" multiple :value="param" ></v-checkbox>
             </v-list-item-action>
-            <v-list-item-content class="my-0">
+            <v-list-item-content @click="setActiveParams([param])" class="my-0">
               <v-list-item-title>{{param}}</v-list-item-title>
             </v-list-item-content>
-            <v-list-item-icon class="mt-3 d-flex align-center ">
+            <!-- <v-list-item-icon class="mt-3 d-flex align-center ">
               <v-tooltip color="black" bottom>
                 <template #activator="{ on }">
                     <v-chip v-on="on" small>{{paramMean(param)}}</v-chip>
                 </template>
                 <span>Mean</span>
               </v-tooltip>
-            </v-list-item-icon>
+            </v-list-item-icon> -->
            </template>
         </v-list-item>
         </v-lazy>
@@ -39,46 +39,43 @@
 </template>
 
 <script lang="ts">
-import { dispatchSetActiveParam } from '@/store/data/actions';
-import { readActiveParam, readActiveTrace, readBurnIn, readParamsOfActiveTrace } from '@/store/data/getters';
+import { dispatchSetActiveParams } from '@/store/data/actions';
 import { format, mean } from 'mathjs';
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue} from 'vue-property-decorator';
+import { Trace } from '../../interfaces';
 
-@Component
+@Component({})
 export default class ParamsPanel extends Vue {
+    // @ts-ignore
+    @Prop(Trace) public trace;
+
     public isActive = false;
 
-    get activeTrace() {
-        return readActiveTrace(this.$store);
+    get activeParams() {
+      return this.trace.activeParams;
     }
-    get parameters() {
-        return readParamsOfActiveTrace(this.$store);
+
+    set activeParams(params) {
+      dispatchSetActiveParams(this.$store, {traceID: this.trace.id, params});
     }
-    get activeParam() {
-        return readActiveParam(this.$store);
+
+    public setActiveParams(params) {
+      dispatchSetActiveParams(this.$store, {traceID: this.trace.id, params});
     }
 
     public paramMean(param) {
-      const trace = this.activeTrace;
-      const burnIn = readBurnIn(this.$store) / 100;
-      if (trace) {
-          const data = trace.parameters[param].slice(
-                trace.parameters.state.length * burnIn,
-                ).map((row) =>  row.value).filter(Boolean); // nulls (inf etc) not in mean
-          if (data.length > 0) {
-              // @ts-ignore: No overload matches this call error
-              return format(mean(data), {precision: 4});
-            }
+      console.log(param);
+
+      const burnIn = this.trace.burnIn;
+      const data = this.trace.parameters[param].slice(
+            this.trace.parameters.state.length * burnIn / 100,
+            ).map((row) =>  row.value).filter(Boolean); // nulls (inf etc) not in mean
+      if (data.length > 0) {
+          // @ts-ignore: No overload matches this call error
+          return format(mean(data), {precision: 4});
       }
       return null;
     }
 
-    public async setActiveParam(param) {
-      await dispatchSetActiveParam(this.$store, param);
-    }
-    @Watch('activeParams', { deep: true })
-    public onChildChanged() {
-      // this.parameters = this.$store.getters.paramsOfActiveTrace
-    }
 }
 </script>

@@ -8,27 +8,26 @@
       height="100%"
       style="overflow-y: auto;  overflow-x: hidden;"
     >
-
       <v-list
-        class="py-0 "
-        v-if="traces.length"
+        class="py-0 my-0"
+        v-if="Object.keys(traces).length"
       >
         <v-list-group
-          v-for="(trace, i) in traces"
-          :key="i"
+          v-for="trace in traces"
+          :key="trace.id"
           @click="setAcitveTrace(trace)"
           color="primary"
           v-bind:disabled="isloading"
         >
           <template v-slot:activator>
             <v-list-item-content class="mb-0">
-              <v-list-item-title x-large>
+              <v-list-item-title class="text-h6 font-weight-regular">
                 {{fileName(trace.path)}}
               </v-list-item-title>
-              <v-list-item-subtitle class="wrap-text">
+              <v-list-item-subtitle class="wrap-text text-caption">
                 {{trace.path}}
               </v-list-item-subtitle>
-              <v-list-item-content>
+              <v-list-item-content class="pb-0">
                 <v-chip-group
                   column
                   v-if="Object.keys(trace.parameters).length > 0"
@@ -60,28 +59,46 @@
                         > {{trace.parameters.state.length}} </v-chip>
                       </template>
                       <span>Samples</span>
-                      </v-tooltip>
-                      </v-chip-group>
+                    </v-tooltip>
+                    <v-tooltip
+                      color="black"
+                      bottom
+                      v-if="trace.activeParams.length"
+                    >
+                      <template #activator="{ on }">
+                        <v-chip
+                          color="red"
+                          text-color="white"
+                          v-on="on"
+                          @click:close="setActiveParams(trace)"
+                          small
+                          close
+                        > {{trace.activeParams.length}}</v-chip>
+                      </template>
+                      <span>Active</span>
+                    </v-tooltip>
+                  </v-chip-group>
               </v-list-item-content>
             </v-list-item-content>
 
           </template>
-          <div v-if="activeTrace && activeTrace.id === trace.id" >
-          <v-col class=" mr-4 mb-0">
-            <div>Burn-in {{burnIn}}%</div>
-            <v-slider
-              v-on:end="setBurnIn"
-              v-model="burnIn"
-              class="align-center"
-              :max="100"
-              :min="0"
-              hide-details
-            > 
-              </v-slider>
-          </v-col>
-          <v-divider class="my-0"></v-divider>
-          
-          <ParamsPanel />
+          <div v-if="activeTraceIDs.includes(trace.id)">
+            <v-col class=" mr-4 mb-0">
+              <div>Burn-in {{burnIn}}%</div>
+              <v-slider
+                v-on:change="setBurnIn($event, trace.id)"
+                :value="trace.burnIn"
+                v-model="burnIn"
+                class="align-center"
+                :max="100"
+                :min="0"
+                hide-details
+              > 
+                </v-slider>
+            </v-col>
+            <v-divider class="my-0"></v-divider>
+            
+            <ParamsPanel :trace="trace" />
           </div>
           <div v-else class="text-center my-4">
              <v-progress-circular
@@ -103,11 +120,12 @@ import ParamsPanel from '@/components/data/ParamsPanel.vue';
 import {
   dispatchGetSamples,
   dispatchGetTraces,
+  dispatchSetActiveParams,
   dispatchSetActiveTrace,
   dispatchSetBurnIn,
   dispatchSetLoadingSamples,
 } from '@/store/data/actions';
-import { readActiveTrace, readBurnIn, readLoadingSamples, readTraces } from '@/store/data/getters';
+import { readActiveTraceIDs, readLoadingSamples, readTraces } from '@/store/data/getters';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
@@ -123,58 +141,56 @@ export default class TraceList extends Vue {
   public burnIn: number = 10;
 
   get traces() {
-    return readTraces(this.$store);
+    const traces = readTraces(this.$store);
+    console.log(traces);
+    return traces;
   }
 
-  get activeTrace() {
-    return readActiveTrace(this.$store);
+  get activeTraceIDs() {
+    return readActiveTraceIDs(this.$store);
   }
 
   get isloading() {
     return readLoadingSamples(this.$store);
   }
 
-  public setBurnIn(value) {
-    dispatchSetBurnIn(this.$store, value);
+  public setActiveParams(trace) {
+      dispatchSetActiveParams(this.$store, {traceID: trace.id, params: []});
   }
 
-  public async createInterval(trace) {
-    this.interval = setInterval( async () => {
-      const skip = 'state' in trace.parameters ? trace.parameters.state.length : 0;
-      if (!readLoadingSamples(this.$store)) {
-            await dispatchGetSamples(this.$store, {
-            trace,
-            skip,
-            limit: 100,
-          });
-            await dispatchSetActiveTrace(this.$store, trace);
-      }}, 2000);
+  public setBurnIn(value, traceID) {
+    console.log(value, traceID);
+
+    dispatchSetBurnIn(this.$store, {traceID, burnIn: value});
   }
 
   public async setAcitveTrace(trace) {
     const skip =
       'state' in trace.parameters ? trace.parameters.state.length : 0;
-    if (this.activeTrace === null || ( this.activeTrace && !(this.activeTrace.id === trace.id))) {
+    if (this.activeTraceIDs === [] || ( this.activeTraceIDs && !(this.activeTraceIDs.includes(trace.id)))) {
       // have just started or part way though loading
       if (!readLoadingSamples(this.$store)) {
-        dispatchSetLoadingSamples(this.$store, true);
+        // dispatchSetLoadingSamples(this.$store, true);
         // not loading and no active so load
-        if (this.interval) {
-          clearInterval(this.interval);
-        }
         await dispatchGetSamples(this.$store, { trace, skip, limit: 2000, all: true });
         await dispatchSetActiveTrace(this.$store, trace);
-        dispatchSetLoadingSamples(this.$store, false);
-        await this.createInterval(trace);
+        // dispatchSetLoadingSamples(this.$store, false);
+        // await this.createInterval(trace);
       } // if it is loading do nothing
-
     }
-
   }
 
   public async mounted() {
     await dispatchGetTraces(this.$store);
-    // await dispatchLoadAllSamplesAllTraces(this.$store)
+    this.interval = setInterval( async () => {
+      for (const id of Object.keys(this.traces)) {
+        const trace = this.traces[id];
+        if (trace.isActive === true) {
+          const skip = 'state' in trace.parameters ? trace.parameters.state.length : 0;
+          await dispatchGetSamples(this.$store, {trace, skip, limit: 100});
+          }
+        }
+      }, 2000);
   }
   public async beforeDestroy() {
     clearInterval(this.interval);

@@ -28,6 +28,7 @@ class CRUDSample(CRUDBase[Sample, SampleCreate, SampleUpdate]):
         db_objs = [self.model(**obj_in_data) for obj_in_data in objs_in_data]
         db.add_all(db_objs)
         db.commit()
+        # db.refresh(db_objs)
         return db_objs
 
     def get_multi_by_trace(

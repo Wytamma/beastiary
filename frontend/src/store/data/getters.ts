@@ -4,29 +4,12 @@ import { DataState } from './state';
 
 export const getters = {
     traces: (state: DataState) => state.traces,
-    activeTrace: (state: DataState) => state.activeTraceID ?
-        state.traces.find((trace) => trace.id === state.activeTraceID) :
-        null,
-    paramsOfActiveTrace: (state: DataState) => {
-        if (state.activeTraceID) {
-            const activeTrace = state.traces.find((trace) => trace.id === state.activeTraceID);
-            if (activeTrace && activeTrace.parameters) {
-                return Object.keys(activeTrace.parameters);
-            } else {
-                return null;
-            }
-        }
-    },
-    activeParam: (state: DataState) => state.activeParam,
-    burnIn: (state: DataState) => state.burnIn,
     loadingSamples: (state: DataState) => state.loadingSamples,
+    activeTraceIDs: (state: DataState) => Object.values(state.traces).filter((t) => t.isActive).map((t) => t.id),
 };
 const {read} = getStoreAccessors<DataState, State>('');
 
 export const readTraces = read(getters.traces);
-export const readBurnIn = read(getters.burnIn);
-export const readParamsOfActiveTrace = read(getters.paramsOfActiveTrace);
-export const readActiveTrace = read(getters.activeTrace);
-export const readActiveParam = read(getters.activeParam);
 export const readLoadingSamples = read(getters.loadingSamples);
+export const readActiveTraceIDs = read(getters.activeTraceIDs);
 

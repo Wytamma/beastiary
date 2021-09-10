@@ -1,5 +1,6 @@
 import { Data, InSample, SetSample, Trace } from '@/interfaces';
 import { getStoreAccessors } from 'typesafe-vuex';
+import Vue from 'vue';
 import { State } from '../state';
 import { DataState } from './state';
 
@@ -22,52 +23,55 @@ function formatData(samples: InSample[]) {
     return parameters;
 }
 
+function setTraceDefaults(trace: Trace) {
+    trace.parameters = {};
+    trace.activeParams = [];
+    trace.isActive = false;
+    trace.burnIn = 10;
+}
+
 export const mutations = {
     setTraces(state: DataState, payload: Trace[]) {
         for (const trace of payload) {
-            if (!trace.parameters) {
-                trace.parameters = {};
-            }
+            setTraceDefaults(trace);
         }
-        state.traces = payload;
+        const traces = payload.reduce((obj, trace) => {
+            obj[trace.id] = trace;
+            return obj;
+          }, {});
+        state.traces = traces;
     },
     setTrace(state: DataState, payload: Trace) {
-        if (!payload.parameters) {
-            payload.parameters = {};
-        }
-        state.traces.push(payload);
+        console.log(payload);
+        setTraceDefaults(payload);
+        // https://vuex.vuejs.org/guide/mutations.html#mutations-follow-vue-s-reactivity-rules
+        Vue.set(state.traces, payload.id, payload);
     },
     setActiveTrace(state: DataState, payload: Trace) {
-        if (payload) {
-            state.activeTraceID = payload.id;
-        } else {
-            state.activeTraceID = null;
-        }
+        state.traces[payload.id].isActive = true;
 
     },
-    setActiveParam(state: DataState, payload: string) {
-        state.activeParam = payload;
+    setActiveParams(state: DataState, payload: {traceID: number, params: string[]}) {
+        state.traces[payload.traceID].activeParams = payload.params;
     },
-    setBurnIn(state: DataState, payload: number) {
-        state.burnIn = payload;
+    setBurnIn(state: DataState, payload: {traceID: number, burnIn: number}) {
+        console.log(payload);
+        state.traces[payload.traceID].burnIn = payload.burnIn;
     },
     setLoadingSamples(state: DataState, payload: boolean) {
         state.loadingSamples = payload;
     },
-    setSetSamples(state: DataState, payload: SetSample) {
-        const traceId = payload.trace.id;
+    setSetSamples(state: DataState, payload: {traceID: number, data: InSample[]}) {
         const data = formatData(payload.data);
-        const trace = state.traces.find((t) => t.id === traceId);
-        if (trace) {
-            if (Object.keys(trace.parameters).length === 0) {
-                trace.parameters = data;
-            } else {
-                for (const paramName in data) {
-                    if (paramName) {
-                        trace.parameters[paramName] = trace.parameters[paramName].concat(
-                            data[paramName]).sort((a, b) => a.state - b.state,
-                        );
-                    }
+        const trace = state.traces[payload.traceID];
+        if (Object.keys(trace.parameters).length === 0) {
+            trace.parameters = data;
+        } else {
+            for (const paramName in data) {
+                if (paramName) {
+                    trace.parameters[paramName] = trace.parameters[paramName].concat(
+                        data[paramName]).sort((a, b) => a.state - b.state,
+                    );
                 }
             }
         }
@@ -80,7 +84,7 @@ export const commitSetTraces = commit(mutations.setTraces);
 export const commitSetTrace = commit(mutations.setTrace);
 export const commitSetActiveTrace = commit(mutations.setActiveTrace);
 export const commitSetSamples = commit(mutations.setSetSamples);
-export const commitSetActiveParam = commit(mutations.setActiveParam);
+export const commitSetActiveParams = commit(mutations.setActiveParams);
 export const commitSetBurnIn = commit(mutations.setBurnIn);
 export const commitSetLoadingSamples = commit(mutations.setLoadingSamples);
 

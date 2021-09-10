@@ -3,18 +3,21 @@
 </template>
 
 <script lang="ts">
-import { readActiveParam, readActiveTrace } from '@/store/data/getters';
-import { readBurnIn } from '@/store/data/getters';
+import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Vue } from 'vue-property-decorator';
+import { Trace } from '../../../interfaces';
 @Component({
   components: {
     Plotly,
   },
 })
 export default class Violin extends Vue {
-    get activeTrace() {
-        return readActiveTrace(this.$store);
+    get traces() {
+      return readTraces(this.$store);
+    }
+    get activeTraceIDs() {
+      return readActiveTraceIDs(this.$store);
     }
     get layout() {
         return {
@@ -25,40 +28,76 @@ export default class Violin extends Vue {
             margin: {
             l: 50,
             r: 30,
-            b: 20,
-            t: 30,
+            b: 30,
+            t: 20,
             pad: 0,
             },
-            height: 200,
+            height: 270,
         };
     }
     get ViolinData() {
-    const trace = readActiveTrace(this.$store);
-    const param = readActiveParam(this.$store);
-    const burnIn = readBurnIn(this.$store) / 100;
-    if (trace && param) {
-        // console.log(Object.keys(trace.parameters).map( param => trace.parameters[param].map((row) =>  row.value)))
-        const data = trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value);
-        return [{
-        x: data,
-        type: 'violin',
-        points: 'none',
-        box: {
-            visible: true,
-        },
-        boxpoints: false,
-        line: {
-            color: 'black',
-        },
-        opacity: 0.6,
-        meanline: {
-            visible: true,
-        },
-        fillcolor: '#8dd3c7',
-      }];
-    } else {
-      return {};
+    const data: any[] = [];
+    const colours = [
+      '#2980b9',
+      '#2ecc71',
+      '#9b59b6',
+      '#f1c40f',
+      '#e74c3c',
+      '#1abc9c',
+      '#8e44ad',
+      '#1f77b4',
+      '#ff7f0e',
+      '#2ca02c',
+      '#d62728',
+      '#9467bd',
+      '#8c564b',
+      '#e377c2',
+      '#7f7f7f',
+      '#bcbd22',
+      '#17becf',
+    ];
+    let count = 0;
+    for (const trace of Object.values(this.traces)) {
+      // @ts-ignore
+      if (trace.isActive) {
+        // @ts-ignore
+        const burnIn = trace.burnIn / 100;
+        // @ts-ignore
+        for (const param of trace.activeParams) {
+          data.push({
+            // @ts-ignore
+            x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
+            y: null,
+            type: 'violin',
+            points: 'none',
+            box: {
+                visible: true,
+            },
+            boxpoints: false,
+            line: {
+                color: 'black',
+            },
+            opacity: 0.5,
+            meanline: {
+                visible: true,
+            },
+            fillcolor: colours[count],
+            name: this.activeTraceIDs.length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
+            hovertemplate: '%{y}',
+            // @ts-ignore
+            showlegend: false,
+            // @ts-ignore
+            legendgroup: `${param}`,
+          });
+
+          count++;
+        }
+      }
     }
+    return data;
+  }
+  public fileName(path) {
+    return path.substring(path.lastIndexOf('/') + 1);
   }
 }
 </script>

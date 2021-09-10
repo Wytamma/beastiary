@@ -4,10 +4,7 @@ import { mutations } from './mutations';
 import { DataState } from './state';
 
 const defaultState: DataState = {
-    traces: [],
-    activeTraceID: null,
-    activeParam: null,
-    burnIn: 10,
+    traces: {},
     loadingSamples: false,
 };
 

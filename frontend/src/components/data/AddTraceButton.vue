@@ -27,7 +27,7 @@
         <form>
           <v-text-field
                   required
-                  label="Path to the BEAST log file"
+                  label="Path to the log file"
                   v-model="path"
           ></v-text-field>
         </form>
@@ -65,7 +65,6 @@ export default class AddTraceButton extends Vue {
     public submit() {
       dispatchCreateTrace(this.$store, {path: this.path});
       this.dialog = false;
-
     }
 }
 </script>

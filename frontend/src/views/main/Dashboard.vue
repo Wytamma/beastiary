@@ -5,7 +5,7 @@
           <v-toolbar
                 class="rounded-md"
                 flat >
-            <v-toolbar-title >
+            <v-toolbar-title class="text-h5">
                 Traces
             </v-toolbar-title>
             
@@ -16,8 +16,7 @@
           <TraceList />
         </v-col>
         <v-col cols="8" class="pl-2">
-          <div  v-if="activeTrace" class="my-4">
-            <div class="text-button text-center">{{activeParam ? activeParam : ''}}</div >
+          <div  v-if="activeParams" class="">
             <Trace />
             <Violin />
           </div>
@@ -30,13 +29,11 @@
 import '@/assets/css/custom.css';
 
 import AddTraceButton from '@/components/data/AddTraceButton.vue';
-import Histogram from '@/components/data/graphs/Histogram.vue';
 import Trace from '@/components/data/graphs/Trace.vue';
 import Violin from '@/components/data/graphs/Violin.vue';
 import ParamsPanel from '@/components/data/ParamsPanel.vue';
 import TraceList from '@/components/data/TraceList.vue';
-import { readActiveTrace, readTraces } from '@/store/data/getters';
-import { readActiveParam } from '@/store/data/getters';
+import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Vue } from 'vue-property-decorator';
 
@@ -45,7 +42,6 @@ import { Component, Vue } from 'vue-property-decorator';
     TraceList,
     ParamsPanel,
     Plotly,
-    Histogram,
     Trace,
     Violin,
     AddTraceButton,
@@ -53,15 +49,25 @@ import { Component, Vue } from 'vue-property-decorator';
   },
 })
 export default class Dashboard extends Vue {
-  get activeTrace() {
-    return readActiveTrace(this.$store);
+  get activeTraceIDs() {
+    const IDs = readActiveTraceIDs(this.$store);
+    console.log(IDs);
+    return IDs;
   }
   get traces() {
     return readTraces(this.$store);
   }
-  get activeParam() {
-    return readActiveParam(this.$store);
+
+  get activeParams() {
+    console.log(Object.values(this.traces));
+    const traces = Object.values(this.traces);
+    const activeParams = traces.map((trace) => trace.activeParams).flat().map((t) => t.toLowerCase());
+    if (activeParams) {
+      return [...new Set(activeParams)].join(' ');
+    }
+    return '';
   }
+
 
 }
 </script>

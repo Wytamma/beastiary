@@ -1,17 +1,13 @@
 import { api } from '@/api';
 import { Trace, TraceCreate } from '@/interfaces';
-import router from '@/router';
-import { readActiveParam } from '@/store/data/getters';
-import { AxiosError } from 'axios';
-import { setDifference } from 'mathjs';
+import { AxiosResponse } from 'axios';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { ActionContext } from 'vuex';
 import { dispatchCheckApiError } from '../main/actions';
 import { commitAddNotification, commitRemoveNotification } from '../main/mutations';
 import { State } from '../state';
-import { readTraces } from './getters';
 import {
-    commitSetActiveParam,
+    commitSetActiveParams,
     commitSetActiveTrace,
     commitSetBurnIn,
     commitSetLoadingSamples,
@@ -25,39 +21,36 @@ type MainContext = ActionContext<DataState, State>;
 
 export const actions = {
     async actionGetTraces(context: MainContext) {
+        let response: AxiosResponse | null = null;
         try {
-            const response = await api.getTraces(context.rootState.main.token);
-            if (response) {
-                commitSetTraces(context, response.data);
-            }
+            response = await api.getTraces(context.rootState.main.token);
         } catch (error) {
             await dispatchCheckApiError(context, error);
-
+        }
+        if (response) {
+            commitSetTraces(context, response.data);
         }
     },
     async actionCreateTrace(context: MainContext, payload: TraceCreate) {
         const loadingNotification = { content: 'saving', showProgress: true };
         commitAddNotification(context, loadingNotification);
+        let response: AxiosResponse | null = null;
         try {
-            const response = await api.createTrace(context.rootState.main.token, payload);
-            commitSetTrace(context, response.data);
-            commitRemoveNotification(context, loadingNotification);
-            commitAddNotification(context, { content: 'Trace successfully created', color: 'success' });
+            response = await api.createTrace(context.rootState.main.token, payload);
         } catch (error) {
-            commitRemoveNotification(context, loadingNotification);
             await dispatchCheckApiError(context, error);
+        }
+        commitRemoveNotification(context, loadingNotification);
+        if (response != null) {
+            commitSetTrace(context, response.data);
+            commitAddNotification(context, { content: 'Trace successfully created', color: 'success' });
         }
     },
     async actionSetActiveTrace(context: MainContext, payload: Trace) {
         commitSetActiveTrace(context, payload);
-        const param = readActiveParam(context);
-        const headers = payload.headers_line.split(' ');
-        if ( param === null || headers.includes(param) === false) {
-            commitSetActiveParam(context, headers[1]);
-        }
     },
-    async actionSetActiveParam(context: MainContext, payload: string) {
-        commitSetActiveParam(context, payload);
+    async actionSetActiveParams(context: MainContext, payload: {traceID: number, params: string[]}) {
+        commitSetActiveParams(context, payload);
     },
     async actionGetSamples(
         context: MainContext,
@@ -70,33 +63,25 @@ export const actions = {
         const limit = payload.limit ? payload.limit : 100;
         const all = payload.all ? payload.all : false;
         const loadingNotification = { content: 'Loading samples...', showProgress: true };
+        if (skip === 0) {
+            commitAddNotification(context, loadingNotification);
+        }
+        let response: AxiosResponse | null = null;
         try {
-            if (skip === 0) {
-                commitAddNotification(context, loadingNotification);
-            }
-            const response = await api.getSamples(context.rootState.main.token, trace, skip, limit);
+            response = await api.getSamples(context.rootState.main.token, trace, skip, limit);
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+        commitRemoveNotification(context, loadingNotification);
+        if (response != null) {
             if (all === true && response.data.length === limit) {
                 // if you get back what you request go again
                 await dispatchGetSamples(context, {trace, skip: skip + limit, limit, all: true});
             }
-            if (response) {
-                commitSetSamples(context, {trace, data: response.data});
-            }
-        } catch (error) {
-            await dispatchCheckApiError(context, error);
-        } finally {
-            commitRemoveNotification(context, loadingNotification);
+            commitSetSamples(context, {traceID: trace.id, data: response.data});
         }
     },
-    async actionLoadAllSamplesAllTraces(context: MainContext) {
-        const traces = readTraces(context);
-        for (const trace of traces) {
-            if (trace) {
-                await dispatchGetSamples(context, {trace});
-            }
-        }
-    },
-    async actionSetBurnIn(context: MainContext, payload: number) {
+    async actionSetBurnIn(context: MainContext, payload: {traceID: number, burnIn: number}) {
         commitSetBurnIn(context, payload);
     },
     async actionSetLoadingSamples(context: MainContext, payload: boolean) {
@@ -110,8 +95,7 @@ export const dispatchGetTraces = dispatch(actions.actionGetTraces);
 export const dispatchCreateTrace = dispatch(actions.actionCreateTrace);
 export const dispatchSetActiveTrace = dispatch(actions.actionSetActiveTrace);
 export const dispatchGetSamples = dispatch(actions.actionGetSamples);
-export const dispatchLoadAllSamplesAllTraces = dispatch(actions.actionLoadAllSamplesAllTraces);
-export const dispatchSetActiveParam = dispatch(actions.actionSetActiveParam);
+export const dispatchSetActiveParams = dispatch(actions.actionSetActiveParams);
 export const dispatchSetBurnIn = dispatch(actions.actionSetBurnIn);
 export const dispatchSetLoadingSamples = dispatch(actions.actionSetLoadingSamples);
 
