@@ -4,13 +4,12 @@
       <div v-for="(data, param) in trace.parameters"
           :key="param"
           >
-          <!-- <v-divider class="mx-4" v-if="i > 0" ></v-divider> -->
       <v-lazy
         :options="{
           threshold: .9
         }"
         transition="fade-transition"
-        
+        v-if="param != 'state'">
         :value="param"
       >
         <v-list-item >
@@ -21,14 +20,9 @@
             <v-list-item-content @click="setActiveParams([param])" class="my-0">
               <v-list-item-title>{{param}}</v-list-item-title>
             </v-list-item-content>
-            <!-- <v-list-item-icon class="mt-3 d-flex align-center ">
-              <v-tooltip color="black" bottom>
-                <template #activator="{ on }">
-                    <v-chip v-on="on" small>{{paramMean(param)}}</v-chip>
-                </template>
-                <span>Mean</span>
-              </v-tooltip>
-            </v-list-item-icon> -->
+            <v-list-item-icon class="mt-3 d-flex align-center ">
+              <ESSChip :data="data" :burnIn="trace.burnIn"/>
+            </v-list-item-icon>
            </template>
         </v-list-item>
         </v-lazy>
@@ -39,12 +33,15 @@
 </template>
 
 <script lang="ts">
+import ESSChip from '@/components/data/ESSChip.vue';
 import { dispatchSetActiveParams } from '@/store/data/actions';
 import { format, mean } from 'mathjs';
 import { Component, Prop, Vue} from 'vue-property-decorator';
 import { Trace } from '../../interfaces';
 
-@Component({})
+@Component({components: {
+    ESSChip,
+  }})
 export default class ParamsPanel extends Vue {
     // @ts-ignore
     @Prop(Trace) public trace;
