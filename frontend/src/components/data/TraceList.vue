@@ -82,7 +82,7 @@
             </v-list-item-content>
 
           </template>
-          <div v-show="activeTraceIDs.includes(trace.id)">
+          <div v-if="openTraceID === trace.id && activeTraceIDs.includes(trace.id)">
             <v-col class=" mr-4 mb-0">
               <div>Burn-in {{burnIn}}%</div>
               <v-slider
@@ -97,7 +97,6 @@
                 </v-slider>
             </v-col>
             <v-divider class="my-0"></v-divider>
-            
             <ParamsPanel :trace="trace" />
           </div>
           <div v-show="!activeTraceIDs.includes(trace.id)" class="text-center my-4">
@@ -136,6 +135,7 @@ import { Component, Vue } from 'vue-property-decorator';
 })
 export default class TraceList extends Vue {
   public activeTraces = [];
+  public openTraceID = null;
   public show: boolean = true;
   public interval?: number;
   public burnIn: number = 10;
@@ -165,6 +165,7 @@ export default class TraceList extends Vue {
   }
 
   public async setAcitveTrace(trace) {
+    this.openTraceID = trace.id
     const skip =
       'state' in trace.parameters ? trace.parameters.state.length : 0;
     if (this.activeTraceIDs === [] || ( this.activeTraceIDs && !(this.activeTraceIDs.includes(trace.id)))) {
@@ -190,7 +191,7 @@ export default class TraceList extends Vue {
           await dispatchGetSamples(this.$store, {trace, skip, limit: 100});
           }
         }
-      }, 2000);
+      }, 5000);
   }
   public async beforeDestroy() {
     clearInterval(this.interval);

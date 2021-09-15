@@ -73,7 +73,7 @@ export default class Histogram extends Vue {
             x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.state),
             y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
             type: 'scatter',
-            opacity: 0.6,
+            opacity: 0.8,
             name: this.activeTraceIDs.length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             marker: {color: colours[count]},
             hovertemplate: '%{y}',

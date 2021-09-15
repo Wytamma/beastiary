@@ -3,15 +3,7 @@
     <v-list-item-group style="height:400px; overflow:auto" >
       <div v-for="(data, param) in trace.parameters"
           :key="param"
-          >
-      <v-lazy
-        :options="{
-          threshold: .9
-        }"
-        transition="fade-transition"
-        v-if="param != 'state'">
-        :value="param"
-      >
+          v-if="param != 'state'">
         <v-list-item >
           <template>
             <v-list-item-action>
@@ -25,7 +17,6 @@
             </v-list-item-icon>
            </template>
         </v-list-item>
-        </v-lazy>
         </div>
         
     </v-list-item-group>
@@ -61,8 +52,6 @@ export default class ParamsPanel extends Vue {
     }
 
     public paramMean(param) {
-      console.log(param);
-
       const burnIn = this.trace.burnIn;
       const data = this.trace.parameters[param].slice(
             this.trace.parameters.state.length * burnIn / 100,
