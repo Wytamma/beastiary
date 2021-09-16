@@ -8,6 +8,14 @@
 
 This is a real time version of tracer that can be run on remote servers (e.g. a HPC). Its goal is to be a beautiful and simple, yet power tool for Bayesian phylogenetic inference.
 
+---
+
+**Documentation**: <a href="https://beastiary.wytamma.com" target="_blank">https://beastiary.wytamma.com</a>
+
+**Source Code**: <a href="https://github.com/Wytamma/beastiaryi" target="_blank">https://github.com/Wytamma/beastiary</a>
+
+---
+
 ## Installation
 ```bash
 pip install beastiary
@@ -22,6 +30,6 @@ beastiary
 
 The server will start on [http://127.0.0.1:5000/](http://127.0.0.1:5000/) by default. Every time the server starts it will generate a unique id that can be used to log into the webapp. 
 
-Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/) and log in with the ID. 
+![](https://beastiary.wytamma.com/images/screen_shot_dark.png)
 
-![](docs/images/screen_shot.png)
+For more information read the [docs](https://beastiary.wytamma.com/).

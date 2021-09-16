@@ -30,6 +30,6 @@ beastiary
 
 The server will start on [http://127.0.0.1:5000/](http://127.0.0.1:5000/) by default. Every time the server starts it will generate a unique id that can be used to log into the webapp. 
 
-![](docs/images/screen_shot.png)
+![](docs/images/screen_shot_dark.png)
 
 For more information read the [docs](https://beastiary.wytamma.com/).
