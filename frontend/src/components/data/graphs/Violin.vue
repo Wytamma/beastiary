@@ -22,14 +22,14 @@ export default class Violin extends Vue {
     get layout() {
         return {
             plot_bgcolor: 'rgba(0, 0, 0, 0)',
-            paper_bgcolor: 'rgba(0, 0, 0, 0)',
+            paper_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'rgba(0, 0, 0, 0)',
             yaxis: {showticklabels: false, zeroline: false},
             xaxis: { zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
             margin: {
             l: 50,
             r: 30,
             b: 30,
-            t: 20,
+            t: 10,
             pad: 0,
             },
             height: 270,
@@ -82,7 +82,7 @@ export default class Violin extends Vue {
                 visible: true,
             },
             fillcolor: colours[count],
-            name: this.activeTraceIDs.length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
+            name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             hovertemplate: '%{y}',
             // @ts-ignore
             showlegend: false,

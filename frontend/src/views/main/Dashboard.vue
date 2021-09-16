@@ -1,24 +1,27 @@
 <template>
       <v-layout fill-height  style=" overflow: hidden;">
-      <v-row>
-        <v-col cols="4" class="pr-0 pl-6 mb-4 mt-2">
-          <v-toolbar
-                class="rounded-md"
-                flat >
-            <v-toolbar-title class="text-h5">
-                Traces
-            </v-toolbar-title>
-            
-            <v-spacer></v-spacer>
-            <AddTraceButton/>
-          </v-toolbar>
-          <v-divider v-if="traces.length > 0"></v-divider>
-          <TraceList />
+      <v-row class="ml-4 mr-2 pb-8 mt-4">
+        <v-col cols="3" class="pa-0">
+          <div class="mt-0 fill-height elevation-4 rounded-lg">
+            <v-toolbar
+                  class="rounded-t-lg"
+                  flat >
+              <v-toolbar-title class="text-h5">
+                  Traces
+              </v-toolbar-title>
+              
+              <v-spacer></v-spacer>
+              <AddTraceButton/>
+            </v-toolbar>
+            <v-divider v-if="traces.length > 0"></v-divider>
+            <TraceList />
+          </div>
         </v-col>
-        <v-col cols="8" class="pl-2">
+        <v-col cols="9" class="pl-4 pt-0">
           <div  v-if="activeParams" class="">
-            <Trace />
-            <Violin />
+
+            <Trace class="elevation-3 mb-4 rounded-lg" />
+            <Violin class="elevation-3 rounded-lg" />
           </div>
         </v-col>
       </v-row>

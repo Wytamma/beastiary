@@ -4,7 +4,7 @@
     fill-height
   >
     <v-list
-      class="col mb-15 py-0"
+      class="col mb-15 py-0 rounded-b-lg "
       height="100%"
       style="overflow-y: auto;  overflow-x: hidden;"
     >

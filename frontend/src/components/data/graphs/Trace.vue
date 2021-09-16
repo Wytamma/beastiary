@@ -29,16 +29,17 @@ export default class Histogram extends Vue {
       yaxis2: {showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
       xaxis2: {domain: [0.73, 1], showline: false, zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
       plot_bgcolor: 'rgba(0, 0, 0, 0)',
-      paper_bgcolor: 'rgba(0, 0, 0, 0)',
+      paper_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'rgba(0, 0, 0, 0)',
       barmode: 'overlay',
-      legend: {orientation: 'h', x: 0.5, y: 1.15, xanchor: 'center'},
+      legend: {orientation: 'h', x: 0.5, y: 1.15, xanchor: 'center', font: {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'}},
       margin: {
         l: 50,
         r: 30,
         b: 30,
-        t: 10,
+        t: 0,
         pad: 0,
       },
+      height: 400,
     };
   }
   get traceData() {
@@ -74,7 +75,7 @@ export default class Histogram extends Vue {
             y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
             type: 'scatter',
             opacity: 0.8,
-            name: this.activeTraceIDs.length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
+            name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             marker: {color: colours[count]},
             hovertemplate: '%{y}',
             showlegend: false,
@@ -88,7 +89,6 @@ export default class Histogram extends Vue {
             name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             marker: {color: colours[count]},
             hovertemplate: '%{y}',
-            bingroup: '1',
           });
           count++;
         }
