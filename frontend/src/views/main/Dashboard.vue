@@ -51,7 +51,6 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class Dashboard extends Vue {
   get activeTraceIDs() {
     const IDs = readActiveTraceIDs(this.$store);
-    console.log(IDs);
     return IDs;
   }
   get traces() {
@@ -59,7 +58,6 @@ export default class Dashboard extends Vue {
   }
 
   get activeParams() {
-    console.log(Object.values(this.traces));
     const traces = Object.values(this.traces);
     const activeParams = traces.map((trace) => trace.activeParams).flat().map((t) => t.toLowerCase());
     if (activeParams) {

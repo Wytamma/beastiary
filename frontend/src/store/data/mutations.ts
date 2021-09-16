@@ -42,7 +42,6 @@ export const mutations = {
         state.traces = traces;
     },
     setTrace(state: DataState, payload: Trace) {
-        console.log(payload);
         setTraceDefaults(payload);
         // https://vuex.vuejs.org/guide/mutations.html#mutations-follow-vue-s-reactivity-rules
         Vue.set(state.traces, payload.id, payload);
@@ -55,7 +54,6 @@ export const mutations = {
         state.traces[payload.traceID].activeParams = payload.params;
     },
     setBurnIn(state: DataState, payload: {traceID: number, burnIn: number}) {
-        console.log(payload);
         state.traces[payload.traceID].burnIn = payload.burnIn;
     },
     setLoadingSamples(state: DataState, payload: boolean) {

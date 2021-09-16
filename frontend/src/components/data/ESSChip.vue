@@ -1,25 +1,23 @@
 <template>
-    <v-tooltip v-if="ESS" color="black" bottom>
+    <v-tooltip  color="black" bottom>
       <template #activator="{ on }">
-          <v-chip :color="color" text-color="white" v-on="on" small>{{ESS}}</v-chip>
+          <v-chip v-show="ESS" :color="color" text-color="white" v-on="on" small>{{ESS}}</v-chip>
       </template>
       <span>ESS</span>
     </v-tooltip>
 </template>
 
 <script lang="ts">
-import { format, mean, zeros } from 'mathjs';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Data } from '../../interfaces';
 
 @Component
 export default class ESSChip extends Vue {
-  // @ts-ignore
-  @Prop() public data: Data[];
-  // @ts-ignore
-  @Prop() public burnIn: number;
 
   get color() {
+    if (this.ESS === null) {
+      return 'red'
+    }
     if (this.ESS < 100) {
       return 'red';
     } else if (this.ESS < 200) {
@@ -29,21 +27,27 @@ export default class ESSChip extends Vue {
     }
 
   }
+  // @ts-ignore
+  @Prop() public data: Data[];
+  // @ts-ignore
+  @Prop() public burnIn: number;
 
-  get ESS(): number {
-    const MAX_LAG: number = 2000;
-    const values: Array<number | null> = this.data.slice(
-      this.data.length * (this.burnIn / 100),
+  public ESS: number | null = null;
+
+  public actions = [
+  { message: 'ESS', func: (data, burnIn) => {
+    const values: Array<number | null> = data.slice(
+      data.length * (burnIn / 100),
       ).map((v) => v.value);
     if (values.includes(null)) {
-      return 0;
+      return 1;
     }
+    const stepSize: number = data[1].state - data[0].state;
+    const MAX_LAG: number = 2000;
     const nSmaples: number = values.length;
-    const stepSize: number = this.data[1].state - this.data[0].state;
-
     const maxLag: number = Math.min(nSmaples - 1, MAX_LAG);
     // @ts-ignore
-    const valuesMean: number = mean(values);
+    const valuesMean: number = values.reduce((a, b) => (a + b)) / values.length;
     const gammaStat: number[] = new Array(maxLag); for (let i = 0; i < maxLag; ++i) { gammaStat[i] = 0; }
     let stat = 0.0;
     for (let lag = 0; lag < maxLag; lag++) {
@@ -74,8 +78,28 @@ export default class ESSChip extends Vue {
     if (ACT !== 0) {
       ESS = (stepSize * nSmaples) / ACT;
     }
+    return ESS;
+  }},
+  ];
+  
+  // @ts-ignore
+  public worker = this.$worker.create(this.actions);
 
-    return Math.round(ESS);
+  @Watch('data')
+  public updateESS(data: Data[]) {
+    const burnIn = this.burnIn;
+    this.worker.postMessage('ESS', [data, burnIn]) // compute ESS in worker
+    .then((res) => this.ESS = Math.round(res))
+    .catch(console.error);
   }
+
+  public mounted() {
+    const data = this.data;
+    const burnIn = this.burnIn;
+    this.worker.postMessage('ESS', [data, burnIn]) // compute ESS in worker
+    .then((res) => this.ESS = Math.round(res))
+    .catch(console.error);
+  }
+
 }
 </script>

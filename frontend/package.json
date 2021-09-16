@@ -23,6 +23,7 @@
     "vue-plotly": "^1.1.0",
     "vue-property-decorator": "^7.3.0",
     "vue-router": "^3.0.2",
+    "vue-worker": "^1.2.1",
     "vuetify": "^2.4.0",
     "vuex": "^3.1.0"
   },
@@ -41,7 +42,8 @@
     "typescript": "^3.2.4",
     "vue-cli-plugin-vuetify": "~2.4.2",
     "vue-template-compiler": "^2.5.22",
-    "vuetify-loader": "^1.7.0"
+    "vuetify-loader": "^1.7.0",
+    "worker-loader": "^3.0.8"
   },
   "postcss": {
     "plugins": {

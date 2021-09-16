@@ -142,7 +142,6 @@ export default class TraceList extends Vue {
 
   get traces() {
     const traces = readTraces(this.$store);
-    console.log(traces);
     return traces;
   }
 
@@ -159,13 +158,11 @@ export default class TraceList extends Vue {
   }
 
   public setBurnIn(value, traceID) {
-    console.log(value, traceID);
-
     dispatchSetBurnIn(this.$store, {traceID, burnIn: value});
   }
 
   public async setAcitveTrace(trace) {
-    this.openTraceID = trace.id
+    this.openTraceID = trace.id;
     const skip =
       'state' in trace.parameters ? trace.parameters.state.length : 0;
     if (this.activeTraceIDs === [] || ( this.activeTraceIDs && !(this.activeTraceIDs.includes(trace.id)))) {
