@@ -32,6 +32,8 @@
         </v-list>
         <v-divider></v-divider>
         <v-spacer></v-spacer>
+        <img src="https://beastiary.wytamma.com/images/beastiary.png" alt="">
+        <v-spacer></v-spacer>
         <v-list>
           <v-list-item @click="logout">
             <v-list-item-action>
