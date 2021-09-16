@@ -32,8 +32,8 @@
         </v-list>
         <v-divider></v-divider>
         <v-spacer></v-spacer>
-        <img src="https://beastiary.wytamma.com/images/beastiary.png" alt="">
-        <v-spacer></v-spacer>
+        <img class="mr-6 ml-5" src="https://beastiary.wytamma.com/images/Beastiary.png" alt="">
+        <v-divider></v-divider>
         <v-list>
           <v-list-item @click="logout">
             <v-list-item-action>
@@ -46,7 +46,7 @@
         </v-list>
       </v-layout>
     </v-navigation-drawer>
-    <v-app-bar dark color="primary" app>
+    <v-app-bar dark color="teal lighten-2" app>
       <v-app-bar-nav-icon @click.stop="switchShowDrawer"></v-app-bar-nav-icon>
       <v-app-bar-title v-text="appName"></v-app-bar-title >
       <v-spacer></v-spacer>
@@ -54,7 +54,7 @@
           v-model="$vuetify.theme.dark"
           hide-details
           inset
-          color="blue darken-4"
+          color="teal darken-4"
       ></v-switch>
     </v-app-bar>
     <router-view></router-view>

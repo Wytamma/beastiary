@@ -6,7 +6,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          color="primary"
+          color="teal lighten-2"
           dark
           fab
           elevation="2"

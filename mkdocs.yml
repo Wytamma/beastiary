@@ -2,6 +2,9 @@ site_name: Beastiary
 theme:
   name: material
   logo: images/logo_cage_white.svg
+  palette:
+    primary: teal
+    accent: orange
 repo_name: wytamma/beastiary
 repo_url: https://github.com/wytamma/beastiary
 nav:
