@@ -16,7 +16,7 @@ export default class ESSChip extends Vue {
 
   get color() {
     if (this.ESS === null) {
-      return 'red'
+      return 'red';
     }
     if (this.ESS < 100) {
       return 'red';
@@ -81,7 +81,7 @@ export default class ESSChip extends Vue {
     return ESS;
   }},
   ];
-  
+
   // @ts-ignore
   public worker = this.$worker.create(this.actions);
 

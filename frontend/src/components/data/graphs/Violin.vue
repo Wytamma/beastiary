@@ -1,5 +1,10 @@
 <template>
-    <Plotly :data="ViolinData" :layout="layout" :display-mode-bar="false" class="mt-0"></Plotly>
+    <Plotly :data="ViolinData" :layout="layout" :toImageButtonOptions="{
+          filename: 'violin',
+          width: null,
+          height: null,
+          format: 'svg'
+      }" :displaylogo="false"  :mode-bar-buttons-to-remove="modeBarButtons" :display-mode-bar="true"></Plotly>
 </template>
 
 <script lang="ts">
@@ -13,6 +18,22 @@ import { Trace } from '../../../interfaces';
   },
 })
 export default class Violin extends Vue {
+    get modeBarButtons() {
+      return [
+        'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+        'hoverClosestCartesian', 'hoverCompareCartesian',
+        'zoom3d', 'pan3d', 'resetCameraDefault3d', 'resetCameraLastSave3d', 'hoverClosest3d',
+        'orbitRotation', 'tableRotation',
+        'zoomInGeo', 'zoomOutGeo', 'resetGeo', 'hoverClosestGeo',
+        'sendDataToCloud',
+        'hoverClosestGl2d',
+        'hoverClosestPie',
+        'toggleHover',
+        'resetViews',
+        'toggleSpikelines',
+        'resetViewMapbox',
+      ];
+    }
     get traces() {
       return readTraces(this.$store);
     }
@@ -20,20 +41,25 @@ export default class Violin extends Vue {
       return readActiveTraceIDs(this.$store);
     }
     get layout() {
-        return {
-            plot_bgcolor: 'rgba(0, 0, 0, 0)',
-            paper_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'rgba(0, 0, 0, 0)',
-            yaxis: {showticklabels: false, zeroline: false},
-            xaxis: { zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
-            margin: {
-            l: 50,
-            r: 30,
-            b: 30,
-            t: 10,
-            pad: 0,
-            },
-            height: 270,
-        };
+      return {
+          plot_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'white',
+          paper_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'white',
+          yaxis: {showticklabels: false, zeroline: false},
+          xaxis: { zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
+          legend: {
+            orientation: 'h', x: 0.5, y: 1.15,
+            xanchor: 'center',
+            font: {size: 15, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
+          },
+          displayModeBar: true,
+          margin: {
+          l: 10,
+          r: 10,
+          b: 30,
+          t: 0,
+          pad: 0,
+          },
+      };
     }
     get ViolinData() {
     const data: any[] = [];
@@ -84,10 +110,7 @@ export default class Violin extends Vue {
             fillcolor: colours[count],
             name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             hovertemplate: '%{y}',
-            // @ts-ignore
-            showlegend: false,
-            // @ts-ignore
-            legendgroup: `${param}`,
+            showlegend: true,
           });
 
           count++;

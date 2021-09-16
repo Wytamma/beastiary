@@ -1,7 +1,7 @@
 <template>
       <v-layout fill-height  style=" overflow: hidden;">
-      <v-row class="ml-4 mr-2 pb-8 mt-4">
-        <v-col cols="3" class="pa-0">
+      <v-row class="ml-4 mr-2 pb-8 mt-0">
+        <v-col cols="3" class="pa-0 mt-4">
           <div class="mt-0 fill-height elevation-4 rounded-lg">
             <v-toolbar
                   class="rounded-t-lg"
@@ -17,12 +17,71 @@
             <TraceList />
           </div>
         </v-col>
-        <v-col cols="9" class="pl-4 pt-0">
-          <div  v-if="activeParams" class="">
-
-            <Trace class="elevation-3 mb-4 rounded-lg" />
-            <Violin class="elevation-3 rounded-lg" />
-          </div>
+        <v-col cols="9" class="pl-4 mt-4 pt-0">
+          <v-card v-if="activeParams" class="rounded-lg ">
+              <v-tabs  v-model="tab" right  class="mb-4">
+                <v-tab >
+                  Trace
+                </v-tab>
+                <v-tab>
+                  Violin
+                </v-tab>
+                <v-tab>
+                  Histogram
+                </v-tab>
+                <v-tab>
+                  Density
+                </v-tab>
+                <v-tab>
+                  Joint
+                </v-tab>
+                <v-tab>
+                  ESS
+                </v-tab>
+                <v-tab>
+                  Estimates
+                </v-tab>
+              </v-tabs>
+            <v-tabs-items v-model="tab">
+              <v-tab-item >
+                <v-card flat class="pa-2" >
+                    <Trace v-if="tab === 0" />
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pa-2"  fill-height>
+                    <Violin v-if="tab === 1"/>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pa-2"  fill-height>
+                    WIP
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pa-2"  fill-height>
+                    WIP
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pa-2"  fill-height>
+                    WIP
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pa-2"  fill-height>
+                    WIP
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pa-2"  fill-height>
+                    WIP
+                </v-card>
+              </v-tab-item>
+            </v-tabs-items>
+            
+          </v-card>
+          
         </v-col>
       </v-row>
 </v-layout>
@@ -52,6 +111,8 @@ import { Component, Vue } from 'vue-property-decorator';
   },
 })
 export default class Dashboard extends Vue {
+  public tab = null;
+
   get activeTraceIDs() {
     const IDs = readActiveTraceIDs(this.$store);
     return IDs;

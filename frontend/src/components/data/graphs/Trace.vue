@@ -1,6 +1,12 @@
 <template>
 <div>
-    <Plotly :data="traceData" :layout="layout" :display-mode-bar="false"></Plotly>
+    <Plotly :data="traceData" :layout="layout" 
+    :toImageButtonOptions="{
+          filename: 'trace',
+          width: null,
+          height: null,
+          format: 'svg'
+      }" :displaylogo="false"  :mode-bar-buttons-to-remove="modeBarButtons" :display-mode-bar="true"></Plotly>
 </div>
 </template>
 
@@ -15,6 +21,22 @@ import { Trace } from '../../../interfaces';
   },
 })
 export default class Histogram extends Vue {
+  get modeBarButtons() {
+    return [
+      'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+      'hoverClosestCartesian', 'hoverCompareCartesian',
+      'zoom3d', 'pan3d', 'resetCameraDefault3d', 'resetCameraLastSave3d', 'hoverClosest3d',
+      'orbitRotation', 'tableRotation',
+      'zoomInGeo', 'zoomOutGeo', 'resetGeo', 'hoverClosestGeo',
+      'sendDataToCloud',
+      'hoverClosestGl2d',
+      'hoverClosestPie',
+      'toggleHover',
+      'resetViews',
+      'toggleSpikelines',
+      'resetViewMapbox',
+    ];
+  }
   get traces() {
     return readTraces(this.$store);
   }
@@ -28,18 +50,18 @@ export default class Histogram extends Vue {
       yaxis: {showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
       yaxis2: {showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
       xaxis2: {domain: [0.73, 1], showline: false, zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
-      plot_bgcolor: 'rgba(0, 0, 0, 0)',
-      paper_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'rgba(0, 0, 0, 0)',
+      plot_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'white',
+      paper_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'white',
       barmode: 'overlay',
-      legend: {orientation: 'h', x: 0.5, y: 1.15, xanchor: 'center', font: {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'}},
+      legend: {orientation: 'h', x: 0.5, y: 1.15, xanchor: 'center', font: {size: 15, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'}},
       margin: {
         l: 50,
-        r: 30,
+        r: 10,
         b: 30,
         t: 0,
         pad: 0,
       },
-      height: 400,
+      // height: 400,
     };
   }
   get traceData() {
