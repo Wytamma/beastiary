@@ -1,17 +1,8 @@
 <template>
-  <v-layout
-    column
-    fill-height
-  >
     <v-list
-      class="col mb-15 py-0 rounded-b-lg "
-      height="100%"
-      style="overflow-y: auto;  overflow-x: hidden;"
+      class="col mb-0 py-0 my-0 rounded-b-lg "
+      style="overflow-x: hidden;"
     >
-      <v-list
-        class="py-0 my-0"
-        v-if="Object.keys(traces).length"
-      >
         <v-list-group
           v-for="trace in traces"
           :key="trace.id"
@@ -20,7 +11,7 @@
           v-bind:disabled="isloading"
         >
           <template v-slot:activator>
-            <v-list-item-content class="mb-0">
+            <v-list-item-content class="mb-0 px-0">
               <v-list-item-title class="text-h6 font-weight-regular">
                 {{fileName(trace.path)}}
               </v-list-item-title>
@@ -82,7 +73,7 @@
             </v-list-item-content>
 
           </template>
-          <div v-if="openTraceID === trace.id && activeTraceIDs.includes(trace.id)">
+          <div style="overflow:auto" v-if="openTraceID === trace.id && activeTraceIDs.includes(trace.id)">
             <v-col class=" mr-4 mb-0">
               <div>Burn-in {{burnIn}}%</div>
               <v-slider
@@ -97,7 +88,10 @@
                 </v-slider>
             </v-col>
             <v-divider class="my-0"></v-divider>
-            <ParamsPanel :trace="trace" />
+            <div style="overflow:auto" >
+              <ParamsPanel :trace="trace" height="400px" />
+            </div>
+            
           </div>
           <div v-show="!activeTraceIDs.includes(trace.id)" class="text-center my-4">
              <v-progress-circular
@@ -108,9 +102,7 @@
           <v-divider></v-divider>
           </v-list-group>
           </v-list>
-          </v-list>
           
-    </v-layout>
 </template>
 
 <script lang="ts">
@@ -166,15 +158,15 @@ export default class TraceList extends Vue {
     const skip =
       'state' in trace.parameters ? trace.parameters.state.length : 0;
     if (this.activeTraceIDs === [] || ( this.activeTraceIDs && !(this.activeTraceIDs.includes(trace.id)))) {
-      // have just started or part way though loading
+      // have not loaded or just started or part way though loading
       if (!readLoadingSamples(this.$store)) {
-        // dispatchSetLoadingSamples(this.$store, true);
         // not loading and no active so load
+        dispatchSetLoadingSamples(this.$store, true);
         await dispatchGetSamples(this.$store, { trace, skip, limit: 2000, all: true });
         await dispatchSetActiveTrace(this.$store, trace);
-        // dispatchSetLoadingSamples(this.$store, false);
+        dispatchSetLoadingSamples(this.$store, false);
         // await this.createInterval(trace);
-      } // if it is loading do nothing
+      }
     }
   }
 

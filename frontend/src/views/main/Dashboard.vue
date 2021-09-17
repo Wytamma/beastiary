@@ -1,8 +1,9 @@
 <template>
-      <v-layout fill-height  style=" overflow: hidden;">
-      <v-row class="ml-4 mr-2 pb-8 mt-0">
-        <v-col cols="3" class="pa-0 mt-4">
-          <div class="mt-0 fill-height elevation-4 rounded-lg">
+      <v-layout  style=" overflow: hidden;">
+      <v-row class="ma-0 pb-0">
+        <v-col cols="3" class="mt-4 pt-0 pr-0">
+          <v-card  class="rounded-lg px-0 ma-0">
+               <div>
             <v-toolbar
                   class="rounded-t-lg"
                   flat >
@@ -13,9 +14,12 @@
               <v-spacer></v-spacer>
               <AddTraceButton/>
             </v-toolbar>
+            </div>
             <v-divider v-if="traces.length > 0"></v-divider>
-            <TraceList />
-          </div>
+            <div style="max-height: 80vh;overflow: auto;">
+              <TraceList />
+            </div>
+          </v-card>
         </v-col>
         <v-col cols="9" class="pl-4 mt-4 pt-0">
           <v-card v-if="activeParams" class="rounded-lg ">

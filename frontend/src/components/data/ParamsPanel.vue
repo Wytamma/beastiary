@@ -1,26 +1,26 @@
 <template>
-  <v-list dense class="my-0 py-0">
-    <v-list-item-group style="max-height:50vh; overflow:auto" >
-      <div v-for="(data, param) in trace.parameters"
-          :key="param"
-          v-if="param != 'state'">
-        <v-list-item >
-          <template>
-            <v-list-item-action>
-              <v-checkbox v-model="activeParams" multiple :value="param" ></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content @click="setActiveParams([param])" class="my-0">
-              <v-list-item-title>{{param}}</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-icon class="mt-3 d-flex align-center ">
-              <ESSChip :data="data" :burnIn="trace.burnIn"/>
-            </v-list-item-icon>
-           </template>
-        </v-list-item>
-        </div>
-        
-    </v-list-item-group>
-  </v-list>
+    <v-list style="max-height: 55vh;overflow: auto;" dense class="my-0 py-0" >
+      <v-list-item-group >
+        <div v-for="(data, param) in trace.parameters"
+            :key="param"
+            v-if="param != 'state'">
+          <v-list-item class="ma-0" >
+            <template>
+              <v-list-item-action class="my-1">
+                <v-checkbox v-model="activeParams" multiple :value="param" ></v-checkbox>
+              </v-list-item-action>
+              <v-list-item-content @click="setActiveParams([param])" class="mt-0">
+                <v-list-item-title>{{param}}</v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-icon class="mb-1 mt-2 d-flex align-center ">
+                <ESSChip :data="data" :burnIn="trace.burnIn"/>
+              </v-list-item-icon>
+            </template>
+          </v-list-item>
+          </div>
+          
+      </v-list-item-group>
+    </v-list>
 </template>
 
 <script lang="ts">
@@ -39,6 +39,15 @@ export default class ParamsPanel extends Vue {
 
     public isActive = false;
 
+    get height() {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return 400
+          case 'sm': return 400
+          case 'md': return 400
+          case 'lg': return 400
+          case 'xl': return 600
+        }
+    }
     get activeParams() {
       return this.trace.activeParams;
     }

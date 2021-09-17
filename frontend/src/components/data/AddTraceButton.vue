@@ -35,14 +35,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="blue darken-1"
+            color="red lighten-3"
             text
             @click="dialog = false"
           >
             Close
           </v-btn>
           <v-btn
-            color="blue darken-1"
+            color="primary"
             text
             @click="submit"
           >
