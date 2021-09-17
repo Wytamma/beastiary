@@ -85,11 +85,13 @@ export default class ESSChip extends Vue {
   public worker = this.$worker.create(this.actions);
 
   @Watch('data')
+  // @ts-ignore
   public dataChanged() {
     this.updateESS()
   }
 
   @Watch('burnIn')
+  // @ts-ignore
   public burnInChanged() {
     this.updateESS()
   }
