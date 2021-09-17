@@ -22,7 +22,7 @@ pip install beastiary
 ```
 
 ## Use
-To start beastiary use the `beastiary` command. This will start the beastiary server. 
+To start beastiary use the `beastiary` command. 
 
 ```bash
 beastiary
