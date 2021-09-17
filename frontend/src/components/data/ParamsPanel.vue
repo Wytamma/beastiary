@@ -41,11 +41,11 @@ export default class ParamsPanel extends Vue {
 
     get height() {
         switch (this.$vuetify.breakpoint.name) {
-          case 'xs': return 400
-          case 'sm': return 400
-          case 'md': return 400
-          case 'lg': return 400
-          case 'xl': return 600
+          case 'xs': return 400;
+          case 'sm': return 400;
+          case 'md': return 400;
+          case 'lg': return 400;
+          case 'xl': return 600;
         }
     }
     get activeParams() {

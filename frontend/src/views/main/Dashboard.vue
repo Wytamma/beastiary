@@ -34,7 +34,7 @@
                   Histogram
                 </v-tab>
                 <v-tab>
-                  Density
+                  Parallel
                 </v-tab>
                 <v-tab>
                   Joint
@@ -59,12 +59,12 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    WIP
+                    <Histogram v-if="tab === 2"/>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    WIP
+                    <Parallel v-if="tab === 3"/>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
@@ -95,6 +95,8 @@
 import '@/assets/css/custom.css';
 
 import AddTraceButton from '@/components/data/AddTraceButton.vue';
+import Histogram from '@/components/data/graphs/Histogram.vue';
+import Parallel from '@/components/data/graphs/Parallel.vue';
 import Trace from '@/components/data/graphs/Trace.vue';
 import Violin from '@/components/data/graphs/Violin.vue';
 import ParamsPanel from '@/components/data/ParamsPanel.vue';
@@ -110,6 +112,8 @@ import { Component, Vue } from 'vue-property-decorator';
     Plotly,
     Trace,
     Violin,
+    Histogram,
+    Parallel,
     AddTraceButton,
 
   },

@@ -39,7 +39,7 @@ export default class ESSChip extends Vue {
       data.length * (burnIn / 100),
       ).map((v) => v.value);
     if (values.includes(null)) {
-      return 1;
+      return null;
     }
     const stepSize: number = data[1].state - data[0].state;
     const MAX_LAG: number = 2000;
@@ -87,13 +87,13 @@ export default class ESSChip extends Vue {
   @Watch('data')
   // @ts-ignore
   public dataChanged() {
-    this.updateESS()
+    this.updateESS();
   }
 
   @Watch('burnIn')
   // @ts-ignore
   public burnInChanged() {
-    this.updateESS()
+    this.updateESS();
   }
 
   public updateESS() {
