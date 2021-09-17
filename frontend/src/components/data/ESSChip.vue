@@ -13,6 +13,12 @@ import { Data } from '../../interfaces';
 
 @Component
 export default class ESSChip extends Vue {
+  // @ts-ignore
+  @Prop() public data: Data[];
+  // @ts-ignore
+  @Prop() public burnIn: number;
+
+  public ESS: number | null = null;
 
   get color() {
     if (this.ESS === null) {
@@ -27,13 +33,6 @@ export default class ESSChip extends Vue {
     }
 
   }
-  // @ts-ignore
-  @Prop() public data: Data[];
-  // @ts-ignore
-  @Prop() public burnIn: number;
-
-  public ESS: number | null = null;
-
   public actions = [
   { message: 'ESS', func: (data, burnIn) => {
     const values: Array<number | null> = data.slice(
@@ -86,7 +85,17 @@ export default class ESSChip extends Vue {
   public worker = this.$worker.create(this.actions);
 
   @Watch('data')
-  public updateESS(data: Data[]) {
+  public dataChanged() {
+    this.updateESS()
+  }
+
+  @Watch('burnIn')
+  public burnInChanged() {
+    this.updateESS()
+  }
+
+  public updateESS() {
+    const data = this.data;
     const burnIn = this.burnIn;
     this.worker.postMessage('ESS', [data, burnIn]) // compute ESS in worker
     .then((res) => this.ESS = Math.round(res))

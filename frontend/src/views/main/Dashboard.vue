@@ -5,7 +5,7 @@
           <v-card  class="rounded-lg px-0 ma-0">
                <div>
             <v-toolbar
-                  class="rounded-t-lg"
+                  class="rounded-lg"
                   flat >
               <v-toolbar-title class="text-h5">
                   Traces
