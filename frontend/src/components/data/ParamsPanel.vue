@@ -1,6 +1,6 @@
 <template>
   <v-list dense class="my-0 py-0">
-    <v-list-item-group style="height:400px; overflow:auto" >
+    <v-list-item-group style="max-height:50vh; overflow:auto" >
       <div v-for="(data, param) in trace.parameters"
           :key="param"
           v-if="param != 'state'">

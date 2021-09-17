@@ -53,8 +53,8 @@ export default class Violin extends Vue {
           },
           displayModeBar: true,
           margin: {
-          l: 10,
-          r: 10,
+          l: 50,
+          r: 50,
           b: 30,
           t: 0,
           pad: 0,
