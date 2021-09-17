@@ -114,6 +114,10 @@ export default class Parallel extends Vue {
     if (traceFound) {
 
       data['dimensions'] = dimensions;
+      data['labelfont'] = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
+      data['rangefont'] = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
+      data['tickfont'] = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
+
       data['type'] = 'parcoords';
       // @ts-ignore
       const colorValues = traceFound.parameters[traceFound.activeParams[0]].slice(
@@ -126,7 +130,12 @@ export default class Parallel extends Vue {
         color: colorValues,
         label: 'test',
         colorbar: {
+          outlinecolor: this.$vuetify.theme.dark ? 'white' : '#2c3e50',
+          tickfont: {
+            color: this.$vuetify.theme.dark ? 'white' : '#2c3e50',
+          },
           title: {
+            font: {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
             // @ts-ignore
             text: traceFound.activeParams[0],
           },
@@ -135,7 +144,7 @@ export default class Parallel extends Vue {
       return [data];
     }
     return [];
-    
+
   }
   public fileName(path) {
     return path.substring(path.lastIndexOf('/') + 1);
