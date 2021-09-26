@@ -63,7 +63,7 @@ export default class Parallel extends Vue {
       };
     }
     get ParallelData() {
-    const data = {};
+    const data: any = {};
     const dimensions: any[] = [];
     const colours = [
       '#2980b9',
@@ -112,18 +112,17 @@ export default class Parallel extends Vue {
       }
     }
     if (traceFound) {
+      data.dimensions = dimensions;
+      data.labelfont = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
+      data.rangefont = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
+      data.tickfont = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
 
-      data['dimensions'] = dimensions;
-      data['labelfont'] = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
-      data['rangefont'] = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
-      data['tickfont'] = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
-
-      data['type'] = 'parcoords';
+      data.type = 'parcoords';
       // @ts-ignore
       const colorValues = traceFound.parameters[traceFound.activeParams[0]].slice(
         // @ts-ignore
         traceFound.parameters.state.length * burnIn).map((row) =>  row.value);
-      data['line'] = {
+      data.line = {
         showscale: true,
         reversescale: true,
         colorscale: 'Jet',

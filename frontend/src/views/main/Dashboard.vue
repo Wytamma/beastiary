@@ -79,7 +79,7 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    WIP
+                    <StatsTable v-if="tab === 6" />
                 </v-card>
               </v-tab-item>
             </v-tabs-items>
@@ -100,6 +100,7 @@ import Parallel from '@/components/data/graphs/Parallel.vue';
 import Trace from '@/components/data/graphs/Trace.vue';
 import Violin from '@/components/data/graphs/Violin.vue';
 import ParamsPanel from '@/components/data/ParamsPanel.vue';
+import StatsTable from '@/components/data/StatsTable.vue';
 import TraceList from '@/components/data/TraceList.vue';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
@@ -115,6 +116,7 @@ import { Component, Vue } from 'vue-property-decorator';
     Histogram,
     Parallel,
     AddTraceButton,
+    StatsTable,
 
   },
 })
