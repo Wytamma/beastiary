@@ -56,7 +56,7 @@ export default class Histogram extends Vue {
       legend: {orientation: 'h', x: 0.5, y: 1.15, xanchor: 'center', font: {size: 15, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'}},
       margin: {
         l: 50,
-        r: 10,
+        r: 20,
         b: 30,
         t: 0,
         pad: 0,
@@ -105,6 +105,7 @@ export default class Histogram extends Vue {
           data.push({
             y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
             type: 'histogram',
+            histnorm: 'probability',
             xaxis: 'x2',
             yaxis: 'y1',
             opacity: 0.6,

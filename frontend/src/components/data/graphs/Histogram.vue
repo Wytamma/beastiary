@@ -96,6 +96,7 @@ export default class Histogram extends Vue {
             x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
             y: null,
             type: 'histogram',
+            histnorm: 'probability',
             points: 'none',
             box: {
                 visible: true,
