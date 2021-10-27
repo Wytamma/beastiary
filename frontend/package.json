@@ -20,6 +20,7 @@
     "vee-validate": "^2.1.7",
     "vue": "^2.5.22",
     "vue-class-component": "^6.0.0",
+    "vue-json-to-csv": "^1.1.8",
     "vue-plotly": "^1.1.0",
     "vue-property-decorator": "^7.3.0",
     "vue-router": "^3.0.2",

@@ -1,18 +1,35 @@
 <template>
+<div>
     <v-data-table
     :headers="headers"
     :items="statistics"
     dense
   >
+   <template v-slot:footer.page-text>
+        <vue-json-to-csv :json-data="statistics" csv-title="beastiary">
+            <v-btn
+          color="primary"
+          dark
+          small
+          class="">
+            Download
+          </v-btn>
+        </vue-json-to-csv>
+    </template>
   </v-data-table>
+  
+</div>
 </template>
 
 <script lang="ts">
 import { readTraces } from '@/store/data/getters';
 import { format, mean, median, quantileSeq, sqrt, std, variance } from 'mathjs';
 import { Component, Prop, Vue} from 'vue-property-decorator';
+import VueJsonToCsv from 'vue-json-to-csv';
 
-@Component
+@Component({components: {
+    VueJsonToCsv,
+  }})
 export default class StatsTable extends Vue {
 
     public get headers() {
@@ -64,7 +81,7 @@ export default class StatsTable extends Vue {
                 // @ts-ignore
                 row.median = format(stats.median, {notation: 'auto', precision: 5});
                 // @ts-ignore
-                row.CI = stats.CI
+                row.quantile = format(stats.quantile, {notation: 'auto', precision: 5});
                 // @ts-ignore
                 row.HPD = format(stats.HPD, {notation: 'auto', precision: 5});
                 // row.HPD = stats.HPD
@@ -167,7 +184,7 @@ export default class StatsTable extends Vue {
                 // @ts-ignore
                 median: median(values),
                 // @ts-ignore
-                // CI: quantileSeq(values, [0.025, 0.975]),
+                quantile: quantileSeq(values, [0.025, 0.975]),
                 // @ts-ignore
                 HPD: this.HPDInterval(0.95, values),
             };
