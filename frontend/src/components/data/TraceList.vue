@@ -75,11 +75,10 @@
           </template>
           <div style="overflow:auto" v-if="openTraceID === trace.id && activeTraceIDs.includes(trace.id)">
             <v-col class=" mr-4 mb-0">
-              <div>Burn-in {{burnIn}}%</div>
+              <div>Burn-in {{burnIn[trace.id]}}%</div>
               <v-slider
                 v-on:change="setBurnIn($event, trace.id)"
-                :value="trace.burnIn"
-                v-model="burnIn"
+                v-model="burnIn[trace.id]"
                 class="align-center"
                 :max="100"
                 :min="0"
@@ -130,7 +129,8 @@ export default class TraceList extends Vue {
   public openTraceID = null;
   public show: boolean = true;
   public interval?: number;
-  public burnIn: number = 10;
+  // this is so dumb need a better way to do dynamic v-model defualts
+  public burnIn = [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
 
   get traces() {
     const traces = readTraces(this.$store);
