@@ -48,25 +48,26 @@ export default class StatsTable extends Vue {
                 // @ts-ignore
                 const stats = this.calculateStats(trace.parameters[param], trace.burnIn);
                 // @ts-ignore
-                row.mean = format(stats.mean, {notation: 'engineering', precision: 4});
+                row.mean = format(stats.mean, {notation: 'auto', precision: 5});
                 // @ts-ignore
                 row.ESS = Math.round(stats.ESS);
                 // @ts-ignore
-                row.ACT = format(stats.ACT, {notation: 'engineering', precision: 4});
+                row.ACT = format(stats.ACT, {notation: 'auto', precision: 5});
                 // @ts-ignore
-                row.variance = format(stats.variance, {notation: 'engineering', precision: 4});
+                row.variance = format(stats.variance, {notation: 'auto', precision: 5});
                 // @ts-ignore
                 row.nSamples = stats.nSamples;
                 // @ts-ignore
-                row.std = format(stats.std, {notation: 'engineering', precision: 4});
+                row.std = format(stats.std, {notation: 'auto', precision: 5});
                 // @ts-ignore
-                row.stderr = format(stats.stderr, {notation: 'engineering', precision: 4});
+                row.stderr = format(stats.stderr, {notation: 'auto', precision: 5});
                 // @ts-ignore
-                row.median = format(stats.median, {notation: 'engineering', precision: 4});
+                row.median = format(stats.median, {notation: 'auto', precision: 5});
                 // @ts-ignore
-                row.CI = format(stats.CI, {notation: 'engineering', precision: 4});
+                row.CI = stats.CI
                 // @ts-ignore
-                row.HPD = format(stats.HPD, {notation: 'engineering', precision: 4});
+                row.HPD = format(stats.HPD, {notation: 'auto', precision: 5});
+                // row.HPD = stats.HPD
                 // @ts-ignore
                 statistics.push(
                     row,
