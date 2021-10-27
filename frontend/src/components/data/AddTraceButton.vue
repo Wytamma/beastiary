@@ -24,13 +24,13 @@
           <span class="text-h5">Add trace to Beastiary</span>
         </v-card-title>
         <v-card-text>
-        <form>
+        <v-form @submit.prevent="submit"> 
           <v-text-field
                   required
                   label="Path to the log file"
                   v-model="path"
           ></v-text-field>
-        </form>
+        </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
