@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from beastiary import crud, schemas
 from beastiary.api import deps
+from beastiary.api.core import check_for_new_samples
 
 router = APIRouter()
 
@@ -51,4 +52,5 @@ def create_trace(
     except Exception as e:
         raise HTTPException(500, detail=f"Could not add {trace_in.path}")
     # get samples
+    # check_for_new_samples(db, trace=trace)
     return trace

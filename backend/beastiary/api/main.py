@@ -17,8 +17,8 @@ class BeastiaryAPI(FastAPI):
     def __init__(
         self,
         title: str = "Beastiary",
-        description: str = "Realtime and remote trace inspection",
-        version: str = "0.8.2",
+        description: str = "Real-time and remote trace inspection",
+        version: str = "1.2.2",
     ) -> None:
         super().__init__(
             title=title, description=description, version=version

@@ -72,7 +72,6 @@ export const actions = {
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
-        commitRemoveNotification(context, loadingNotification);
         if (response != null) {
             if (all === true && response.data.length === limit) {
                 // if you get back what you request go again
@@ -80,6 +79,7 @@ export const actions = {
             }
             commitSetSamples(context, {traceID: trace.id, data: response.data});
         }
+        commitRemoveNotification(context, loadingNotification);
     },
     async actionSetBurnIn(context: MainContext, payload: {traceID: number, burnIn: number}) {
         commitSetBurnIn(context, payload);
