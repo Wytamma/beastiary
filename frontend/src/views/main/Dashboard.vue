@@ -37,12 +37,6 @@
                   Parallel
                 </v-tab>
                 <v-tab>
-                  Joint
-                </v-tab>
-                <v-tab>
-                  ESS
-                </v-tab>
-                <v-tab>
                   Estimates
                 </v-tab>
               </v-tabs>
@@ -69,17 +63,7 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    WIP
-                </v-card>
-              </v-tab-item>
-              <v-tab-item>
-                <v-card flat class="pa-2"  fill-height>
-                    WIP
-                </v-card>
-              </v-tab-item>
-              <v-tab-item>
-                <v-card flat class="pa-2"  fill-height>
-                    <StatsTable v-if="tab === 6" />
+                    <StatsTable v-if="tab === 4" />
                 </v-card>
               </v-tab-item>
             </v-tabs-items>

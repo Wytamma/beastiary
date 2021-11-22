@@ -24,8 +24,8 @@
 <script lang="ts">
 import { readTraces } from '@/store/data/getters';
 import { format, mean, median, quantileSeq, sqrt, std, variance } from 'mathjs';
-import { Component, Prop, Vue} from 'vue-property-decorator';
 import VueJsonToCsv from 'vue-json-to-csv';
+import { Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component({components: {
     VueJsonToCsv,

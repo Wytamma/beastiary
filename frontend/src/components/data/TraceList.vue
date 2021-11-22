@@ -130,7 +130,7 @@ export default class TraceList extends Vue {
   public show: boolean = true;
   public interval?: number;
   // this is so dumb need a better way to do dynamic v-model defualts
-  public burnIn = [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
+  public burnIn = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10];
 
   get traces() {
     const traces = readTraces(this.$store);
