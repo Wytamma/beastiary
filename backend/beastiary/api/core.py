@@ -1,14 +1,16 @@
+from logging import log
 from pathlib import Path
 from typing import Tuple, Union, List
 from beastiary import crud, schemas
 from beastiary.models.trace import Trace
 from sqlalchemy.orm.session import Session
 from beastiary.schemas.sample import SampleCreate
-
+from beastiary.log import logger
 import os, math, errno
 
 
 def get_headers(path: Path) -> Tuple[int, str]:
+    logger.debug(f"Getting headers from {path}")
     with open(path, "r") as f:
         headers_set = False
         while True:
@@ -22,6 +24,8 @@ def get_headers(path: Path) -> Tuple[int, str]:
                 raise ValueError(f"Could not find headers in {path}")
             headers_line = " ".join(headers_list)
             last_byte = f.tell()
+            logger.debug(f"last_byte = {last_byte}")
+            logger.debug(f"headers_line = {headers_line}")
             return last_byte, headers_line
 
 
@@ -29,13 +33,16 @@ def add_trace(db: Session, trace_in: schemas.TraceCreate) -> Trace:
     if not trace_in.path.is_file():
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), trace_in.path)
     last_byte, headers_line = get_headers(trace_in.path)
+    logger.debug(f"Creating trace: {trace_in}")
     trace = crud.trace.create(
         db=db, obj_in=trace_in, headers_line=headers_line, last_byte=last_byte
     )
+    logger.debug(f"Created trace: {trace}")
     return trace
 
 
 def read_lines(trace: Trace) -> Tuple[int, list]:
+    logger.debug(f"reading lines from: {trace}")
     if not trace.path:
         raise ValueError("Path must be set.")
     with open(trace.path, "r") as f:
@@ -45,6 +52,8 @@ def read_lines(trace: Trace) -> Tuple[int, list]:
             last_byte = f.tell()
         else:
             last_byte = trace.last_byte
+        logger.debug(f"last_byte = {last_byte}")
+        logger.debug(f"lines found = {len(lines)}")
         return last_byte, lines
 
 
