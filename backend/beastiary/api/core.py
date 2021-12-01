@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Tuple, Union, List
 from beastiary import crud, schemas
 from beastiary.models.trace import Trace
+from pydantic.utils import is_valid_field
 from sqlalchemy.orm.session import Session
 from beastiary.schemas.sample import SampleCreate
 from beastiary.log import logger
@@ -29,10 +30,18 @@ def get_headers(path: Path) -> Tuple[int, str]:
             return last_byte, headers_line
 
 
+def is_valid_log_file(headers_line: str) -> bool:
+    if len(headers_line.split()) > 1:
+        return True
+    return False
+
+
 def add_trace(db: Session, trace_in: schemas.TraceCreate) -> Trace:
     if not trace_in.path.is_file():
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), trace_in.path)
     last_byte, headers_line = get_headers(trace_in.path)
+    if not is_valid_log_file(headers_line):
+        raise ValueError(f"Invalid log file: {trace_in.path}")
     logger.debug(f"Creating trace: {trace_in}")
     trace = crud.trace.create(
         db=db, obj_in=trace_in, headers_line=headers_line, last_byte=last_byte
