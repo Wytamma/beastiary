@@ -37,6 +37,9 @@
                   Parallel
                 </v-tab>
                 <v-tab>
+                  ESS
+                </v-tab>
+                <v-tab>
                   Estimates
                 </v-tab>
               </v-tabs>
@@ -63,7 +66,12 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    <StatsTable v-if="tab === 4" />
+                    <CumulativeESS v-if="tab === 4"/>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pa-2"  fill-height>
+                    <StatsTable v-if="tab === 5" />
                 </v-card>
               </v-tab-item>
             </v-tabs-items>
@@ -79,6 +87,7 @@
 import '@/assets/css/custom.css';
 
 import AddTraceButton from '@/components/data/AddTraceButton.vue';
+import CumulativeESS from '@/components/data/graphs/ESS.vue';
 import Histogram from '@/components/data/graphs/Histogram.vue';
 import Parallel from '@/components/data/graphs/Parallel.vue';
 import Trace from '@/components/data/graphs/Trace.vue';
@@ -86,6 +95,8 @@ import Violin from '@/components/data/graphs/Violin.vue';
 import ParamsPanel from '@/components/data/ParamsPanel.vue';
 import StatsTable from '@/components/data/StatsTable.vue';
 import TraceList from '@/components/data/TraceList.vue';
+
+
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Vue } from 'vue-property-decorator';
@@ -101,7 +112,7 @@ import { Component, Vue } from 'vue-property-decorator';
     Parallel,
     AddTraceButton,
     StatsTable,
-
+    CumulativeESS,
   },
 })
 export default class Dashboard extends Vue {
