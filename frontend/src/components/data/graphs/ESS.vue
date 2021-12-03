@@ -53,7 +53,7 @@ export default class CumulativeESS extends Vue {
         pad: 0,
       },
       shapes: [
-        
+
         {
           type: 'line',
           xref: 'paper',
@@ -64,8 +64,8 @@ export default class CumulativeESS extends Vue {
           line: {
             color: '#4CAF50',
             dash: 'dot',
-            width: 3
-          }
+            width: 3,
+          },
         },
 
         {
@@ -78,10 +78,10 @@ export default class CumulativeESS extends Vue {
           line: {
             color: '#ff9800',
             dash: 'dot',
-            width: 3
-          }
+            width: 3,
+          },
         },
-      ]
+      ],
       // height: 400,
     };
   }
@@ -127,6 +127,7 @@ export default class CumulativeESS extends Vue {
             hovertemplate: '%{y}',
             showlegend: true,
           });
+          break;
         }
       }
 
@@ -134,7 +135,7 @@ export default class CumulativeESS extends Vue {
     return data;
   }
 
-  public CumESSdata: {state:number, value:number}[] = [];
+  public CumESSdata: Array<{state: number, value: number}> = [];
 
   public actions = [
   { message: 'CumESS', func: (data, burnIn, k) => {
@@ -143,7 +144,7 @@ export default class CumulativeESS extends Vue {
         data.length * (burnIn / 100),
       );
 
-    const _CumESSdata: {state:number, value:number}[] = [];
+    const cumESSdata: Array<{state: number, value: number}> = [];
     for (let index = k; index < dataWithBurnIn.length; index += k) {
       const values: Array<number | null> = dataWithBurnIn.slice(
         0, index,
@@ -188,9 +189,9 @@ export default class CumulativeESS extends Vue {
       if (ACT !== 0) {
         ESS = (stepSize * nSmaples) / ACT;
       }
-      _CumESSdata[index] = {state: dataWithBurnIn[index].state, value: ESS};
+      cumESSdata[index] = {state: dataWithBurnIn[index].state, value: ESS};
     }
-    return _CumESSdata;
+    return cumESSdata;
   }}];
 
   // @ts-ignore
@@ -209,6 +210,7 @@ export default class CumulativeESS extends Vue {
           this.worker.postMessage('CumESS', [data, burnIn, 50]) // compute ESS in worker
           .then((res) => this.CumESSdata = res)
           .catch(console.error);
+          break;
         }
       }
     }
