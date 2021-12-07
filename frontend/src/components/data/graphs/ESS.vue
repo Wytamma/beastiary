@@ -72,9 +72,9 @@ export default class CumulativeESS extends Vue {
           type: 'line',
           xref: 'paper',
           x0: 0.05,
-          y0: 150,
+          y0: 100,
           x1: 0.95,
-          y1: 150,
+          y1: 100,
           line: {
             color: '#ff9800',
             dash: 'dot',
