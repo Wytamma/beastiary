@@ -54,7 +54,7 @@ def main(
                 trace = add_trace(db, schemas.TraceCreate(path=str(path)))
                 typer.echo(f"✅ - {trace.path}")
             except ValueError:
-                typer.echo(f"❌ - {trace.path}")
+                typer.echo(f"❌ - {path}")
         typer.echo("")
     url = typer.style(
         f"http://{host}:{port}/login?token={token}", fg=typer.colors.GREEN, bold=False
