@@ -16,7 +16,7 @@ def get_headers(path: Path) -> Tuple[int, str]:
         headers_set = False
         while True:
             line = f.readline()
-            if line.startswith("#"):
+            if line.startswith("#") or line.startswith("["):
                 continue
             headers_list = line.split()
             try:
