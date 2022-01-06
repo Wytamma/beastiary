@@ -1,5 +1,5 @@
 <template>
-    <Plotly :data="cumulativeESSData" :layout="layout" :toImageButtonOptions="{
+    <Plotly id="cumulativeESS" :data="cumulativeESSData" :layout="layout" :toImageButtonOptions="{
           filename: 'cumulativeESS',
           width: null,
           height: null,
@@ -11,16 +11,14 @@
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import { Trace } from '../../../interfaces';
+import { Trace, Traces } from '../../../interfaces';
 @Component({
   components: {
     Plotly,
   },
 })
 export default class CumulativeESS extends Vue {
-  get traces() {
-    return readTraces(this.$store);
-  }
+
   get modeBarButtons() {
     return [
       'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -106,39 +104,41 @@ export default class CumulativeESS extends Vue {
       '#bcbd22',
       '#17becf',
     ];
-    const count = 0;
-    for (const trace of Object.values(this.traces)) {
-      // @ts-ignore
+    let count = 0;
+    let trace: Trace;
+    for (trace of Object.values(this.traces)) {
       if (trace.isActive) {
-        // @ts-ignore
-        const burnIn = trace.burnIn / 100;
-        if (trace.activeParams.length > 0) {
-          const param = trace.activeParams[0];
-          this.updateCumESS();
-          data.push({
-            x: this.CumESSdata.map((row) =>  row.state),
-            y: this.CumESSdata.map((row) =>  row.value),
-            type: 'scatter',
-            mode: 'lines+markers',
-            connectgaps: true,
-            opacity: 0.8,
-            name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
-            marker: {color: colours[count]},
-            hovertemplate: '%{y}',
-            showlegend: true,
-          });
-          break;
+        for (const parameter of Object.values(trace.activeParams)) {
+          const parameterCumulativeESSData = this.CumulativeESSdata.filter(
+              (e) => e.id === `${trace.id}-${parameter}`,
+            ).pop();
+          if (parameterCumulativeESSData) {
+            data.push({
+              x: parameterCumulativeESSData.data.map((row) =>  row.state), // because it's used here
+              y: parameterCumulativeESSData.data.map((row) =>  row.value),
+              type: 'scatter',
+              mode: 'lines+markers',
+              connectgaps: true,
+              opacity: 0.8,
+              name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${parameter}` : `${this.fileName(trace.path)} - ${parameter}`,
+              marker: {color: colours[count]},
+              hovertemplate: '%{y}',
+              showlegend: true,
+            });
+            count++;
+          }
         }
       }
-
     }
     return data;
   }
 
-  public CumESSdata: Array<{state: number, value: number}> = [];
+  public CumulativeESSdata: Array<{id: string, data: Array<{state: number, value: number}>}> = [];
+  // @ts-ignore
+  public worker = this.$worker.create(this.actions);
 
   public actions = [
-  { message: 'CumESS', func: (data, burnIn, k) => {
+  { message: 'CumulativeESS', func: (data, burnIn, k) => {
 
     const dataWithBurnIn = data.slice(
         data.length * (burnIn / 100),
@@ -194,30 +194,46 @@ export default class CumulativeESS extends Vue {
     return cumESSdata;
   }}];
 
-  // @ts-ignore
-  public worker = this.$worker.create(this.actions);
+  get traces(): Traces {
+    return readTraces(this.$store);
+  }
+
+  public removeESSdata(id) {
+    this.CumulativeESSdata = this.CumulativeESSdata.filter((data) => data.id !== id);
+  }
+  public addESSdata(id, data) {
+    this.removeESSdata(id);
+    this.CumulativeESSdata.push({id, data});
+  }
   public fileName(path) {
     return path.substring(path.lastIndexOf('/') + 1);
   }
 
-  public updateCumESS() {
-    for (const trace of Object.values(this.traces)) {
+  public updateCumulativeESS() {
+    let trace: Trace;
+    for (trace of Object.values(this.traces)) {
       if (trace.isActive) {
-        if (trace.activeParams.length > 0) {
-          const param = trace.activeParams[0];
+        for (const parameter of Object.values(trace.activeParams)) {
           const burnIn = trace.burnIn;
-          const data = trace.parameters[param];
-          this.worker.postMessage('CumESS', [data, burnIn, 50]) // compute ESS in worker
-          .then((res) => this.CumESSdata = res)
+          const data = trace.parameters[parameter];
+          const traceId = trace.id;
+          this.worker.postMessage('CumulativeESS', [data, burnIn, 50]) // compute ESS in worker
+          .then((res) => {
+            this.addESSdata(`${traceId}-${parameter}`, res);
+            })
           .catch(console.error);
-          break;
         }
       }
     }
   }
 
+  @Watch('traces', { immediate: true, deep: true })
+  public onTraceChange(val: Traces, oldVal: Traces) {
+    this.updateCumulativeESS();
+  }
+
   public mounted() {
-    // this.updateCumESS();
+    this.updateCumulativeESS();
   }
 }
 </script>
