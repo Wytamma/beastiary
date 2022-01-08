@@ -134,9 +134,7 @@ export default class CumulativeESS extends Vue {
   }
 
   public CumulativeESSdata: Array<{id: string, data: Array<{state: number, value: number}>}> = [];
-  // @ts-ignore
-  public worker = this.$worker.create(this.actions);
-
+  
   public actions = [
   { message: 'CumulativeESS', func: (data, burnIn, k) => {
 
@@ -193,6 +191,10 @@ export default class CumulativeESS extends Vue {
     }
     return cumESSdata;
   }}];
+
+  // @ts-ignore
+  public worker = this.$worker.create(this.actions);
+
 
   get traces(): Traces {
     return readTraces(this.$store);
