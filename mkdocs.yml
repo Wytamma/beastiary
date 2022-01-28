@@ -16,7 +16,11 @@ nav:
   - tutorial/remote-beastiary.md
   - tutorial/google-colab.md
   - tutorial/running-in-the-background.md
-  
+- Plots:
+  - plots/Cumulative-ESS.md
+  - plots/parallel-coordinates.md
+- Design and Implementation: design.md
+
 markdown_extensions:
 - toc:
     permalink: true
@@ -24,6 +28,7 @@ markdown_extensions:
     guess_lang: false
 - admonition
 - codehilite
+- md_in_html
 - extra
 - pymdownx.superfences:
     custom_fences:
