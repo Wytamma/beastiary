@@ -27,4 +27,9 @@ export const api = {
     options.params = {trace_id: trace.id, skip, limit};
     return axios.get<InSample[]>(`${apiUrl}/api/samples/`, options);
   },
+  async listDirectory(token: string, path: string) {
+    const options = authHeaders(token);
+    options.params = {path};
+    return axios.get(`${apiUrl}/api/explorer/`, options);
+  },
 };

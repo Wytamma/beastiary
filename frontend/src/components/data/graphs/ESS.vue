@@ -134,7 +134,7 @@ export default class CumulativeESS extends Vue {
   }
 
   public CumulativeESSdata: Array<{id: string, data: Array<{state: number, value: number}>}> = [];
-  
+
   public actions = [
   { message: 'CumulativeESS', func: (data, burnIn, k) => {
 

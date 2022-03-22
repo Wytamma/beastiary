@@ -13,6 +13,7 @@
           x-small
           v-bind="attrs"
           v-on="on"
+          @click="reset()"
         >
           <v-icon dark>
             mdi-plus
@@ -31,6 +32,62 @@
                   v-model="path"
           ></v-text-field>
         </v-form>
+         <v-list style="max-height: 300px;overflow: auto;">
+              <v-list-item>
+                <v-list-item-avatar>
+                  <v-icon
+                      class="grey lighten-1"
+                      dark
+                    >
+                      mdi-folder
+                  </v-icon>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title >..</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
+                <v-btn @click="currentPath=parentDir; list_dir()" icon >
+                  <v-icon color="grey lighten-1">mdi-chevron-right</v-icon>
+                </v-btn>
+              </v-list-item-action>
+              </v-list-item>
+              <v-list-item
+              v-for="file in files"
+              :key="file.name"
+              >
+              <v-list-item-avatar>
+                  <v-icon
+                      class="grey lighten-1"
+                      dark
+                      v-if="file.is_dir"
+                    >
+                      mdi-folder
+                  </v-icon>
+                  <v-icon
+                      class="primary lighten-1"
+                      dark
+                      v-else
+                    >
+                      mdi-file
+                  </v-icon>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title v-text="file.name"></v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
+                <v-btn @click="currentPath=file.path; list_dir()" icon v-if="file.is_dir">
+                  <v-icon color="grey lighten-1">mdi-chevron-right</v-icon>
+                </v-btn>
+                <v-btn @click="path=file.path" icon v-else>
+                  <v-icon color="primary">mdi-plus</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -54,17 +111,38 @@
 </template>
 
 <script lang="ts">
+import { api } from '@/api';
 import { dispatchCreateTrace } from '@/store/data/actions';
+import { AxiosResponse } from 'axios';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class AddTraceButton extends Vue {
     public dialog: boolean = false;
     public path: string = '';
+    public currentPath: string = '';
+    public parentDir: string = '';
+    public files: any[] = [];
 
     public submit() {
       dispatchCreateTrace(this.$store, {path: this.path});
       this.dialog = false;
+    }
+
+    public reset() {
+      this.path = '';
+      this.currentPath = '';
+      this.parentDir  = '';
+      this.files = [];
+      this.list_dir();
+    }
+
+    public async list_dir() {
+      let response: AxiosResponse | null = null;
+      response = await api.listDirectory(this.$store.state.token, this.currentPath);
+      this.files = response.data.files;
+      this.currentPath = response.data.path;
+      this.parentDir = response.data.parent;
     }
 }
 </script>
