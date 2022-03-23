@@ -139,7 +139,7 @@ export default class AddTraceButton extends Vue {
 
     public async list_dir() {
       let response: AxiosResponse | null = null;
-      response = await api.listDirectory(this.$store.state.token, this.currentPath);
+      response = await api.listDirectory(this.$store.getters.token, this.currentPath);
       this.files = response.data.files;
       this.currentPath = response.data.path;
       this.parentDir = response.data.parent;
