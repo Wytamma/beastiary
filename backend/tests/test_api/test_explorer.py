@@ -11,8 +11,8 @@ def test_explorer_no_path() -> None:
     assert "files" in data
     assert "path" in data
     assert "parent" in data
-    assert data["path"] == "/Users/wytamma/programming/beastiary/backend"
-    assert data["parent"] == "/Users/wytamma/programming/beastiary"
+    assert data["path"].endswith("beastiary/backend")
+    assert data["parent"].endswith("beastiary")
 
 
 def test_explorer_with_path() -> None:
