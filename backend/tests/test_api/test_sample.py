@@ -1,5 +1,11 @@
 from fastapi.testclient import TestClient
-from .utils import app, headers, hcv_coal_first_sample, ebola_first_sample
+from .utils import (
+    app,
+    headers,
+    hcv_coal_first_sample,
+    ebola_first_sample,
+    csv_first_sample,
+)
 from beastiary import crud
 from beastiary.schemas import TraceCreate, sample
 from beastiary.db.session import SessionLocal
@@ -27,6 +33,16 @@ last_byte, headers_line = get_headers(path=path)
 na_trace = crud.trace.create(
     db,
     obj_in=TraceCreate(path=path),
+    headers_line=headers_line,
+    last_byte=last_byte,
+)
+
+path = "tests/data/beast1.csv"
+last_byte, headers_line = get_headers(path=path, delimiter=",")
+
+csv_trace = crud.trace.create(
+    db,
+    obj_in=TraceCreate(path=path, delimiter=","),
     headers_line=headers_line,
     last_byte=last_byte,
 )
@@ -76,3 +92,12 @@ def test_get_samples_with_missing_values() -> None:
     json = response.json()
     assert json[0]["trace_id"] == na_trace.id
     assert json[0]["data"] == ebola_first_sample
+
+
+def test_get_csv_sample() -> None:
+    response = client.get(f"/api/samples/?trace_id={csv_trace.id}", headers=headers)
+    assert response.status_code == 200
+    json = response.json()
+    assert json[0]["trace_id"] == csv_trace.id
+    print(json[0]["data"])
+    assert json[0]["data"] == csv_first_sample

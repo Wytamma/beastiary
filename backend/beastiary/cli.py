@@ -38,6 +38,7 @@ def main(
     security: bool = typer.Option(True, help="Turn off token requirement."),
     debug: bool = typer.Option(False, help="Set debug mode."),
     testing: bool = typer.Option(False, help="Only for testing.", hidden=True),
+    delimiter: str = typer.Option(None, "--delimiter"),
 ) -> None:
     """
     Realtime and remote trace inspection with BEASTIARY.
@@ -51,7 +52,9 @@ def main(
         typer.echo(f"Adding log files:")
         for path in log_files:
             try:
-                trace = add_trace(db, schemas.TraceCreate(path=str(path)))
+                trace = add_trace(
+                    db, schemas.TraceCreate(path=str(path), delimiter=delimiter)
+                )
                 typer.echo(f"✅ - {trace.path}")
             except ValueError:
                 typer.echo(f"❌ - {path}")

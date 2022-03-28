@@ -1,6 +1,6 @@
 from logging import log
 from pathlib import Path
-from typing import Tuple, Union, List
+from typing import Optional, Tuple, Union, List
 from beastiary import crud, schemas
 from beastiary.models.trace import Trace
 from pydantic.utils import is_valid_field
@@ -10,7 +10,7 @@ from beastiary.log import logger
 import os, math, errno
 
 
-def get_headers(path: Path) -> Tuple[int, str]:
+def get_headers(path: Path, delimiter: Optional[str] = None) -> Tuple[int, str]:
     logger.debug(f"Getting headers from {path}")
     with open(path, "r") as f:
         headers_set = False
@@ -18,20 +18,23 @@ def get_headers(path: Path) -> Tuple[int, str]:
             line = f.readline()
             if line.startswith("#") or line.startswith("["):
                 continue
-            headers_list = line.split()
+            headers_list = line.strip().split(delimiter)
             try:
                 headers_list[0] = "state"
             except IndexError:
                 raise ValueError(f"Could not find headers in {path}")
-            headers_line = " ".join(headers_list)
+            if delimiter == None:
+                delimiter = " "
+            headers_line = delimiter.join(headers_list)
             last_byte = f.tell()
             logger.debug(f"last_byte = {last_byte}")
             logger.debug(f"headers_line = {headers_line}")
+            logger.debug(f"delimiter = {delimiter}")
             return last_byte, headers_line
 
 
-def is_valid_log_file(headers_line: str) -> bool:
-    if len(headers_line.split()) > 1:
+def is_valid_log_file(headers_line: str, delimiter: Optional[str] = None) -> bool:
+    if len(headers_line.split(delimiter)) > 1:
         return True
     return False
 
@@ -39,8 +42,8 @@ def is_valid_log_file(headers_line: str) -> bool:
 def add_trace(db: Session, trace_in: schemas.TraceCreate) -> Trace:
     if not trace_in.path.is_file():
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), trace_in.path)
-    last_byte, headers_line = get_headers(trace_in.path)
-    if not is_valid_log_file(headers_line):
+    last_byte, headers_line = get_headers(trace_in.path, delimiter=trace_in.delimiter)
+    if not is_valid_log_file(headers_line, delimiter=trace_in.delimiter):
         raise ValueError(f"Invalid log file: {trace_in.path}")
     logger.debug(f"Creating trace: {trace_in}")
     trace = crud.trace.create(
@@ -66,7 +69,9 @@ def read_lines(trace: Trace) -> Tuple[int, list]:
         return last_byte, lines
 
 
-def lines_to_SampleCreate(headers: list, lines: list) -> List[SampleCreate]:
+def lines_to_SampleCreate(
+    headers: list, lines: list, delimiter: Optional[str] = None
+) -> List[SampleCreate]:
     samples = []
     for line in lines:
         if not line:
@@ -74,7 +79,8 @@ def lines_to_SampleCreate(headers: list, lines: list) -> List[SampleCreate]:
             # you'll have to have a smart way to handel this with the byte offset
             raise ValueError("Poorly formated line.")
         data = {}
-        for header, value in zip(headers, line.split()):
+        line = line.strip()  # strip \n
+        for header, value in zip(headers, line.split(delimiter)):
             value = float(value)
             if value.is_integer():
                 value = int(value)
@@ -88,9 +94,13 @@ def lines_to_SampleCreate(headers: list, lines: list) -> List[SampleCreate]:
     return samples
 
 
-def check_for_new_samples(db: Session, trace: Trace) -> None:
+def check_for_new_samples(
+    db: Session, trace: Trace, delimiter: Optional[str] = None
+) -> None:
     last_byte, lines = read_lines(trace)
-    in_samples = lines_to_SampleCreate(trace.headers_line.split(), lines)
+    in_samples = lines_to_SampleCreate(
+        trace.headers_line.split(delimiter), lines, delimiter=trace.delimiter
+    )
     if in_samples:
         crud.sample.create_multi_with_trace(db, objs_in=in_samples, trace_id=trace.id)
     # update the trace byte

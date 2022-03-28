@@ -13,4 +13,5 @@ class Trace(Base):
     path = Column(String)
     headers_line = Column(String, default="")
     last_byte = Column(Integer, default=0)
+    delimiter = Column(String, default=None)
     samples = relationship("Sample", back_populates="trace")

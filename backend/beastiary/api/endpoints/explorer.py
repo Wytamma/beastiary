@@ -1,11 +1,7 @@
 from typing import Any, List, Optional
 import os
 from pathlib import Path
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-
-from beastiary import crud, schemas
-from beastiary.api.core import check_for_new_samples
+from fastapi import APIRouter, Depends
 
 router = APIRouter()
 

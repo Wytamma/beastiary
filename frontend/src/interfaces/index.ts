@@ -6,6 +6,7 @@ export interface Trace {
     id: number;
     path: string;
     headers_line: string;
+    delimiter: string;
     last_byte: number;
     parameters: {[key: string]: Data[]};
     activeParams: string[];

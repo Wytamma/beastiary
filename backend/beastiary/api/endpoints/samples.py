@@ -35,7 +35,7 @@ def get_samples(
 
         logger.debug(f"Checking for new samples in {trace.path}")
         try:
-            check_for_new_samples(db, trace=trace)
+            check_for_new_samples(db, trace=trace, delimiter=trace.delimiter)
         except Exception as e:
             raise HTTPException(500, detail=f"Could read samples in {trace.path}")
         # get samples

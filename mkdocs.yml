@@ -13,6 +13,7 @@ nav:
   - tutorial/index.md
   - tutorial/first-steps.md
   - tutorial/logs-from-the-command-line.md
+  - tutorial/log-file-format.md
   - tutorial/remote-beastiary.md
   - tutorial/google-colab.md
   - tutorial/running-in-the-background.md
