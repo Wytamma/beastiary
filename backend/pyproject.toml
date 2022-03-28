@@ -23,6 +23,7 @@ pytest-cov = "^2.12.1"
 pre-commit = "^2.13.0"
 mypy = "^0.910"
 sqlalchemy-stubs = "^0.4"
+flamegraph = {git = "https://github.com/evanhempel/python-flamegraph.git"}
 
 
 [build-system]

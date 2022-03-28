@@ -15,6 +15,8 @@ from beastiary.db.init_db import init_db
 from beastiary.db.session import SessionLocal
 from beastiary import schemas
 
+import flamegraph
+
 
 app = typer.Typer()
 
@@ -43,6 +45,8 @@ def main(
     """
     Realtime and remote trace inspection with BEASTIARY.
     """
+    flamegraph.start_profile_thread(fd=open("./perf.log", "w"))
+
     if version:
         typer.echo(f"Beastiary {pkg_resources.get_distribution('beastiary').version}")
         return typer.Exit()

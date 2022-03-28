@@ -26,7 +26,7 @@ class CRUDSample(CRUDBase[Sample, SampleCreate, SampleUpdate]):
         for obj_in in objs_in_data:
             obj_in.update({"trace_id": trace_id})
         db_objs = [self.model(**obj_in_data) for obj_in_data in objs_in_data]
-        db.add_all(db_objs)
+        db.bulk_save_objects(db_objs)
         db.commit()
         # db.refresh(db_objs)
         return db_objs
