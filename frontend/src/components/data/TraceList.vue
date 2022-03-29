@@ -193,7 +193,7 @@ export default class TraceList extends Vue {
         const trace = this.traces[id];
         if (trace.isActive === true) {
           const skip = 'state' in trace.parameters ? trace.parameters.state.length : 0;
-          await dispatchGetSamples(this.$store, {trace, skip, limit: 100});
+          await dispatchGetSamples(this.$store, {trace, skip, limit: 1000});
           }
         }
       }, 5000);

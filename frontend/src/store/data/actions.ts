@@ -73,11 +73,12 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
         if (response != null) {
+            commitSetSamples(context, {traceID: trace.id, data: response.data});
             if (all === true && response.data.length === limit) {
                 // if you get back what you request go again
                 await dispatchGetSamples(context, {trace, skip: skip + limit, limit, all: true});
             }
-            commitSetSamples(context, {traceID: trace.id, data: response.data});
+            
         }
         commitRemoveNotification(context, loadingNotification);
     },
