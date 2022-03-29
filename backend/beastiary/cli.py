@@ -13,8 +13,6 @@ from beastiary.api import api
 from beastiary.db import Database
 from beastiary import schemas
 
-import flamegraph
-
 
 app = typer.Typer()
 
@@ -40,7 +38,6 @@ def main(
     """
     Realtime and remote trace inspection with BEASTIARY.
     """
-    flamegraph.start_profile_thread(fd=open("./perf.log", "w"))
     db = Database()
     db.create_table("Trace")
     db.create_table("Sample")
@@ -62,7 +59,6 @@ def main(
             except ValueError:
                 typer.echo(f"❌ - {path}")
         typer.echo("")
-    print(api.db)
     url = typer.style(
         f"http://{host}:{port}/login?token={token}", fg=typer.colors.GREEN, bold=False
     )
