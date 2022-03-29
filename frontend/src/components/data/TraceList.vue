@@ -1,6 +1,6 @@
 <template>
     <v-list
-      class="col mb-0 py-0 my-0 rounded-b-lg "
+      class="col mb-0 py-0 my-0 rounded-b-lg no-scrollbar"
       style="overflow-x: hidden;"
     >
         <v-list-group
@@ -73,7 +73,7 @@
             </v-list-item-content>
 
           </template>
-          <div style="overflow:auto" v-if="openTraceID === trace.id && activeTraceIDs.includes(trace.id)">
+          <div style="overflow-x: hidden !important; overflow-y: auto !important;" v-if="openTraceID === trace.id && activeTraceIDs.includes(trace.id)">
             <v-col class=" mr-4 mb-0">
               <div>Burn-in {{burnIn[trace.id]}}%</div>
               <v-slider
@@ -87,7 +87,7 @@
                 </v-slider>
             </v-col>
             <v-divider class="my-0"></v-divider>
-            <div style="overflow:auto" >
+            <div style="overflow-x:hidden" >
               <ParamsPanel :trace="trace" height="400px" />
             </div>
             
@@ -103,6 +103,22 @@
           </v-list>
           
 </template>
+
+<style>
+.no-scrollbar {
+  overflow-y: scroll; /* Add the ability to scroll */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+</style>
 
 <script lang="ts">
 import AddTraceButton from '@/components/data/AddTraceButton.vue';
