@@ -77,8 +77,7 @@ export const actions = {
             if (all === true && response.data.length === limit) {
                 // if you get back what you request go again
                 await dispatchGetSamples(context, {trace, skip: skip + limit, limit, all: true});
-            }
-            
+            }            
         }
         commitRemoveNotification(context, loadingNotification);
     },

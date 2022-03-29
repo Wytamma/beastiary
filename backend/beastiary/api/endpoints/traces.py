@@ -21,7 +21,7 @@ def get_traces(
 
 
 @router.get("/{trace_id}", response_model=schemas.Trace)
-def get_trace(request: Request, trace_id: int) -> schemas.Trace:
+def get_trace(request: Request, trace_id: int) -> dict:
     """
     Retrieve traces.
     """
@@ -36,7 +36,7 @@ def create_trace(
     request: Request,
     *,
     trace_in: schemas.TraceCreate,
-) -> schemas.Trace:
+) -> dict:
     """
     Create new trace.
     """

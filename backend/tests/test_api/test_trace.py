@@ -27,11 +27,11 @@ def test_get_trace() -> None:
         headers_line=headers_line,
         last_byte=last_byte,
     )
-    response = client.get(f"/api/traces/{trace.id}", headers=headers)
+    response = client.get(f"/api/traces/{trace['id']}", headers=headers)
     assert response.status_code == 200
     assert response.json() == {
         "path": path,
-        "id": trace.id,
+        "id": trace["id"],
         "headers_line": "state posterior likelihood prior treeLikelihood TreeHeight freqParameter.1 freqParameter.2 freqParameter.3 freqParameter.4 rateAC rateAG rateAT rateCG rateGT gammaShape BayesianSkyline bPopSizes.1 bPopSizes.2 bPopSizes.3 bPopSizes.4 bGroupSizes.1 bGroupSizes.2 bGroupSizes.3 bGroupSizes.4",
         "last_byte": 6479,
         "delimiter": None,

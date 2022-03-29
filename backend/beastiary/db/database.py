@@ -20,7 +20,7 @@ class Database:
         return [
             row
             for row in self.data[table_name]
-            if all(getattr(row, k) == v for k, v in kwargs.items())
+            if all(row[k] == v for k, v in kwargs.items())
         ][skip : skip + limit]
 
     def add(self, table_name: str, obj):

@@ -13,7 +13,6 @@ from beastiary.api import api
 from beastiary.db import Database
 from beastiary import schemas
 
-
 app = typer.Typer()
 
 
@@ -55,7 +54,7 @@ def main(
                     api.db, schemas.TraceCreate(path=str(path), delimiter=delimiter)
                 )
                 check_for_new_samples(api.db, trace=trace)
-                typer.echo(f"✅ - {trace.path}")
+                typer.echo(f"✅ - {trace['path']}")
             except ValueError:
                 typer.echo(f"❌ - {path}")
         typer.echo("")

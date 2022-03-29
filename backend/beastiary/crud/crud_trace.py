@@ -13,8 +13,8 @@ class CRUDTrace(CRUDBase[Trace, TraceCreate, TraceUpdate]):
     def create(  # type: ignore
         self, db: Database, *, obj_in: TraceCreate, headers_line: str, last_byte: int
     ) -> Trace:
-        trace = self.model(
-            **obj_in.dict(),
+        trace = obj_in.dict()
+        trace.update(
             last_byte=last_byte,
             headers_line=headers_line,
             id=len(db.data[self.model.__name__]),

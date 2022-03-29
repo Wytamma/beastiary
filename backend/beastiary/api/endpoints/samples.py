@@ -9,7 +9,7 @@ from beastiary.log import logger
 router = APIRouter()
 
 
-@router.get("/", response_model=List[schemas.Sample])
+@router.get("/")
 def get_samples(
     request: Request,
     trace_id: int,
@@ -24,21 +24,19 @@ def get_samples(
         raise HTTPException(404, detail="Trace not found!")
 
     samples = crud.sample.get_multi_by_trace(
-        request.app.db, trace_id=trace.id, skip=skip, limit=limit
+        request.app.db, trace_id=trace["id"], skip=skip, limit=limit
     )
-
     logger.debug(f"{limit} samples requested - {len(samples)} found")
     if len(samples) < limit:
-
-        logger.debug(f"Checking for new samples in {trace.path}")
+        logger.debug(f"Checking for new samples in {trace['path']}")
         try:
             check_for_new_samples(request.app.db, trace=trace)
         except Exception as e:
-            print(e)
-            raise HTTPException(500, detail=f"Could read samples in {trace.path}")
+            logger.error(str(e))
+            raise HTTPException(500, detail=f"Could read samples in {trace['path']}")
         # get samples
         samples = crud.sample.get_multi_by_trace(
-            request.app.db, trace_id=trace.id, skip=skip, limit=limit
+            request.app.db, trace_id=trace["id"], skip=skip, limit=limit
         )
     logger.debug(f"Returning {len(samples)} samples")
     return samples

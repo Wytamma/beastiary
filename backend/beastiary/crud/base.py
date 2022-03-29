@@ -28,8 +28,7 @@ class CRUDBase(Generic[InDBSchemaType, CreateSchemaType, UpdateSchemaType]):
         return db.query(self.model.__name__, skip=skip, limit=limit)
 
     def create(self, db: Database, *, obj_in: CreateSchemaType) -> InDBSchemaType:
-        obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data)  # type: ignore
+        db_obj = jsonable_encoder(obj_in)
         db.add(self.model.__name__, db_obj)
         return db_obj
 
@@ -37,22 +36,8 @@ class CRUDBase(Generic[InDBSchemaType, CreateSchemaType, UpdateSchemaType]):
         self,
         db: Database,
         *,
-        db_obj: InDBSchemaType,
+        db_obj: dict,
         obj_in: Union[UpdateSchemaType, Dict[str, Any]],
     ) -> InDBSchemaType:
-        obj_data = jsonable_encoder(db_obj)
-        if isinstance(obj_in, dict):
-            update_data = obj_in
-        else:
-            update_data = obj_in.dict(exclude_unset=True)
-        for field in obj_data:
-            if field in update_data:
-                setattr(db_obj, field, update_data[field])
+        db_obj.update(obj_in)
         return db_obj
-
-    def remove(self, db: Database, *, id: int) -> InDBSchemaType:
-        obj = db.query(self.model.__name__, id=id)
-        if not obj:
-            raise ValueError(f"{obj} not found!")
-        db.delete(obj)
-        return obj

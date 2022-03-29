@@ -64,20 +64,22 @@ def test_no_trace() -> None:
 
 
 def test_get_sample() -> None:
-    response = client.get(f"/api/samples/?trace_id={trace.id}", headers=headers)
+    response = client.get(f"/api/samples/?trace_id={trace['id']}", headers=headers)
     assert response.status_code == 200
     json = response.json()
-    assert json[0]["trace_id"] == trace.id
+    assert json[0]["trace_id"] == trace["id"]
     assert json[0]["data"] == hcv_coal_first_sample
 
 
 def test_get_sample_limit() -> None:
-    response = client.get(f"/api/samples/?trace_id={trace.id}&limit=1", headers=headers)
+    response = client.get(
+        f"/api/samples/?trace_id={trace['id']}&limit=1", headers=headers
+    )
     assert response.status_code == 200
     json = response.json()
     assert len(json) == 1
     response = client.get(
-        f"/api/samples/?trace_id={trace.id}&limit=1000000", headers=headers
+        f"/api/samples/?trace_id={trace['id']}&limit=1000000", headers=headers
     )
     assert response.status_code == 200
     json = response.json()
@@ -85,17 +87,17 @@ def test_get_sample_limit() -> None:
 
 
 def test_get_samples_with_missing_values() -> None:
-    response = client.get(f"/api/samples/?trace_id={na_trace.id}", headers=headers)
+    response = client.get(f"/api/samples/?trace_id={na_trace['id']}", headers=headers)
     assert response.status_code == 200
     json = response.json()
-    assert json[0]["trace_id"] == na_trace.id
+    assert json[0]["trace_id"] == na_trace["id"]
     assert json[0]["data"] == ebola_first_sample
 
 
 def test_get_csv_sample() -> None:
-    response = client.get(f"/api/samples/?trace_id={csv_trace.id}", headers=headers)
+    response = client.get(f"/api/samples/?trace_id={csv_trace['id']}", headers=headers)
     assert response.status_code == 200
     json = response.json()
-    assert json[0]["trace_id"] == csv_trace.id
+    assert json[0]["trace_id"] == csv_trace["id"]
     print(json[0]["data"])
     assert json[0]["data"] == csv_first_sample
