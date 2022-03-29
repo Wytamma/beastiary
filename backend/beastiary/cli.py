@@ -7,21 +7,16 @@ import uvicorn
 
 from pathlib import Path
 from typing import List, Optional
-from fastapi.params import Security
 
-from beastiary.api.core import add_trace
+from beastiary.api.core import add_trace, check_for_new_samples
 from beastiary.api import api
-from beastiary.db.init_db import init_db
-from beastiary.db.session import SessionLocal
+from beastiary.db import Database
 from beastiary import schemas
 
 import flamegraph
 
 
 app = typer.Typer()
-
-db = SessionLocal()
-init_db(db)
 
 
 @app.command()
@@ -46,7 +41,10 @@ def main(
     Realtime and remote trace inspection with BEASTIARY.
     """
     flamegraph.start_profile_thread(fd=open("./perf.log", "w"))
-
+    db = Database()
+    db.create_table("Trace")
+    db.create_table("Sample")
+    setattr(api, "db", db)
     if version:
         typer.echo(f"Beastiary {pkg_resources.get_distribution('beastiary').version}")
         return typer.Exit()
@@ -57,12 +55,14 @@ def main(
         for path in log_files:
             try:
                 trace = add_trace(
-                    db, schemas.TraceCreate(path=str(path), delimiter=delimiter)
+                    api.db, schemas.TraceCreate(path=str(path), delimiter=delimiter)
                 )
+                check_for_new_samples(api.db, trace=trace)
                 typer.echo(f"✅ - {trace.path}")
             except ValueError:
                 typer.echo(f"❌ - {path}")
         typer.echo("")
+    print(api.db)
     url = typer.style(
         f"http://{host}:{port}/login?token={token}", fg=typer.colors.GREEN, bold=False
     )

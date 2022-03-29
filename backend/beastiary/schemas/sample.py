@@ -22,11 +22,7 @@ class SampleUpdate(SampleBase):
 
 # Properties shared by models stored in DB
 class SampleInDBBase(SampleBase):
-    id: int
     trace_id: int
-
-    class Config:
-        orm_mode = True
 
 
 # Properties to return to client

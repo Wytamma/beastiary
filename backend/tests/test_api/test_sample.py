@@ -8,12 +8,8 @@ from .utils import (
 )
 from beastiary import crud
 from beastiary.schemas import TraceCreate, sample
-from beastiary.db.session import SessionLocal
-from beastiary.db.init_db import init_db
 from beastiary.api.core import get_headers
 
-db = SessionLocal()
-init_db(db)
 
 client = TestClient(app)
 
@@ -21,7 +17,7 @@ path = "tests/data/hcv_coal.log"
 last_byte, headers_line = get_headers(path=path)
 
 trace = crud.trace.create(
-    db,
+    client.app.db,
     obj_in=TraceCreate(path=path),
     headers_line=headers_line,
     last_byte=last_byte,
@@ -31,7 +27,7 @@ path = "tests/data/prior.ebola.log"
 last_byte, headers_line = get_headers(path=path)
 
 na_trace = crud.trace.create(
-    db,
+    client.app.db,
     obj_in=TraceCreate(path=path),
     headers_line=headers_line,
     last_byte=last_byte,
@@ -41,7 +37,7 @@ path = "tests/data/beast1.csv"
 last_byte, headers_line = get_headers(path=path, delimiter=",")
 
 csv_trace = crud.trace.create(
-    db,
+    client.app.db,
     obj_in=TraceCreate(path=path, delimiter=","),
     headers_line=headers_line,
     last_byte=last_byte,
@@ -68,7 +64,7 @@ def test_no_trace() -> None:
 
 
 def test_get_sample() -> None:
-    response = client.get("/api/samples/?trace_id=1", headers=headers)
+    response = client.get(f"/api/samples/?trace_id={trace.id}", headers=headers)
     assert response.status_code == 200
     json = response.json()
     assert json[0]["trace_id"] == trace.id
@@ -76,18 +72,20 @@ def test_get_sample() -> None:
 
 
 def test_get_sample_limit() -> None:
-    response = client.get("/api/samples/?trace_id=1&limit=1", headers=headers)
+    response = client.get(f"/api/samples/?trace_id={trace.id}&limit=1", headers=headers)
     assert response.status_code == 200
     json = response.json()
     assert len(json) == 1
-    response = client.get("/api/samples/?trace_id=1&limit=1000000", headers=headers)
+    response = client.get(
+        f"/api/samples/?trace_id={trace.id}&limit=1000000", headers=headers
+    )
     assert response.status_code == 200
     json = response.json()
     assert len(json) == 1001
 
 
 def test_get_samples_with_missing_values() -> None:
-    response = client.get("/api/samples/?trace_id=2", headers=headers)
+    response = client.get(f"/api/samples/?trace_id={na_trace.id}", headers=headers)
     assert response.status_code == 200
     json = response.json()
     assert json[0]["trace_id"] == na_trace.id

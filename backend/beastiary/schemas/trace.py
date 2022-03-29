@@ -25,9 +25,6 @@ class TraceInDBBase(TraceBase):
     headers_line: str
     last_byte: int
 
-    class Config:
-        orm_mode = True
-
 
 # Properties to return to client
 class Trace(TraceInDBBase):

@@ -2,12 +2,7 @@ from fastapi.testclient import TestClient
 from .utils import app, headers
 from beastiary import crud
 from beastiary.schemas import TraceCreate
-from beastiary.db.session import SessionLocal
-from beastiary.db.init_db import init_db
 from beastiary.api.core import get_headers
-
-db = SessionLocal()
-init_db(db)
 
 client = TestClient(app)
 
@@ -23,11 +18,11 @@ def test_read_wrong_trace_id() -> None:
 
 def test_get_trace() -> None:
     try:
-        crud.trace.remove(db=db, id=1)
+        crud.trace.remove(db=client.app.db, id=1)
     except:
         pass
     trace = crud.trace.create(
-        db,
+        client.app.db,
         obj_in=TraceCreate(path=path),
         headers_line=headers_line,
         last_byte=last_byte,
@@ -44,22 +39,20 @@ def test_get_trace() -> None:
 
 
 def test_get_traces() -> None:
-    for trace in crud.trace.get_multi(db=db):
-        crud.trace.remove(db=db, id=trace.id)
     crud.trace.create(
-        db,
+        client.app.db,
         obj_in=TraceCreate(path=path),
         headers_line=headers_line,
         last_byte=last_byte,
     )
     crud.trace.create(
-        db,
+        client.app.db,
         obj_in=TraceCreate(path=path),
         headers_line=headers_line,
         last_byte=last_byte,
     )
     crud.trace.create(
-        db,
+        client.app.db,
         obj_in=TraceCreate(path=path),
         headers_line=headers_line,
         last_byte=last_byte,
@@ -67,9 +60,7 @@ def test_get_traces() -> None:
     response = client.get("/api/traces/", headers=headers)
     assert response.status_code == 200
     json = response.json()
-    assert len(json) == 3
-    for trace in json:
-        crud.trace.remove(db=db, id=trace["id"])
+    assert len(json) >= 3
 
 
 def test_add_trace() -> None:

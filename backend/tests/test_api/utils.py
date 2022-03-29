@@ -1,9 +1,15 @@
 from beastiary.api import api as app
+from beastiary.db.database import Database
 
 
 app.security = True
 app.token = "testing"
 app.debug = True
+
+db = Database()
+db.create_table("Trace")
+db.create_table("Sample")
+app.db = db
 
 headers = {"Authorization": "Bearer testing"}
 
