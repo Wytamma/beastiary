@@ -237,6 +237,21 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "flamegraph"
+version = "0.1"
+description = "Statistical profiler which outputs in format suitable for FlameGraph"
+category = "dev"
+optional = false
+python-versions = "*"
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/evanhempel/python-flamegraph.git"
+reference = "master"
+resolved_reference = "6b70f9068cb987a2b1942fbf048fc88a7a644c40"
+
+[[package]]
 name = "ghp-import"
 version = "2.0.1"
 description = "Copy your docs directly to the gh-pages branch."
@@ -1029,7 +1044,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6.2,<4.0"
-content-hash = "b69d87dc232791bc8844ee2c60e89edaf2752ed526c04de642036e119f9ee0c7"
+content-hash = "7284a208edde3a7770b7621ba54d8831187bbcf427716651d0bb0c728fe039b7"
 
 [metadata.files]
 aiofiles = [
@@ -1166,6 +1181,7 @@ filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
     {file = "filelock-3.0.12.tar.gz", hash = "sha256:18d82244ee114f543149c66a6e0c14e9c4f8a1044b5cdaadd0f82159d6a6ff59"},
 ]
+flamegraph = []
 ghp-import = [
     {file = "ghp-import-2.0.1.tar.gz", hash = "sha256:753de2eace6e0f7d4edfb3cce5e3c3b98cd52aadb80163303d1d036bda7b4483"},
 ]

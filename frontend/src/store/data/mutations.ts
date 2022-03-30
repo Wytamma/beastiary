@@ -28,6 +28,7 @@ function setTraceDefaults(trace: Trace) {
     trace.activeParams = [];
     trace.isActive = false;
     trace.burnIn = 10;
+    trace.isLoading = false;
 }
 
 export const mutations = {
@@ -56,8 +57,9 @@ export const mutations = {
     setBurnIn(state: DataState, payload: {traceID: number, burnIn: number}) {
         state.traces[payload.traceID].burnIn = payload.burnIn;
     },
-    setLoadingSamples(state: DataState, payload: boolean) {
-        state.loadingSamples = payload;
+    setLoadingSamples(state: DataState, payload: {traceID: number, loading: boolean}) {
+        state.loadingSamples = payload.loading;
+        state.traces[payload.traceID].isLoading = payload.loading;
     },
     setSetSamples(state: DataState, payload: {traceID: number, data: InSample[]}) {
         const data = formatData(payload.data);
@@ -68,7 +70,7 @@ export const mutations = {
             for (const paramName in data) {
                 if (paramName) {
                     trace.parameters[paramName] = trace.parameters[paramName].concat(
-                        data[paramName]).sort((a, b) => a.state - b.state,
+                        data[paramName], // ).sort((a, b) => a.state - b.state,
                     );
                 }
             }

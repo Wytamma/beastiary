@@ -1,46 +1,41 @@
-from typing import Any, List, Tuple
-import math
-from beastiary.models.trace import Trace
-from fastapi import APIRouter, Depends, HTTPException, Path
-from sqlalchemy.orm import Session
+from typing import Any, List
+from fastapi import APIRouter, Depends, HTTPException, Path, Request
 
-from beastiary import crud, schemas
-from beastiary.api import deps
+from beastiary import crud
 from beastiary.api.core import check_for_new_samples
 from beastiary.log import logger
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[schemas.Sample])
+@router.get("/")
 def get_samples(
+    request: Request,
     trace_id: int,
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(deps.get_db),
 ) -> Any:
     """
     Retrieve samples.
     """
-    trace = crud.trace.get(db, trace_id)
+    trace = crud.trace.get(request.app.db, trace_id)
     if not trace:
         raise HTTPException(404, detail="Trace not found!")
 
     samples = crud.sample.get_multi_by_trace(
-        db, trace_id=trace.id, skip=skip, limit=limit
+        request.app.db, trace_id=trace["id"], skip=skip, limit=limit
     )
-
     logger.debug(f"{limit} samples requested - {len(samples)} found")
     if len(samples) < limit:
-
-        logger.debug(f"Checking for new samples in {trace.path}")
+        logger.debug(f"Checking for new samples in {trace['path']}")
         try:
-            check_for_new_samples(db, trace=trace, delimiter=trace.delimiter)
+            check_for_new_samples(request.app.db, trace=trace)
         except Exception as e:
-            raise HTTPException(500, detail=f"Could read samples in {trace.path}")
+            logger.error(str(e))
+            raise HTTPException(500, detail=f"Could read samples in {trace['path']}")
         # get samples
         samples = crud.sample.get_multi_by_trace(
-            db, trace_id=trace.id, skip=skip, limit=limit
+            request.app.db, trace_id=trace["id"], skip=skip, limit=limit
         )
     logger.debug(f"Returning {len(samples)} samples")
     return samples

@@ -16,7 +16,7 @@
             </v-toolbar>
             </div>
             <v-divider v-if="traces.length > 0"></v-divider>
-            <div style="max-height: 80vh;overflow: auto;">
+            <div style="max-height: 80vh" class="no-scrollbar">
               <TraceList />
             </div>
           </v-card>
