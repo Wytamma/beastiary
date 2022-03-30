@@ -77,14 +77,13 @@ export const actions = {
             if (all === true && response.data.length === limit) {
                 // if you get back what you request go again
                 await dispatchGetSamples(context, {trace, skip: skip + limit, limit, all: true});
-            }            
-        }
+            }}
         commitRemoveNotification(context, loadingNotification);
     },
     async actionSetBurnIn(context: MainContext, payload: {traceID: number, burnIn: number}) {
         commitSetBurnIn(context, payload);
     },
-    async actionSetLoadingSamples(context: MainContext, payload: boolean) {
+    async actionSetLoadingSamples(context: MainContext, payload: {traceID: number, loading: boolean}) {
         commitSetLoadingSamples(context, payload);
     },
 };

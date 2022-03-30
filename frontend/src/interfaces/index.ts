@@ -12,6 +12,7 @@ export interface Trace {
     activeParams: string[];
     isActive: boolean;
     burnIn: number;
+    isLoading: boolean;
 }
 
 export interface Traces {
