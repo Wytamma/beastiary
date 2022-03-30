@@ -27,3 +27,7 @@ If prompted enter token: 8e02d06b-d30e-4a89-8476-fb22712a31b3
 ```
 
 </div>
+
+!!! note
+    
+    Any files with non standard delimiters (e.g. csv) must be loaded from the command line.
