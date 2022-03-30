@@ -2,11 +2,8 @@ from logging import log
 from pathlib import Path
 from typing import Optional, Tuple, Union, List
 from beastiary import crud, schemas
-from beastiary.crud import crud_trace
 from beastiary.db.database import Database
 from pydantic.utils import is_valid_field
-from sqlalchemy.orm.session import Session
-from beastiary.schemas.sample import SampleCreate
 from beastiary.log import logger
 import os, math, errno
 

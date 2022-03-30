@@ -3,7 +3,6 @@ from typing import List
 from beastiary.db import Database
 
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy.orm import Session
 
 from beastiary.crud.base import CRUDBase
 from beastiary.schemas.trace import TraceCreate, TraceUpdate, Trace

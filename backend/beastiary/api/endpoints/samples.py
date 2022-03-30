@@ -1,8 +1,7 @@
 from typing import Any, List
-import math
 from fastapi import APIRouter, Depends, HTTPException, Path, Request
 
-from beastiary import crud, schemas
+from beastiary import crud
 from beastiary.api.core import check_for_new_samples
 from beastiary.log import logger
 
