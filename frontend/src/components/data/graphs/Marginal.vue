@@ -79,7 +79,7 @@ export default class Marginal extends Vue {
           l: 70,
           r: 50,
           b: 40,
-          t: 50,
+          t: 0,
           pad: 0,
           },
       };
