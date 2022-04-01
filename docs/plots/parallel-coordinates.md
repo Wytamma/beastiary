@@ -1,4 +1,4 @@
-The 'Parallel' panel will produce Parallel coordinates plots for the selected traces. Here, a set of parameters and their values are represented as columns. Each posterior sample is drawn as a line across these parameters. Although parallel coordinates  have not been typically used in MCMC trace exploration, we believe they will be useful at elucidating MCMC behaviour and correlation between parameters in MCMC trace, especially in high dimensional models. 
+The 'Parallel' panel will produce Parallel coordinates plots for the selected traces. Here, a set of parameters and their values are represented as columns. Each sample is drawn as a line across these parameters. Although parallel coordinates have not been typically used in MCMC trace exploration, we believe they will be useful at elucidating MCMC behaviour and correlation between parameters in MCMC trace, especially in high dimensional models. 
 
 ![](../images/parallel.png)
 
