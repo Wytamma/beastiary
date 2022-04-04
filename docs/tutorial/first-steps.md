@@ -13,9 +13,9 @@ If prompted enter token: 8e02d06b-d30e-4a89-8476-fb22712a31b3
 
 </div>
 
-The server will start on [http://127.0.0.1:5000/](http://127.0.0.1:5000/) by default. Every time the server starts it will generate a unique id that can be used to log into the webapp. 
+The server will start on [http://127.0.0.1:5000/](http://127.0.0.1:5000/) by default. Every time the server starts it will generate a unique token that can be used to log into the webapp. 
 
-Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/) and log in with the ID. 
+Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/) and log in with the token. 
 
 ![](../images/login_screen_shot.png)
 
