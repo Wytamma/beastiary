@@ -1,7 +1,7 @@
 site_name: Beastiary
 theme:
   name: material
-  logo: images/logo_cage_white.svg
+  logo: images/Beastiary.png
   palette:
     primary: teal
     accent: orange
