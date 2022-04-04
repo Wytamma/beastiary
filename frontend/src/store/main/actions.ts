@@ -1,6 +1,5 @@
 import { api } from '@/api';
 import router from '@/router';
-import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { ActionContext } from 'vuex';
@@ -22,7 +21,6 @@ export const actions = {
             const response = await api.getToken(payload.token);
             const token = response.data.token;
             if (token) {
-                saveLocalToken(token);
                 commitSetToken(context, token);
                 commitSetLoggedIn(context, true);
                 commitSetLogInError(context, false);
@@ -38,14 +36,7 @@ export const actions = {
     },
     async actionCheckLoggedIn(context: MainContext) {
         if (!context.state.isLoggedIn) {
-            let token = context.state.token;
-            if (!token) {
-                const localToken = getLocalToken();
-                if (localToken) {
-                    commitSetToken(context, localToken);
-                    token = localToken;
-                }
-            }
+            const token = context.state.token;
             if (token) {
                 try {
                     commitSetLoggedIn(context, true);
@@ -58,7 +49,6 @@ export const actions = {
         }
     },
     async actionRemoveLogIn(context: MainContext) {
-        removeLocalToken();
         commitSetToken(context, '');
         commitSetLoggedIn(context, false);
     },

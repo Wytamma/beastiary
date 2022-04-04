@@ -53,7 +53,9 @@ export default class Login extends Vue {
   }
   private mounted() {
     this.token = this.getTokenFromUrl();
-    this.submit();
+    if (this.token) {
+      this.submit();
+    }    
  }
 }
 </script>

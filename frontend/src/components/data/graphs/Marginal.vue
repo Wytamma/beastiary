@@ -8,6 +8,7 @@
 </template>
 
 <script lang="ts">
+// @ts-ignore
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Vue } from 'vue-property-decorator';
@@ -17,6 +18,7 @@ import { Component, Vue } from 'vue-property-decorator';
     Plotly,
   },
 })
+// @ts-ignore
 export default class Marginal extends Vue {
     get modeBarButtons() {
       return [

@@ -44,7 +44,7 @@ export default class Parallel extends Vue {
       return {
           plot_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'white',
           paper_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'white',
-          yaxis: {showticklabels: false, zeroline: false},
+          yaxis: {showticklabels: false, zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
           xaxis: { zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
           legend: {
             orientation: 'h', x: 0.5, y: 1.15,
@@ -115,7 +115,6 @@ export default class Parallel extends Vue {
       data.dimensions = dimensions;
       data.labelfont = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
       data.rangefont = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
-      data.tickfont = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
 
       data.type = 'parcoords';
       // @ts-ignore
