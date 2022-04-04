@@ -4,4 +4,4 @@ For example, beastiary can be run in Google Colab notebooks. [Enzo Andree](https
 
 Here you can see an example of this notebook adapted to also run beastiary: 
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Wytamma/ColabBEAST/blob/main/BEAST2.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1XfKBhTLIenFUB1_uoDwKBnJey6gHna4e?usp=sharing)

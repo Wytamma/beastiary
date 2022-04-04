@@ -18,7 +18,7 @@ nav:
   - tutorial/google-colab.md
   - tutorial/running-in-the-background.md
 - Plots:
-  - plots/joint-marginal.md
+  - plots/pairwise.md
   - plots/Cumulative-ESS.md
   - plots/parallel-coordinates.md
 - Design and Implementation: design.md

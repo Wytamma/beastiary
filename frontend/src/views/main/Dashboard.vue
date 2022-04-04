@@ -34,7 +34,7 @@
                   Histogram
                 </v-tab>
                 <v-tab>
-                  Marginal
+                  Pairwise
                 </v-tab>
                 <v-tab>
                   Parallel
@@ -64,7 +64,7 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    <Marginal v-if="tab === 3"/>
+                    <Pairwise v-if="tab === 3"/>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
@@ -97,7 +97,7 @@ import '@/assets/css/custom.css';
 import AddTraceButton from '@/components/data/AddTraceButton.vue';
 import CumulativeESS from '@/components/data/graphs/ESS.vue';
 import Histogram from '@/components/data/graphs/Histogram.vue';
-import Marginal from '@/components/data/graphs/Marginal.vue';
+import Pairwise from '@/components/data/graphs/Pairwise.vue';
 import Parallel from '@/components/data/graphs/Parallel.vue';
 import Trace from '@/components/data/graphs/Trace.vue';
 import Violin from '@/components/data/graphs/Violin.vue';
@@ -122,7 +122,7 @@ import { Component, Vue } from 'vue-property-decorator';
     AddTraceButton,
     StatsTable,
     CumulativeESS,
-    Marginal,
+    Pairwise,
   },
 })
 export default class Dashboard extends Vue {
