@@ -14,9 +14,9 @@ Go to: <span style="color: green;">http://127.0.0.1:5000/login?token=8e02d06b-d3
 
 </div>
 
-!!! note
+!!! warning
     
-    If using beastiary on a shared computer (e.g. a HPC) disabling security will enable other users to log into your beastiary session and thus access files in your account.
+    If you are using beastiary on a shared computer (e.g. a HPC) disabling security will enable other users to log into your beastiary session and thus access files in your account.
 
 
 ## User defined token
