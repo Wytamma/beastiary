@@ -51,3 +51,7 @@ If prompted enter token: 8e02d06b-d30e-4a89-8476-fb22712a31b3
 
     Because beastiary is running on the remote server you will have to specify paths to log files as they are on the server. 
 
+
+## Reconnecting 
+
+If you are using ssh tunnelling to connect to Beastiary running on the remote server then you should be able to reopen the forwarded port e.g. http://127.0.0.1:5000 while Beastiary is running and the ssh connection remains open. Closing the ssh session or stopping Beastiary will prevent you from reconnect, but that’s expected. If you close the window simply go to http://127.0.0.1:5000 again and re-enter the login token.
