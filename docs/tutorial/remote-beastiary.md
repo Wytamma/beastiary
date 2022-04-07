@@ -31,7 +31,7 @@ Welcome to Spartan, the general purpose High Performance Computer system.
 
 ## Start beastiary 
 
-Now that you are logged into the HPC start beastiary using the `beastiary` command. Once beastiary has started you can go to http://127.0.0.1:5000 on your local machine to access remote log files. 
+Now that you are logged into the HPC start beastiary using the `beastiary` command. Once beastiary has started you can go to [http://127.0.0.1:5000](http://127.0.0.1:5000) on your local machine to access remote log files. 
 
 <div class="termy">
 
@@ -54,4 +54,4 @@ If prompted enter token: 8e02d06b-d30e-4a89-8476-fb22712a31b3
 
 ## Reconnecting 
 
-If you are using ssh tunnelling to connect to Beastiary running on the remote server then you should be able to reopen the forwarded port e.g. http://127.0.0.1:5000 while Beastiary is running and the ssh connection remains open. Closing the ssh session or stopping Beastiary will prevent you from reconnect, but that’s expected. If you close the window simply go to http://127.0.0.1:5000 again and re-enter the login token.
+If you are using ssh tunnelling to connect to Beastiary running on the remote server then you should be able to reopen the forwarded port e.g. [http://127.0.0.1:5000](http://127.0.0.1:5000) while Beastiary is running and the ssh connection remains open. Closing the ssh session or stopping Beastiary will prevent you from reconnect, but that’s expected. If you close the window simply go to [http://127.0.0.1:5000](http://127.0.0.1:5000) again and re-enter the login token.

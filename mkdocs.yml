@@ -15,6 +15,7 @@ nav:
   - tutorial/logs-from-the-command-line.md
   - tutorial/log-file-format.md
   - tutorial/remote-beastiary.md
+  - tutorial/security.md
   - tutorial/google-colab.md
   - tutorial/running-in-the-background.md
 - Plots:

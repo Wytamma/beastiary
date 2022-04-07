@@ -58,13 +58,15 @@ def main(
             except ValueError:
                 typer.echo(f"❌ - {path}")
         typer.echo("")
+
+    setattr(api, "token", token)
     url = typer.style(
         f"http://{host}:{port}/login?token={token}", fg=typer.colors.GREEN, bold=False
     )
     typer.echo(f"Go to: {url}\n")
-    typer.echo(f"If prompted enter token: {token}")
-    setattr(api, "token", token)
-    if not security:
+    if security:
+        typer.echo(f"If prompted enter token: {token}")
+    else:
         warning = typer.style("WARNING", fg=typer.colors.YELLOW, bold=True)
         typer.echo(f"{warning}: Security disabled!")
         setattr(api, "security", False)
