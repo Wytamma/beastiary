@@ -23,6 +23,7 @@
     "vue-json-to-csv": "^1.1.8",
     "vue-plotly": "^1.1.0",
     "vue-property-decorator": "^7.3.0",
+    "vue-resizable": "^1.3.2",
     "vue-router": "^3.0.2",
     "vue-worker": "^1.2.1",
     "vuetify": "^2.4.0",

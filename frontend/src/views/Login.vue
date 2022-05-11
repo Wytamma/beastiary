@@ -55,7 +55,7 @@ export default class Login extends Vue {
     this.token = this.getTokenFromUrl();
     if (this.token) {
       this.submit();
-    }    
+    }
  }
 }
 </script>

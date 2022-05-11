@@ -6,21 +6,25 @@
           width: null,
           height: null,
           format: 'svg'
-      }" :displaylogo="false"  :mode-bar-buttons-to-remove="modeBarButtons" :display-mode-bar="true"></Plotly>
+      }" :displaylogo="false"  :mode-bar-buttons-to-remove="modeBarButtons" :display-mode-bar="true" ></Plotly>
 </div>
 </template>
 
 <script lang="ts">
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
-import { Component, Vue } from 'vue-property-decorator';
-import { Trace } from '../../../interfaces';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 @Component({
   components: {
     Plotly,
   },
 })
-export default class Histogram extends Vue {
+export default class Trace extends Vue {
+  // @ts-ignore
+  @Prop() public height: number;
+  // @ts-ignore
+  @Prop() public width: number;
   get modeBarButtons() {
     return [
       'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -43,7 +47,7 @@ export default class Histogram extends Vue {
   get activeTraceIDs() {
       return readActiveTraceIDs(this.$store);
   }
-  get layout() {
+  get layout() {    
     return {
       grid: {pattern: 'dependent'},
       xaxis: {domain: [0, 0.7], showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
@@ -61,7 +65,8 @@ export default class Histogram extends Vue {
         t: 0,
         pad: 0,
       },
-      // height: 400,
+      height: this.height,
+      width: this.width,
     };
   }
   get traceData() {

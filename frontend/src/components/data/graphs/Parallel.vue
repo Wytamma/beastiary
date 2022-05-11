@@ -10,14 +10,18 @@
 <script lang="ts">
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
-import { Component, Vue } from 'vue-property-decorator';
-import { Trace } from '../../../interfaces';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 @Component({
   components: {
     Plotly,
   },
 })
 export default class Parallel extends Vue {
+    // @ts-ignore
+    @Prop() public height: number;
+    // @ts-ignore
+    @Prop() public width: number;
     get modeBarButtons() {
       return [
         'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -46,11 +50,6 @@ export default class Parallel extends Vue {
           paper_bgcolor: this.$vuetify.theme.dark ? '#1E1E1E' : 'white',
           yaxis: {showticklabels: false, zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
           xaxis: { zeroline: false, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
-          legend: {
-            orientation: 'h', x: 0.5, y: 1.15,
-            xanchor: 'center',
-            font: {size: 15, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
-          },
           displayModeBar: true,
           name: 'test',
           margin: {
@@ -60,6 +59,8 @@ export default class Parallel extends Vue {
           t: 50,
           pad: 0,
           },
+          height: this.height,
+          width: this.width,
       };
     }
     get ParallelData() {

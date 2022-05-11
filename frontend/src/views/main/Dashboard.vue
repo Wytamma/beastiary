@@ -47,45 +47,108 @@
                 </v-tab>
               </v-tabs>
             <v-tabs-items v-model="tab">
+             
               <v-tab-item >
-                <v-card flat class="pa-2" >
-                    <Trace v-if="tab === 0" />
+                <v-card flat class="pa-2"  fill-height>
+                  <vue-resizable 
+                    :active='["b"]'
+                    @mount="eHandler"
+                    @resize:move="eHandler"
+                    @resize:start="eHandler"
+                    @resize:end="eHandler" 
+                    :width="tabWidth"
+                    :height="tabHeight"
+                    :fitParent="false"
+                    class="pb-4"
+                  >
+                    <Trace v-if="tab === 0" :height="tabHeight" :width="tabWidth" />
+                  </vue-resizable>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    <Violin v-if="tab === 1"/>
+                  <vue-resizable 
+                    :active='["b"]'
+                    @mount="eHandler"
+                    @resize:move="eHandler"
+                    @resize:start="eHandler"
+                    @resize:end="eHandler" 
+                    :width="tabWidth"
+                    :height="tabHeight"
+                  >
+                    <Violin v-if="tab === 1" :height="tabHeight" :width="tabWidth" />
+                  </vue-resizable>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    <Histogram v-if="tab === 2"/>
+                  <vue-resizable 
+                    :active='["b"]'
+                    @mount="eHandler"
+                    @resize:move="eHandler"
+                    @resize:start="eHandler"
+                    @resize:end="eHandler" 
+                    :width="tabWidth"
+                    :height="tabHeight"
+                  >
+                    <Histogram v-if="tab === 2" :height="tabHeight" :width="tabWidth" />
+                  </vue-resizable>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pa-2"  fill-height >
+                  <vue-resizable 
+                    :active='["b"]'
+                    @mount="eHandler"
+                    @resize:move="eHandler"
+                    @resize:start="eHandler"
+                    @resize:end="eHandler" 
+                    :width="tabWidth"
+                    :height="tabHeight"
+                  >
+                    <Pairwise v-if="tab === 3" :height="tabHeight" :width="tabWidth" />
+                  </vue-resizable>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="pt-2 pb-2"  fill-height>
+                  <vue-resizable 
+                    :active='["b"]'
+                    @mount="eHandler"
+                    @resize:move="eHandler"
+                    @resize:start="eHandler"
+                    @resize:end="eHandler" 
+                    :width="tabWidth"
+                    :height="tabHeight"
+                  >
+                    <Parallel v-if="tab === 4" :height="tabHeight" :width="tabWidth" />
+                  </vue-resizable>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    <Pairwise v-if="tab === 3"/>
+                  <vue-resizable 
+                    :active='["b"]'
+                    @mount="eHandler"
+                    @resize:move="eHandler"
+                    @resize:start="eHandler"
+                    @resize:end="eHandler" 
+                    :width="tabWidth"
+                    :height="tabHeight"
+                  >
+                    <CumulativeESS v-if="tab === 5" :height="tabHeight" :width="tabWidth" />
+                    
+                  </vue-resizable>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
                 <v-card flat class="pa-2"  fill-height>
-                    <Parallel v-if="tab === 4"/>
+                    <StatsTable v-if="tab === 6" :height="tabHeight" :width="tabWidth" />
                 </v-card>
               </v-tab-item>
-              <v-tab-item>
-                <v-card flat class="pa-2"  fill-height>
-                    <CumulativeESS v-if="tab === 5"/>
-                </v-card>
-              </v-tab-item>
-              <v-tab-item>
-                <v-card flat class="pa-2"  fill-height>
-                    <StatsTable v-if="tab === 6" />
-                </v-card>
-              </v-tab-item>
+              
             </v-tabs-items>
-            
           </v-card>
-          
         </v-col>
       </v-row>
 </v-layout>
@@ -105,10 +168,10 @@ import ParamsPanel from '@/components/data/ParamsPanel.vue';
 import StatsTable from '@/components/data/StatsTable.vue';
 import TraceList from '@/components/data/TraceList.vue';
 
-
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Vue } from 'vue-property-decorator';
+import VueResizable from 'vue-resizable';
 
 @Component({
   components: {
@@ -123,10 +186,18 @@ import { Component, Vue } from 'vue-property-decorator';
     StatsTable,
     CumulativeESS,
     Pairwise,
+    VueResizable,
   },
 })
 export default class Dashboard extends Vue {
   public tab = null;
+  public tabHeight = 450;
+  public tabWidth = null;
+
+  public eHandler(data) {
+      this.tabWidth = data.width;
+      this.tabHeight = data.height;
+  }
 
   get activeTraceIDs() {
     const IDs = readActiveTraceIDs(this.$store);
@@ -148,3 +219,11 @@ export default class Dashboard extends Vue {
 
 }
 </script>
+
+<style scoped>
+    .resizable-content {
+        height: 450px;
+        width: 100%;
+        background-color: aqua;
+    }
+</style>

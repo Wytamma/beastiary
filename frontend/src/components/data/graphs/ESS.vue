@@ -18,7 +18,10 @@ import { Trace, Traces } from '../../../interfaces';
   },
 })
 export default class CumulativeESS extends Vue {
-
+  // @ts-ignore
+  @Prop() public height: number;
+  // @ts-ignore
+  @Prop() public width: number;
   get modeBarButtons() {
     return [
       'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -80,6 +83,8 @@ export default class CumulativeESS extends Vue {
           },
         },
       ],
+      height: this.height,
+      width: this.width,
       // height: 400,
     };
   }
@@ -219,7 +224,7 @@ export default class CumulativeESS extends Vue {
           const burnIn = trace.burnIn;
           const data = trace.parameters[parameter];
           const traceId = trace.id;
-          this.worker.postMessage('CumulativeESS', [data, burnIn, 50]) // compute ESS in worker
+          this.worker.postMessage('CumulativeESS', [data, burnIn, 100]) // compute ESS in worker
           .then((res) => {
             this.addESSdata(`${traceId}-${parameter}`, res);
             })

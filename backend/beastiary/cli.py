@@ -1,5 +1,3 @@
-import errno
-import os
 import pkg_resources
 import uuid
 import typer

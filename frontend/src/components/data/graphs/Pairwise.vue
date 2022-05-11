@@ -11,7 +11,7 @@
 // @ts-ignore
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -20,6 +20,10 @@ import { Component, Vue } from 'vue-property-decorator';
 })
 // @ts-ignore
 export default class Pairwise extends Vue {
+    // @ts-ignore
+    @Prop() public height: number;
+    // @ts-ignore
+    @Prop() public width: number;
     get modeBarButtons() {
       return [
         'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -75,7 +79,7 @@ export default class Pairwise extends Vue {
             separatethousands: false,
             color: this.$vuetify.theme.dark ? 'white' : '#2c3e50',
           },
-          height: this.numberOfActivePrams > 3 ? this.numberOfActivePrams * 150 : 450,
+          //height: this.numberOfActivePrams > 3 ? this.numberOfActivePrams * 150 : 450,
           displayModeBar: true,
           margin: {
           l: 70,
@@ -84,6 +88,8 @@ export default class Pairwise extends Vue {
           t: 0,
           pad: 0,
           },
+          height: this.height,
+          width: this.width,
       };
       for (let i = 2; i < this.numberOfActivePrams + 1; i++) {
         console.log(`yaxis${i}`);
