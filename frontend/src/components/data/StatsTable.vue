@@ -61,6 +61,7 @@ export default class StatsTable extends Vue {
             for (const param of trace.activeParams) {
                 const row: any = {};
                 row.filename = this.fileName(trace.path);
+                row.filepath = trace.path;
                 row.param = param;
                 // @ts-ignore
                 const stats = this.calculateStats(trace.parameters[param], trace.burnIn);
