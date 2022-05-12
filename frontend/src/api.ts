@@ -24,8 +24,8 @@ export const api = {
   },
   async getSamples(token: string, trace: Trace, skip: number = 0, limit: number = 100) {
     const options = authHeaders(token);
-    options.params = {trace_id: trace.id, skip, limit};
-    return axios.get<InSample[]>(`${apiUrl}/api/samples/`, options);
+    options.params = {skip, limit};
+    return axios.get<InSample[]>(`${apiUrl}/api/traces/${trace.id}/samples`, options);
   },
   async listDirectory(token: string, path: string) {
     const options = authHeaders(token);
