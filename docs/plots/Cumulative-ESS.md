@@ -2,7 +2,7 @@ The 'ESS' panel will produce cumulative ESS plots for the selected traces. Cumul
 
 ![](../images/cumulativeESS.png)
 
-Each point in the plot above represents the ESS value up to that point (in steps of 50 samples). The 'meanRate' trace has better mixing than the 'age(root)' parameter i.e. the increase in ESS is more linear. However, the overall slope of 'age(root)' is steeper than 'meanRate' and thus reaches the target ESS (200, green dotted line) before 'meanRate' (which will likely reach the target around 55 million steps).
+Each point in the plot above represents the ESS value up to that point (in steps of 100 samples). The 'meanRate' trace has better mixing than the 'age(root)' parameter i.e. the increase in ESS is more linear. However, the overall slope of 'age(root)' is steeper than 'meanRate' and thus reaches the target ESS (200, green dotted line) before 'meanRate' (which will likely reach the target around 55 million steps).
 
 The rate at which ESS increases is dependent on the mixing quality. In particular, the ESS of a well mixing chain should increase linearly with the number of steps (Vehtarh et al., 2021). As a result, the slope of this relationship can be used to estimate how long a run will take to reach a desired ESS value. 
 

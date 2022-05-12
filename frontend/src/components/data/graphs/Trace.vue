@@ -47,7 +47,7 @@ export default class Trace extends Vue {
   get activeTraceIDs() {
       return readActiveTraceIDs(this.$store);
   }
-  get layout() {    
+  get layout() {
     return {
       grid: {pattern: 'dependent'},
       xaxis: {domain: [0, 0.7], showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},

@@ -58,7 +58,6 @@
                     @resize:end="eHandler" 
                     :width="tabWidth"
                     :height="tabHeight"
-                    :fitParent="false"
                     class="pb-4"
                   >
                     <Trace v-if="tab === 0" :height="tabHeight" :width="tabWidth" />

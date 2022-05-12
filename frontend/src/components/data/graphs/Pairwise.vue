@@ -79,7 +79,6 @@ export default class Pairwise extends Vue {
             separatethousands: false,
             color: this.$vuetify.theme.dark ? 'white' : '#2c3e50',
           },
-          //height: this.numberOfActivePrams > 3 ? this.numberOfActivePrams * 150 : 450,
           displayModeBar: true,
           margin: {
           l: 70,
