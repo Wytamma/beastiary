@@ -46,8 +46,8 @@
                   Estimates
                 </v-tab>
               </v-tabs>
-            <v-tabs-items v-model="tab">
-             
+            <v-tabs-items v-model="tab" >
+             <div ref="tabItems" >
               <v-tab-item >
                 <v-card flat class="pa-2"  fill-height>
                   <vue-resizable 
@@ -145,7 +145,7 @@
                     <StatsTable v-if="tab === 6" :height="tabHeight" :width="tabWidth" />
                 </v-card>
               </v-tab-item>
-              
+            </div>
             </v-tabs-items>
           </v-card>
         </v-col>
@@ -194,8 +194,11 @@ export default class Dashboard extends Vue {
   public tabWidth = null;
 
   public eHandler(data) {
-      this.tabWidth = data.width;
       this.tabHeight = data.height;
+      if (this.$refs.tabItems) {
+        // @ts-ignore
+        this.tabWidth = this.$refs.tabItems.clientWidth;
+      }
   }
 
   get activeTraceIDs() {
@@ -215,6 +218,19 @@ export default class Dashboard extends Vue {
     return '';
   }
 
+  private mounted() {
+    window.addEventListener('resize', this.setPlotWidth);
+  }
+  private unmounted() {
+    window.removeEventListener('resize', this.setPlotWidth);
+  }
+
+  private setPlotWidth() {
+    if (this.$refs.tabItems) {
+      // @ts-ignore
+      this.tabWidth = this.$refs.tabItems.clientWidth;
+    }
+  }
 
 }
 </script>
