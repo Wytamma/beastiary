@@ -18,7 +18,7 @@ Beastiary is designed for visualising and analysing MCMC trace files generated f
 
 ---
 
-## Installation
+## Install
 ```bash
 pip install beastiary
 ```
@@ -34,9 +34,7 @@ beastiary
 
 For more information read the [docs](https://beastiary.wytamma.com/).
 
-# Citation 
-
-If you use Beasitary in your research please cite:
+# Cite
 
 > Wytamma Wirth, Sebastian Duchene, Real-time and remote MCMC trace inspection with Beastiary, Molecular Biology and Evolution, 2022;, msac095, https://doi.org/10.1093/molbev/msac095
 
