@@ -10,9 +10,11 @@ Beastiary is designed for visualising and analysing MCMC trace files generated f
 
 ---
 
+**Paper**: <a href="https://academic.oup.com/mbe/advance-article/doi/10.1093/molbev/msac095/6584747" target="_blank">Wirth & Duchene (2022)</a>
+
 **Documentation**: <a href="https://beastiary.wytamma.com" target="_blank">https://beastiary.wytamma.com</a>
 
-**Source Code**: <a href="https://github.com/Wytamma/beastiaryi" target="_blank">https://github.com/Wytamma/beastiary</a>
+**Source Code**: <a href="https://github.com/Wytamma/beastiary" target="_blank">https://github.com/Wytamma/beastiary</a>
 
 ---
 
@@ -31,3 +33,10 @@ beastiary
 ![](docs/images/screen_shot_dark.png)
 
 For more information read the [docs](https://beastiary.wytamma.com/).
+
+# Citation 
+
+If you use Beasitary in your research please cite:
+
+> Wytamma Wirth, Sebastian Duchene, Real-time and remote MCMC trace inspection with Beastiary, Molecular Biology and Evolution, 2022;, msac095, https://doi.org/10.1093/molbev/msac095
+
