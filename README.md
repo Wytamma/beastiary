@@ -34,7 +34,7 @@ beastiary
 
 For more information read the [docs](https://beastiary.wytamma.com/).
 
-# Cite
+## Cite
 
 > Wytamma Wirth, Sebastian Duchene, Real-time and remote MCMC trace inspection with Beastiary, Molecular Biology and Evolution, 2022;, msac095, https://doi.org/10.1093/molbev/msac095
 
