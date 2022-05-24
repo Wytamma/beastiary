@@ -23,6 +23,7 @@ nav:
   - plots/Cumulative-ESS.md
   - plots/parallel-coordinates.md
 - Design and Implementation: design.md
+- Citation: citation.md
 
 markdown_extensions:
 - toc:
