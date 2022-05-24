@@ -10,7 +10,7 @@ from starlette.datastructures import URL
 
 import logging
 
-from beastiary.api.endpoints import traces, explorer
+from beastiary.api.endpoints import traces, explorer, trees
 
 
 class BeastiaryAPI(FastAPI):
@@ -51,6 +51,7 @@ async def test_token() -> Any:
 
 api_router = APIRouter(prefix="/api")
 api_router.include_router(traces.router, prefix="/traces", tags=["traces"])
+api_router.include_router(trees.router, prefix="/trees", tags=["trees"])
 api_router.include_router(explorer.router, prefix="/explorer", tags=["explorer"])
 api.include_router(api_router)
 

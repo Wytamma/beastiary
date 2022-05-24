@@ -8,7 +8,9 @@ app.debug = True
 
 db = Database()
 db.create_table("Trace")
-db.create_table("Sample")
+db.create_table("TraceSample")
+db.create_table("Tree")
+db.create_table("TreeSample")
 app.db = db
 
 headers = {"Authorization": "Bearer testing"}

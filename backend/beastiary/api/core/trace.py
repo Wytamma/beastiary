@@ -1,6 +1,6 @@
 from logging import log
 from pathlib import Path
-from typing import Optional, Tuple, Union, List
+from typing import Optional, Tuple, List
 from beastiary import crud, schemas
 from beastiary.db.database import Database
 from pydantic.utils import is_valid_field
@@ -67,7 +67,7 @@ def read_lines(trace: schemas.Trace) -> Tuple[int, list]:
         return last_byte, lines
 
 
-def lines_to_SampleCreate(
+def format_lines(
     headers: list, lines: list, trace_id: int, delimiter: Optional[str] = None
 ) -> List[dict]:
     samples = []
@@ -89,15 +89,15 @@ def lines_to_SampleCreate(
     return samples
 
 
-def check_for_new_samples(db: Database, trace: schemas.Trace) -> None:
+def check_for_new_trace_samples(db: Database, trace: schemas.Trace) -> None:
     last_byte, lines = read_lines(trace)
-    in_samples = lines_to_SampleCreate(
+    in_samples = format_lines(
         trace["headers_line"].split(trace["delimiter"]),
         lines,
         trace_id=trace["id"],
         delimiter=trace["delimiter"],
     )
     if in_samples:
-        crud.sample.create_multi(db, objs_in=in_samples)
+        crud.trace_sample.create_multi(db, objs_in=in_samples)
     # update the trace byte
     crud.trace.update(db, db_obj=trace, obj_in={"last_byte": last_byte})

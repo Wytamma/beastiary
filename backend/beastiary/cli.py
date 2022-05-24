@@ -6,7 +6,7 @@ import uvicorn
 from pathlib import Path
 from typing import List, Optional
 
-from beastiary.api.core import add_trace, check_for_new_samples
+from beastiary.api.core import add_trace, check_for_new_trace_samples
 from beastiary.api import api
 from beastiary.db import Database
 from beastiary import schemas
@@ -37,7 +37,9 @@ def main(
     """
     db = Database()
     db.create_table("Trace")
-    db.create_table("Sample")
+    db.create_table("TraceSample")
+    db.create_table("TreeSample")
+    db.create_table("Tree")
     setattr(api, "db", db)
     if version:
         typer.echo(f"Beastiary {pkg_resources.get_distribution('beastiary').version}")
@@ -51,7 +53,7 @@ def main(
                 trace = add_trace(
                     api.db, schemas.TraceCreate(path=str(path), delimiter=delimiter)
                 )
-                check_for_new_samples(api.db, trace=trace)
+                check_for_new_trace_samples(api.db, trace=trace)
                 typer.echo(f"✅ - {trace['path']}")
             except ValueError:
                 typer.echo(f"❌ - {path}")

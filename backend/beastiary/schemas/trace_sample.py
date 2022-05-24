@@ -26,5 +26,5 @@ class SampleInDBBase(SampleBase):
 
 
 # Properties to return to client
-class Sample(SampleInDBBase):
+class TraceSample(SampleInDBBase):
     pass

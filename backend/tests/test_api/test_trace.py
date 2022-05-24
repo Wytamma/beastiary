@@ -2,12 +2,11 @@ from fastapi.testclient import TestClient
 from .utils import app, headers
 from beastiary import crud
 from beastiary.schemas import TraceCreate
-from beastiary.api.core import get_headers
+from beastiary.api.core import add_trace
 
 client = TestClient(app)
 
 path = "tests/data/hcv_coal.log"
-last_byte, headers_line = get_headers(path=path)
 
 
 def test_read_wrong_trace_id() -> None:
@@ -21,12 +20,7 @@ def test_get_trace() -> None:
         crud.trace.remove(db=client.app.db, id=1)
     except:
         pass
-    trace = crud.trace.create(
-        client.app.db,
-        obj_in=TraceCreate(path=path),
-        headers_line=headers_line,
-        last_byte=last_byte,
-    )
+    trace = add_trace(client.app.db, TraceCreate(path=path))
     response = client.get(f"/api/traces/{trace['id']}", headers=headers)
     assert response.status_code == 200
     assert response.json() == {
@@ -39,24 +33,9 @@ def test_get_trace() -> None:
 
 
 def test_get_traces() -> None:
-    crud.trace.create(
-        client.app.db,
-        obj_in=TraceCreate(path=path),
-        headers_line=headers_line,
-        last_byte=last_byte,
-    )
-    crud.trace.create(
-        client.app.db,
-        obj_in=TraceCreate(path=path),
-        headers_line=headers_line,
-        last_byte=last_byte,
-    )
-    crud.trace.create(
-        client.app.db,
-        obj_in=TraceCreate(path=path),
-        headers_line=headers_line,
-        last_byte=last_byte,
-    )
+    add_trace(client.app.db, TraceCreate(path=path))
+    add_trace(client.app.db, TraceCreate(path=path))
+    add_trace(client.app.db, TraceCreate(path=path))
     response = client.get("/api/traces/", headers=headers)
     assert response.status_code == 200
     json = response.json()
@@ -84,7 +63,6 @@ def test_change_delimiter() -> None:
     response = client.post(
         "/api/traces/", headers=headers, json={"path": path, "delimiter": ","}
     )
-    print(response.text)
     assert response.status_code == 200
     json = response.json()
     assert json["path"] == path

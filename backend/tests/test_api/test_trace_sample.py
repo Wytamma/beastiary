@@ -83,5 +83,4 @@ def test_get_csv_sample() -> None:
     assert response.status_code == 200
     json = response.json()
     assert json[0]["trace_id"] == csv_trace["id"]
-    print(json[0]["data"])
     assert json[0]["data"] == csv_first_sample
