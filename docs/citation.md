@@ -20,7 +20,7 @@ If you use Beastiary in your research please cite our paper [Wirth & Duchene 202
 }
 ```
 
-# RIS
+## RIS
 
 ```
 Provider: Silverchair
