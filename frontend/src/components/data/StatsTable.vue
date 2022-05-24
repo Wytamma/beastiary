@@ -1,6 +1,7 @@
 <template>
-<div>
+<div class="rounded-lg">
     <v-data-table
+    class="rounded-lg"
     :headers="headers"
     :items="statistics"
     dense
