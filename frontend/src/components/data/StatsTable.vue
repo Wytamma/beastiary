@@ -1,8 +1,10 @@
 <template>
-<div>
+<div class="rounded-lg">
     <v-data-table
+    class="rounded-lg"
     :headers="headers"
     :items="statistics"
+    items-per-page="5"
     dense
   >
    <template v-slot:footer.page-text>

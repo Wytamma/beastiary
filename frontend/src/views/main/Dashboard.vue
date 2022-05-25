@@ -42,9 +42,6 @@
                 <v-tab>
                   ESS
                 </v-tab>
-                <v-tab>
-                  Estimates
-                </v-tab>
               </v-tabs>
             <v-tabs-items v-model="tab" >
              <div ref="tabItems" >
@@ -140,13 +137,11 @@
                   </vue-resizable>
                 </v-card>
               </v-tab-item>
-              <v-tab-item>
-                <v-card flat class="pa-2"  fill-height>
-                    <StatsTable v-if="tab === 6" :height="tabHeight" :width="tabWidth" />
-                </v-card>
-              </v-tab-item>
             </div>
             </v-tabs-items>
+          </v-card>
+          <v-card v-if="activeParams" class="rounded-lg mt-4" >
+              <StatsTable :height="tabHeight" :width="tabWidth" />
           </v-card>
         </v-col>
       </v-row>
