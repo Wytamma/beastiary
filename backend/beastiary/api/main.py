@@ -56,6 +56,7 @@ api.include_router(api_router)
 
 api.mount("/", StaticFiles(directory=webapp_path))
 
+
 # replace with https://tiangolo.medium.com/nice-a6eafd9a7bca
 # probably need some switch to run it off
 # auto_error: bool = False

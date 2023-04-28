@@ -10,6 +10,7 @@ def test_get_mr_bayes() -> None:
     )
     assert last_byte == 124
 
+
 def test_get_space_in_name() -> None:
     path = "tests/data/space.in.name.log"
     last_byte, headers_line = get_headers(path=path, delimiter="\t")
