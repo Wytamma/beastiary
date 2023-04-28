@@ -32,9 +32,9 @@ def test_get_trace() -> None:
     assert response.json() == {
         "path": path,
         "id": trace["id"],
-        "headers_line": "state posterior likelihood prior treeLikelihood TreeHeight freqParameter.1 freqParameter.2 freqParameter.3 freqParameter.4 rateAC rateAG rateAT rateCG rateGT gammaShape BayesianSkyline bPopSizes.1 bPopSizes.2 bPopSizes.3 bPopSizes.4 bGroupSizes.1 bGroupSizes.2 bGroupSizes.3 bGroupSizes.4",
+        "headers_line": "state\tposterior\tlikelihood\tprior\ttreeLikelihood\tTreeHeight\tfreqParameter.1\tfreqParameter.2\tfreqParameter.3\tfreqParameter.4\trateAC\trateAG\trateAT\trateCG\trateGT\tgammaShape\tBayesianSkyline\tbPopSizes.1\tbPopSizes.2\tbPopSizes.3\tbPopSizes.4\tbGroupSizes.1\tbGroupSizes.2\tbGroupSizes.3\tbGroupSizes.4",
         "last_byte": 6479,
-        "delimiter": None,
+        "delimiter": "\t",
     }
 
 
