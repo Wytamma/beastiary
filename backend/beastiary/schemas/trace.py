@@ -6,7 +6,7 @@ from typing import Optional
 # Shared properties
 class TraceBase(BaseModel):
     path: Path
-    delimiter: Optional[str]
+    delimiter: Optional[str] = "\t"
 
 
 # Properties to receive on Trace creation

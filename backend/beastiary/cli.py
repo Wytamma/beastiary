@@ -30,7 +30,7 @@ def main(
     security: bool = typer.Option(True, help="Turn off token requirement."),
     debug: bool = typer.Option(False, help="Set debug mode."),
     testing: bool = typer.Option(False, help="Only for testing.", hidden=True),
-    delimiter: str = typer.Option(None, "--delimiter"),
+    delimiter: str = typer.Option("\t", "--delimiter"),
 ) -> None:
     """
     Realtime and remote trace inspection with BEASTIARY.

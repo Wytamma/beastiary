@@ -8,10 +8,9 @@ from beastiary.log import logger
 import os, math, errno
 
 
-def get_headers(path: Path, delimiter: Optional[str] = None) -> Tuple[int, str]:
+def get_headers(path: Path, delimiter: Optional[str] = "\t") -> Tuple[int, str]:
     logger.debug(f"Getting headers from {path}")
     with open(path, "r") as f:
-        headers_set = False
         while True:
             line = f.readline()
             if line.startswith("#") or line.startswith("["):
@@ -21,8 +20,6 @@ def get_headers(path: Path, delimiter: Optional[str] = None) -> Tuple[int, str]:
                 headers_list[0] = "state"
             except IndexError:
                 raise ValueError(f"Could not find headers in {path}")
-            if delimiter == None:
-                delimiter = " "
             headers_line = delimiter.join(headers_list)
             last_byte = f.tell()
             logger.debug(f"last_byte = {last_byte}")
