@@ -94,7 +94,8 @@ jobs:
       # (requires CODECOV_TOKEN in repository secrets)   
       #----------------------------------------------
       - name: Upload coverage
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./backend/coverage.xml
-          fail_ci_if_error: true
+          fail_ci_if_error: false
