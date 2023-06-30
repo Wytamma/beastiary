@@ -64,7 +64,6 @@ def get_samples(
     """
     Retrieve samples.
     """
-    print(trace_id)
     trace = crud.trace.get(db=request.app.db, id=trace_id)
     if not trace:
         raise HTTPException(404, detail="Trace not found!")
