@@ -53,8 +53,8 @@ def main(
                 )
                 check_for_new_samples(api.db, trace=trace)
                 typer.echo(f"✅ - {trace['path']}")
-            except ValueError:
-                typer.echo(f"❌ - {path}")
+            except ValueError as e:
+                typer.echo(f"❌ - {path}: {e}")
         typer.echo("")
 
     setattr(api, "token", token)
