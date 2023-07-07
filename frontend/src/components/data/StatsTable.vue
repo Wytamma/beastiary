@@ -4,7 +4,7 @@
     class="rounded-lg"
     :headers="headers"
     :items="statistics"
-    items-per-page=5
+    :items-per-page=5
     dense
   >
    <template v-slot:footer.page-text>
@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { readTraces } from '@/store/data/getters';
-import { format, mean, median, quantileSeq, sqrt, std, variance } from 'mathjs';
+import { format, median, quantileSeq, sqrt, std, variance } from 'mathjs';
 import VueJsonToCsv from 'vue-json-to-csv';
 import { Component, Prop, Vue} from 'vue-property-decorator';
 
@@ -61,33 +61,61 @@ export default class StatsTable extends Vue {
         for (const trace of Object.values(this.traces)) {
              // @ts-ignore
             for (const param of trace.activeParams) {
-                const row: any = {};
+                const row: any = {
+                    filename: '',
+                    filepath: '',
+                    param: '',
+                    mean: 'NaN',
+                    ESS: 'NaN',
+                    ACT: 'NaN',
+                    variance: 'NaN',
+                    nSamples: 'NaN',
+                    std: 'NaN',
+                    stderr: 'NaN',
+                    median: 'NaN',
+                    quantile: 'NaN',
+                    HPD: 'NaN',
+                };
                 row.filename = this.fileName(trace.path);
                 row.filepath = trace.path;
                 row.param = param;
-                // @ts-ignore
-                const stats = this.calculateStats(trace.parameters[param], trace.burnIn);
-                // @ts-ignore
-                row.mean = format(stats.mean, {notation: 'auto', precision: 5});
-                // @ts-ignore
-                row.ESS = Math.round(stats.ESS);
-                // @ts-ignore
-                row.ACT = format(stats.ACT, {notation: 'auto', precision: 5});
-                // @ts-ignore
-                row.variance = format(stats.variance, {notation: 'auto', precision: 5});
-                // @ts-ignore
-                row.nSamples = stats.nSamples;
-                // @ts-ignore
-                row.std = format(stats.std, {notation: 'auto', precision: 5});
-                // @ts-ignore
-                row.stderr = format(stats.stderr, {notation: 'auto', precision: 5});
-                // @ts-ignore
-                row.median = format(stats.median, {notation: 'auto', precision: 5});
-                // @ts-ignore
-                row.quantile = format(stats.quantile, {notation: 'auto', precision: 5});
-                // @ts-ignore
-                row.HPD = format(stats.HPD, {notation: 'auto', precision: 5});
-                // row.HPD = stats.HPD
+
+                // @ts-ignore                
+                if (typeof trace.parameters[param][0].value == 'string')
+                {
+                    const values: Array<number | null> = trace.parameters[param].slice(
+                        trace.parameters[param].length * (trace.burnIn / 100),
+                    ).map((v) => v.value);
+                    if (values.includes(null)) {
+                        return null;
+                    }
+                    row.nSamples = values.length;
+                    
+                } else {
+                    // @ts-ignore
+                    const stats = this.calculateStats(trace.parameters[param], trace.burnIn);
+                    // @ts-ignore
+                    row.mean = format(stats.mean, {notation: 'auto', precision: 5});
+                    // @ts-ignore
+                    row.ESS = Math.round(stats.ESS);
+                    // @ts-ignore
+                    row.ACT = format(stats.ACT, {notation: 'auto', precision: 5});
+                    // @ts-ignore
+                    row.variance = format(stats.variance, {notation: 'auto', precision: 5});
+                    // @ts-ignore
+                    row.nSamples = stats.nSamples;
+                    // @ts-ignore
+                    row.std = format(stats.std, {notation: 'auto', precision: 5});
+                    // @ts-ignore
+                    row.stderr = format(stats.stderr, {notation: 'auto', precision: 5});
+                    // @ts-ignore
+                    row.median = format(stats.median, {notation: 'auto', precision: 5});
+                    // @ts-ignore
+                    row.quantile = format(stats.quantile, {notation: 'auto', precision: 5});
+                    // @ts-ignore
+                    row.HPD = format(stats.HPD, {notation: 'auto', precision: 5});
+                    // row.HPD = stats.HPD
+                }
                 // @ts-ignore
                 statistics.push(
                     row,
