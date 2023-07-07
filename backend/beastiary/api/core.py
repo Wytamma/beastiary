@@ -72,11 +72,16 @@ def lines_to_SampleCreate(
         data = {}
         line = line.strip()  # strip \n
         for header, value in zip(headers, line.split(delimiter)):
-            value = float(value)
-            if value.is_integer():
-                value = int(value)
-            elif math.isnan(value) or math.isinf(value):
-                value = None
+            try:
+                value = float(value)
+                if value.is_integer():
+                    value = int(value)
+                elif math.isnan(value) or math.isinf(value):
+                    value = None
+            except ValueError:
+                # value is not a number
+                # treat as categorical
+                logger.debug(f"Value is not a number: {value}")
             data[header] = value
         sample_in = {}
         sample_in["data"] = data
