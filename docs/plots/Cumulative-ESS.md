@@ -1,4 +1,4 @@
-The 'ESS' panel will produce cumulative ESS plots for the selected traces. Cumulative ESS plots are a novel tool that can be used to asses mixing quality and estimate how long a run will take to reach a desired ESS value (Voloch et al., 2012; Vehtarh et al., 2021). These plots are calculated on the fronted so it may take a few moments for the plot to load (depending on the amount of data). 
+The 'ESS' panel will produce cumulative ESS plots for the selected traces. Cumulative ESS plots are a novel tool that can be used to asses mixing quality and estimate how long a run will take to reach a desired ESS value (Voloch et al., 2012; Vehtarh et al., 2021). These plots are calculated on the frontend so it may take a few moments for the plot to load (depending on the amount of data). 
 
 ![](../images/cumulativeESS.png)
 
