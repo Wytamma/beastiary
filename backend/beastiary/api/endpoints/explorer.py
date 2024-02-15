@@ -38,7 +38,7 @@ def list_directory(path: Optional[str] = None) -> dict:
         if not name.startswith(".")
     ]
 
-    sorted_files = sorted(files)
+    sorted_files = sorted(files, key=lambda d: d["name"])
     sorted_folders = sorted(sorted_files, key=lambda d: d["is_dir"], reverse=True)
 
     directory = {
