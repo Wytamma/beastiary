@@ -9,10 +9,11 @@ readme = "PYPI-README.md"
 beastiary = "beastiary.cli:app"
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4.0"
+python = ">=3.8,<4.0"
 typer = {extras = ["all"], version = "^0.3.2"}
 fastapi = {extras = ["all"], version = "^0.95.1"}
 aiofiles = "<0.6.0"
+with-cloudflared = "^0.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.3.1"

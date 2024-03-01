@@ -187,7 +187,7 @@ export default class TraceList extends Vue {
         // not loading and no active so load
         dispatchSetLoadingSamples(this.$store, {traceID: trace.id, loading: true});
         await dispatchSetActiveTrace(this.$store, trace);
-        await dispatchGetSamples(this.$store, { trace, skip, limit: 10000, all: true });
+        await dispatchGetSamples(this.$store, { trace, skip, limit: 2500, all: true });
         dispatchSetLoadingSamples(this.$store, {traceID: trace.id, loading: false});
         // await this.createInterval(trace);
       }
