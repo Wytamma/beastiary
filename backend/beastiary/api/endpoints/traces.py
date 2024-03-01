@@ -47,7 +47,9 @@ def create_trace(
     try:
         # check if trace is outside of the current working directory
         if not os.path.abspath(trace_in.path).startswith(os.getcwd()):
-            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), trace_in.path)
+            raise FileNotFoundError(
+                errno.ENOENT, os.strerror(errno.ENOENT), trace_in.path
+            )
         trace = add_trace(request.app.db, trace_in)
     except FileNotFoundError:
         raise HTTPException(404, detail="Could not find log file!")

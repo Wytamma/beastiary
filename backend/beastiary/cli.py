@@ -28,9 +28,15 @@ def main(
     token: str = typer.Option(str(uuid.uuid4()), "--token", "-t"),
     host: str = typer.Option("127.0.0.1", "--host"),
     port: str = typer.Option(5000, "--port"),
-    share: bool = typer.Option(False, "--share", help="Create a publicly shareable link."),
-    no_security: bool = typer.Option(False, "--no-security", help="Turn off token requirement."),
-    delimiter: str = typer.Option("\t", "--delimiter", help="Delimiter to split file columns on. Default is tab."),
+    share: bool = typer.Option(
+        False, "--share", help="Create a publicly shareable link."
+    ),
+    no_security: bool = typer.Option(
+        False, "--no-security", help="Turn off token requirement."
+    ),
+    delimiter: str = typer.Option(
+        "\t", "--delimiter", help="Delimiter to split file columns on. Default is tab."
+    ),
     debug: bool = typer.Option(False, "--debug", help="Set debug mode."),
     testing: bool = typer.Option(False, help="Only for testing.", hidden=True),
 ) -> None:
@@ -78,7 +84,9 @@ def main(
     if share:
         typer.echo("Creating public shareable link...")
         with cloudflared(port=port) as cloudflared_url:
-            url_with_token = typer.style(f"{cloudflared_url}", fg=typer.colors.GREEN, bold=False)
+            url_with_token = typer.style(
+                f"{cloudflared_url}", fg=typer.colors.GREEN, bold=False
+            )
             typer.echo(f"\nBeastiary is now publicly accessible at: {url_with_token}")
             uvicorn.run(api, host=host, port=port, log_level=log_level)
     else:
