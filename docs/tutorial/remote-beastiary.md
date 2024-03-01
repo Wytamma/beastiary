@@ -18,7 +18,7 @@ If prompted enter token: 8e02d06b-d30e-4a89-8476-fb22712a31b3
 
 Creating public shareable link...
 
-Beastiary is now publicly accessible at: https://grave-profits-stories-idaho.trycloudflare.com
+Beastiary is now publicly accessible at: <span style="color: green;">https://grave-profits-stories-idaho.trycloudflare.com</span>
 ```
 </div>
 
