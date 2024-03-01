@@ -1,4 +1,4 @@
-from os import error, path
+from os import path
 from typing import Any, Optional, Callable
 from fastapi import FastAPI
 from fastapi import APIRouter, Request
@@ -6,7 +6,6 @@ from fastapi.logger import logger
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import JSONResponse, FileResponse
 from starlette.middleware.cors import CORSMiddleware
-from starlette.datastructures import URL
 
 import logging
 
