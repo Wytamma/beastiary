@@ -1,6 +1,6 @@
 <template>
 <v-content fill-height>
-  <v-layout fill-height >
+  <v-layout  >
     <v-navigation-drawer persistent v-model="showDrawer" fixed app>
       <v-layout column fill-height>
         <v-list nav>
@@ -67,7 +67,7 @@ import { appName } from '@/env';
 import { dispatchUserLogOut } from '@/store/main/actions';
 import { readDashboardMiniDrawer, readDashboardShowDrawer } from '@/store/main/getters';
 import { commitSetDashboardMiniDrawer, commitSetDashboardShowDrawer } from '@/store/main/mutations';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 const routeGuardMain = async (to, from, next) => {
   if (to.path === '/main') {
@@ -117,6 +117,17 @@ export default class Main extends Vue {
 
   public async logout() {
     await dispatchUserLogOut(this.$store);
+  }
+
+  @Watch('$vuetify.theme.dark') 
+  public onThemeChange(val) {
+    console.log(val);
+    
+    if (val) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
   }
 }
 </script>

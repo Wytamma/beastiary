@@ -3,3 +3,18 @@
     word-wrap: break-word;
     white-space: normal;
   }
+
+
+  /* Light theme scroll bar */
+:root {
+  --scrollbar-bg-color: #f5f5f5;
+  --scrollbar-thumb-color: #c1c1c1;
+  scrollbar-color: #c1c1c1 #f5f5f5;
+}
+
+/* Dark theme scroll bar */
+[data-theme="dark"] {
+  --scrollbar-bg-color: #303030;
+  --scrollbar-thumb-color: #555555;
+  scrollbar-color: #555555 #303030;
+}
