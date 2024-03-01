@@ -1,8 +1,7 @@
 <template>
-      <v-layout  style=" overflow: hidden;">
-      <v-row class="ma-0 pb-0">
-        <v-col cols="3" class="mt-4 pt-0 pr-0">
-          <v-card  class="rounded-lg px-0 ma-0">
+      <v-layout row class="mt-4 ml-2 mr-4 mb-0" >
+        <v-col cols="12" md="3" class="pt-0 pr-0">
+          <v-card ref="traces"  class="rounded-lg px-0 ma-0">
                <div>
             <v-toolbar
                   class="rounded-lg"
@@ -21,9 +20,9 @@
             </div>
           </v-card>
         </v-col>
-        <v-col cols="9" class="pl-4 mt-4 pt-0">
-          <v-card v-if="activeParams" class="rounded-lg ">
-              <v-tabs  v-model="tab" right  class="mb-4">
+        <v-col cols="12" md="9" class="pt-0 pr-0">
+          <v-card v-if="activeParams" class="rounded-lg  ">
+              <v-tabs show-arrows v-model="tab" right  class="mb-4">
                 <v-tab >
                   Trace
                 </v-tab>
@@ -144,7 +143,6 @@
               <StatsTable :height="tabHeight" :width="tabWidth" />
           </v-card>
         </v-col>
-      </v-row>
 </v-layout>
 </template>
 

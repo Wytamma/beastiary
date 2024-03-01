@@ -15,7 +15,7 @@
               <v-list-item-title class="text-h6 font-weight-regular">
                 {{fileName(trace.path)}}
               </v-list-item-title>
-              <v-list-item-subtitle class="wrap-text text-caption">
+              <v-list-item-subtitle style="word-break: break-all;" class="wrap-text text-caption overflow-x-scroll">
                 {{trace.path}}
               </v-list-item-subtitle>
               <v-list-item-content class="pb-0">
