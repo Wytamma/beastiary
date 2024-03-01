@@ -33,7 +33,7 @@
           ></v-text-field>
         </v-form>
          <v-list style="max-height: 300px;overflow: auto;">
-              <v-list-item>
+              <v-list-item v-if="!isRoot">
                 <v-list-item-avatar>
                   <v-icon
                       class="grey lighten-1"
@@ -123,6 +123,7 @@ export default class AddTraceButton extends Vue {
     public currentPath: string = '';
     public parentDir: string = '';
     public files: any[] = [];
+    public isRoot: boolean = true;
 
     public submit() {
       dispatchCreateTrace(this.$store, {path: this.path});
@@ -135,6 +136,7 @@ export default class AddTraceButton extends Vue {
       this.parentDir  = '';
       this.files = [];
       this.list_dir();
+      this.isRoot = true;
     }
 
     public async list_dir() {
@@ -143,6 +145,7 @@ export default class AddTraceButton extends Vue {
       this.files = response.data.files;
       this.currentPath = response.data.path;
       this.parentDir = response.data.parent;
+      this.isRoot = response.data.is_root;
     }
 }
 </script>

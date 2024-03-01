@@ -18,6 +18,7 @@ class File(BaseModel):
 class Dir(BaseModel):
     path: str
     parent: str
+    is_root: bool
     files: List[File]
 
 
@@ -26,8 +27,15 @@ def list_directory(path: Optional[str] = None) -> dict:
     """
     List the folders/files in a diretory
     """
+    cwd = os.getcwd()
     if not path:
-        path = os.path.abspath(os.getcwd())
+        path = os.path.abspath(cwd)
+    # check it path is cwd or child of cwd
+    if path and not os.path.abspath(path).startswith(cwd):
+        path = os.path.abspath(cwd)
+    # make path relative to cwd
+    path = os.path.relpath(path, cwd)
+    print(path)
     files = [
         {
             "name": name,
@@ -43,7 +51,8 @@ def list_directory(path: Optional[str] = None) -> dict:
 
     directory = {
         "path": path,
-        "parent": str(Path(path).parent.absolute()),
+        "parent": str(Path(path).parent),
         "files": sorted_folders,
+        "is_root": path == ".",
     }
     return directory

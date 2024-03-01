@@ -1,3 +1,5 @@
+import errno
+import os
 from beastiary.api.core import add_trace, check_for_new_samples
 from beastiary.log import logger
 
@@ -43,8 +45,11 @@ def create_trace(
     Create new trace.
     """
     try:
+        # check if trace is outside of the current working directory
+        if not os.path.abspath(trace_in.path).startswith(os.getcwd()):
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), trace_in.path)
         trace = add_trace(request.app.db, trace_in)
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         raise HTTPException(404, detail="Could not find log file!")
     except ValueError as e:
         raise HTTPException(400, detail=str(e))
