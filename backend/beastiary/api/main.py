@@ -6,6 +6,7 @@ from fastapi.logger import logger
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import JSONResponse, FileResponse
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 
 import logging
 
@@ -91,3 +92,6 @@ api.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add GZipMiddleware
+api.add_middleware(GZipMiddleware, minimum_size=1000)
