@@ -11,26 +11,26 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "start" */ './views/main/Start.vue'),
+      component: () => import(/* webpackChunkName: "start", webpackPrefetch: true */ './views/main/Start.vue'),
       children: [
         {
           path: 'login',
           // route level code-splitting
           // this generates a separate chunk (about.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
+          component: () => import(/* webpackChunkName: "login", webpackPrefetch: true */ './views/Login.vue'),
         },
         {
           path: '404',
-          component: () => import(/* webpackChunkName: "reset-password" */ './views/404.vue'),
+          component: () => import(/* webpackChunkName: "not-found", webpackPrefetch: true */ './views/404.vue'),
         },
         {
           path: 'main',
-          component: () => import(/* webpackChunkName: "main" */ './views/main/Main.vue'),
+          component: () => import(/* webpackChunkName: "main", webpackPrefetch: true */ './views/main/Main.vue'),
           children: [
             {
               path: 'dashboard',
-              component: () => import(/* webpackChunkName: "main-dashboard" */ './views/main/Dashboard.vue'),
+              component: () => import(/* webpackChunkName: "main-dashboard", webpackPrefetch: true */ './views/main/Dashboard.vue'),
             },
           ],
         },
