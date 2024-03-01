@@ -11,16 +11,16 @@ def test_explorer_no_path() -> None:
     assert "files" in data
     assert "path" in data
     assert "parent" in data
-    assert data["path"].endswith("beastiary/backend")
-    assert data["parent"].endswith("beastiary")
+    assert data["path"].endswith(".")
+    assert data["parent"].endswith(".")
 
 
 def test_explorer_with_path() -> None:
-    response = client.get("/api/explorer/?path=/", headers=headers)
+    response = client.get("/api/explorer/?path=beastiary", headers=headers)
     assert response.status_code == 200
     data = response.json()
     assert "files" in data
     assert "path" in data
     assert "parent" in data
-    assert data["path"] == "/"
-    assert data["parent"] == "/"
+    assert data["path"] == "beastiary"
+    assert data["parent"] == "."
