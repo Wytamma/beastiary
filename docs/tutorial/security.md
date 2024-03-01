@@ -5,7 +5,7 @@ By default beastiary will generate a unique token used to log in to the webapp. 
 ```console
 $ beastiary --no-security
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Go to: <span style="color: green;">http://127.0.0.1:5000/login?token=8e02d06b-d30e-4a89-8476-fb22712a31b3</span>
 
@@ -28,7 +28,7 @@ Use the `--token` option to define your own token e.g. so it's the same every ti
 ```console
 $ beastiary --token weakPassword
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Go to: <span style="color: green;">http://127.0.0.1:5000/login?token=weakPassword</span>
 

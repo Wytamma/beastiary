@@ -7,7 +7,7 @@ A path to a log file can be passed to `beastiary` via the command line. The ✅ 
 ```console
 $ beastiary data/hcv_coal.log
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Adding log files:
 ✅ - data/hcv_coal.log
@@ -28,7 +28,7 @@ Multiple paths can be passed to `beastiary` via the command line. The ✅ indica
 ```console
 $ beastiary data/hcv_coal.log data/prior.ebola.log 
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Adding log files:
 ✅ - data/hcv_coal.log
@@ -49,7 +49,7 @@ Bash style pattern matching can be used as short hand to specify multiple files.
 ```console
 $ beastiary data/*.log 
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Adding log files:
 ✅ - data/hcv_coal.log

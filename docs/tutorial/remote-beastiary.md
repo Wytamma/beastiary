@@ -19,7 +19,7 @@ The easiest way to access beastiary on a remote server is to use the `--share` f
 ```console
 $ beastiary --share    
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Go to: <span style="color: green;">http://127.0.0.1:5000/login?token=8e02d06b-d30e-4a89-8476-fb22712a31b3</span>
 
@@ -77,7 +77,7 @@ Now that you are logged into the HPC start beastiary using the `beastiary` comma
 ```console
 $ beastiary
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Go to: <span style="color: green;">http://127.0.0.1:5000/login?token=8e02d06b-d30e-4a89-8476-fb22712a31b3</span>
 

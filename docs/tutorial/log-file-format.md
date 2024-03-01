@@ -17,7 +17,7 @@ Beastiary can read other delimited text file e.g. csv. To change the default del
 ```console
 $ beastiary --delimiter , data/beast.csv
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Adding log files:
 ✅ - data/beast.csv

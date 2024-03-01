@@ -10,7 +10,7 @@ Putting a `&` at the end of the `beastiary` will run beackground, but output wil
 $ beastiary &
 [1] 46918
 
-🐙🐁 <span style="color: blue;">STARTING BEASTIARY</span> 🐁🐙
+🐙🐁 <span style="color: #3498db;">STARTING BEASTIARY</span> 🐁🐙
 
 Adding log files:
 ✅ - data/hcv_coal.log
