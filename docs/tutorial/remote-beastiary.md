@@ -1,6 +1,12 @@
 
 One of the main use cases of beastiary is accessing files on a remote server e.g. a high performance computer (HPC). Here we walk though the process of running beastiary on the University of Melbourne's HPC Spartan (although these steps apply to any remote server). This assumes beastiary is already installed on the remote server (e.g. `pip3 --user install beastiary`).
 
+```console
+$ ssh wytamma@spartan.hpc.unimelb.edu.au
+
+Welcome to Spartan, the general purpose High Performance Computer system.
+```
+
 ## Public sharing link
 
 The easiest way to access beastiary on a remote server is to use the `--share` flag when starting beastiary. This will generate a public link that can be accessed from any machine.
