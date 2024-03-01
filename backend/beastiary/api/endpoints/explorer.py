@@ -35,7 +35,6 @@ def list_directory(path: Optional[str] = None) -> dict:
         path = os.path.abspath(cwd)
     # make path relative to cwd
     path = os.path.relpath(path, cwd)
-    print(path)
     files = [
         {
             "name": name,
