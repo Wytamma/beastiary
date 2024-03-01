@@ -1,4 +1,5 @@
 const path = require("path");
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   // Fix Vuex-typescript in prod: https://github.com/istrib/vuex-typescript/issues/13#issuecomment-409869231
@@ -21,6 +22,9 @@ module.exports = {
           },
         },
       );
+    }
+    if (process.env.ANALYZE) {
+      config.plugins.push(new BundleAnalyzerPlugin());
     }
   },
 
