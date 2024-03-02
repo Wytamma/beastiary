@@ -10,7 +10,7 @@
             </v-toolbar>
             <v-card-text>
               <v-form @keyup.enter="submit">
-                <v-text-field @keyup.enter="submit" v-model="token" prepend-icon="person" name="token" label="Token" type="text"></v-text-field>
+                <v-text-field :disabled="loading" @keyup.enter="submit" v-model="token" prepend-icon="person" name="token" label="Token" type="text"></v-text-field>
               </v-form>
               <div v-if="loginError">
                 <v-alert :value="loginError" transition="fade-transition" type="error">
@@ -20,7 +20,13 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn @click.prevent="submit">Login</v-btn>
+              <v-progress-circular
+                indeterminate
+                color="primary"
+                v-if="loading"
+                class="mr-4 mb-1"
+              ></v-progress-circular>
+              <v-btn v-else @click.prevent="submit">Login</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -43,9 +49,12 @@ export default class Login extends Vue {
   public get loginError() {
     return readLoginError(this.$store);
   }
+  public loading = false;
 
   public submit() {
+    this.loading = true;
     dispatchCheckToken(this.$store, {token: this.token});
+    this.loading = false;
   }
   private getTokenFromUrl() {
     // @ts-ignore
