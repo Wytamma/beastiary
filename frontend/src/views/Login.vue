@@ -39,7 +39,7 @@
 import { appName } from '@/env';
 import { dispatchCheckToken } from '@/store/main/actions';
 import { readLoginError } from '@/store/main/getters';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 
 @Component
@@ -53,10 +53,17 @@ export default class Login extends Vue {
 
   public submit() {
     this.loading = true;
-    dispatchCheckToken(this.$store, {token: this.token}).finally(() => {
-      this.loading = false;
-    });
+    dispatchCheckToken(this.$store, {token: this.token})
   }
+
+  @Watch('loginError')
+  public onLoginErrorChange(error: string | null) {
+    if (error) {
+      this.loading = false;
+    }
+  }
+  
+
   private getTokenFromUrl() {
     // @ts-ignore
     return this.$router.history.current.query.token;
