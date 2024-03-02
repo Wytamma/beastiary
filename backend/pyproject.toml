@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "beastiary"
-version = "1.8.2"
-description = ""
+version = "1.8.3"
+description = "Real time and remote MCMC trace monitoring with BEASTIARY"
 authors = ["Wytamma Wirth <wytamma.wirth@me.com>"]
 readme = "PYPI-README.md"
 
