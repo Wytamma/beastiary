@@ -13,6 +13,9 @@ export const mutations = {
     setLogInError(state: MainState, payload: boolean) {
         state.logInError = payload;
     },
+    setDisconnected(state: MainState, payload: boolean) {
+        state.disconnected = payload;
+    },
     setDashboardMiniDrawer(state: MainState, payload: boolean) {
         state.dashboardMiniDrawer = payload;
     },
@@ -36,3 +39,4 @@ export const commitSetLogInError = commit(mutations.setLogInError);
 export const commitSetToken = commit(mutations.setToken);
 export const commitAddNotification = commit(mutations.addNotification);
 export const commitRemoveNotification = commit(mutations.removeNotification);
+export const commitDisconnected = commit(mutations.setDisconnected);

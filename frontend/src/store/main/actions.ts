@@ -6,6 +6,7 @@ import { ActionContext } from 'vuex';
 import { State } from '../state';
 import {
     commitAddNotification,
+    commitDisconnected,
     commitRemoveNotification,
     commitSetLoggedIn,
     commitSetLogInError,
@@ -66,14 +67,21 @@ export const actions = {
         }
     },
     async actionCheckApiError(context: MainContext, payload: AxiosError) {
+        // check for general errors e.g. CORS or network issues
+        if (!payload.response) {
+            console.log('Network error');
+            return commitDisconnected(context, true);
+        }
+        console.log('API error', payload.response);
+        commitDisconnected(context, false);
         if (payload.response!.status === 401) {
-            await dispatchLogOut(context);
+            return await dispatchLogOut(context);
         }
         if (payload.response!.status === 404) {
-            commitAddNotification(context, { content: payload.response!.data.detail, color: 'error', notFound: true});
+            return commitAddNotification(context, { content: payload.response!.data.detail, color: 'error', notFound: true});
         }
         if (payload.response!.status === 500) {
-            commitAddNotification(context, { content: payload.response!.data.detail, color: 'error', notFound: true});
+            return commitAddNotification(context, { content: payload.response!.data.detail, color: 'error', notFound: true});
         }
     },
     actionRouteLoggedIn(context: MainContext) {

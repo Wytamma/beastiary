@@ -7,7 +7,13 @@
                   class="rounded-lg"
                   flat >
               <v-toolbar-title class="text-h5">
-                  Traces
+                  Traces 
+                  <v-tooltip v-if="isDisconnected"  color="black" top>
+                  <template #activator="{ on }">
+                    <v-icon v-on="on"  color="red darken-2">mdi-link-variant-off</v-icon>
+                  </template>
+                  <span>Disconnected from server!</span>
+                </v-tooltip>
               </v-toolbar-title>
               
               <v-spacer></v-spacer>
@@ -161,6 +167,7 @@ import StatsTable from '@/components/data/StatsTable.vue';
 import TraceList from '@/components/data/TraceList.vue';
 
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readDisconnected } from '@/store/main/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Vue } from 'vue-property-decorator';
 import VueResizable from 'vue-resizable';
@@ -192,6 +199,10 @@ export default class Dashboard extends Vue {
         // @ts-ignore
         this.tabWidth = this.$refs.tabItems.clientWidth;
       }
+  }
+
+  get isDisconnected() {
+    return readDisconnected(this.$store);
   }
 
   get activeTraceIDs() {

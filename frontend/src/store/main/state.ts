@@ -9,6 +9,7 @@ export interface MainState {
     token: string;
     isLoggedIn: boolean | null;
     logInError: boolean;
+    disconnected: boolean;
     dashboardMiniDrawer: boolean;
     dashboardShowDrawer: boolean;
     notifications: AppNotification[];

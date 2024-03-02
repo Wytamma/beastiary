@@ -7,6 +7,7 @@ const defaultState: MainState = {
   isLoggedIn: null,
   token: '',
   logInError: false,
+  disconnected: false,
   dashboardMiniDrawer: false,
   dashboardShowDrawer: false,
   notifications: [],
