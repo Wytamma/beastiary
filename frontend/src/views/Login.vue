@@ -53,8 +53,9 @@ export default class Login extends Vue {
 
   public submit() {
     this.loading = true;
-    dispatchCheckToken(this.$store, {token: this.token});
-    this.loading = false;
+    dispatchCheckToken(this.$store, {token: this.token}).finally(() => {
+      this.loading = false;
+    });
   }
   private getTokenFromUrl() {
     // @ts-ignore
