@@ -5,12 +5,12 @@
       <v-layout column fill-height>
         <v-list nav>
           <v-subheader>Main menu</v-subheader>
-          <v-list-item to="/main/dashboard">
+          <v-list-item href="https://doi.org/10.1093/molbev/msac095" target="_blank">
             <v-list-item-action>
-              <v-icon>web</v-icon>
+              <v-icon>mdi-school</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>Dashboard</v-list-item-title>
+              <v-list-item-title>Paper</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item href="https://beastiary.wytamma.com" target="_blank">
@@ -18,7 +18,7 @@
               <v-icon>mdi-file-document-multiple</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>Docs</v-list-item-title>
+              <v-list-item-title>Documentation</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item href="https://github.com/Wytamma/beastiary" target="_blank">
@@ -33,6 +33,10 @@
         <v-divider></v-divider>
         <v-spacer></v-spacer>
         <img class="mr-6 ml-5" src="https://beastiary.wytamma.com/images/Beastiary.png" alt="">
+        <!-- citation -->
+        <code>
+          Wytamma Wirth, Sebastian Duchene, Real-Time and Remote MCMC Trace Inspection with Beastiary, Molecular Biology and Evolution, Volume 39, Issue 5, May 2022, msac095, https://doi.org/10.1093/molbev/msac095
+        </code>
         <v-divider></v-divider>
         <v-list>
           <v-list-item @click="logout">
