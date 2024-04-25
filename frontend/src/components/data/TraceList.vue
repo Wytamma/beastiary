@@ -82,20 +82,24 @@
 
           </template>
           <div style="overflow-x: hidden !important; overflow-y: auto !important;" v-if="openTraceID === trace.id && activeTraceIDs.includes(trace.id)">
-            <v-col class=" mr-4 mb-0">
-              <div>Burn-in {{burnIn[trace.id]}}%</div>
-              <v-slider
-                v-on:change="setBurnIn($event, trace.id)"
-                v-model="burnIn[trace.id]"
-                class="align-center"
-                :max="100"
-                :min="0"
-                hide-details
-              > 
-                </v-slider>
-            </v-col>
+            <div class="my-3 mx-2">
+              <div class="d-flex align-center">
+                <div>Burn-in</div>
+                <v-slider
+                  v-on:change="setBurnIn($event, trace.id)"
+                  v-model="burnIn[trace.id]"
+                  :max="99"
+                  :min="0"
+
+                  hide-details
+                ></v-slider>
+                <span class="fixed-width">{{burnIn[trace.id]}}</span>%
+              </div>
+            </div>
             <v-divider class="my-0"></v-divider>
             <div style="overflow-x:hidden" >
+              <div>
+              </div>
               <ParamsPanel :trace="trace" height="400px" />
             </div>
             
@@ -126,6 +130,12 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+.fixed-width {
+    display: inline-block;
+    width: 1.2em;  /* Adjust this width to fit your content */
+    text-align: right;
+}
+
 </style>
 
 <script lang="ts">
