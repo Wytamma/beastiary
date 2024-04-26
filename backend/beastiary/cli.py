@@ -32,7 +32,7 @@ def main(
     ),
     token: str = typer.Option(str(uuid.uuid4()), "--token", "-t"),
     host: str = typer.Option("127.0.0.1", "--host"),
-    port: str = typer.Option(5000, "--port"),
+    port: int = typer.Option(5000, "--port"),
     share: bool = typer.Option(
         False, "--share", help="Create a publicly shareable link."
     ),
@@ -55,6 +55,12 @@ def main(
     if version:
         typer.echo(f"Beastiary {pkg_resources.get_distribution('beastiary').version}")
         return typer.Exit()
+    if not address_is_available(host, port):
+        typer.secho(
+            f"Address {host}:{port} is already in use. Please choose another address.",
+            fg=typer.colors.RED,
+        )
+        return typer.Exit(1)
     msg = typer.style("STARTING BEASTIARY", fg=typer.colors.BLUE, bold=True)
     typer.echo(f"\n🐙🐁 {msg} 🐁🐙\n")
     if log_files:
@@ -86,12 +92,6 @@ def main(
         log_level = "debug"
     if testing:
         return typer.Exit()
-    if not address_is_available(host, port):
-        typer.secho(
-            f"Address {host}:{port} is already in use. Please choose another address.",
-            fg=typer.colors.RED,
-        )
-        return typer.Exit(1)
     if share:
         typer.echo("Creating public shareable link...")
         with cloudflared(port=port) as cloudflared_url:
