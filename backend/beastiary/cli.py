@@ -14,11 +14,13 @@ from beastiary import schemas
 
 app = typer.Typer()
 
+
 def address_is_available(host: str, port: str) -> bool:
     import socket
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex((host, int(port))) != 0
+
 
 @app.command(context_settings={"help_option_names": ["-h", "--help"]})
 def main(
@@ -96,7 +98,9 @@ def main(
         typer.echo("Creating public shareable link...")
         with cloudflared(port=port) as cloudflared_url:
             url_with_token = typer.style(
-                f"{cloudflared_url}/login?token={token}", fg=typer.colors.GREEN, bold=False
+                f"{cloudflared_url}/login?token={token}",
+                fg=typer.colors.GREEN,
+                bold=False,
             )
             typer.echo(f"\nBeastiary is now publicly accessible at: {url_with_token}")
             uvicorn.run(api, host=host, port=port, log_level=log_level)
