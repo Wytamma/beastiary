@@ -14,6 +14,10 @@ Welcome to Spartan, the general purpose High Performance Computer system.
 
 The easiest way to access beastiary on a remote server is to use the `--share` flag when starting beastiary. This will generate a public link that can be accessed from any machine.
 
+!!! warning 
+    
+    We strongly recommend against disabling security when using the `--share` flag. We try to make Beastiary as secure as possible, but it is still a public link and there are bad actors.
+
 <div class="termy">
 
 ```console
@@ -33,11 +37,10 @@ Beastiary is now publicly accessible at: <span style="color: green;">https://gra
 
 When running beastiary with the `--share` it will use [with-cloudflared](https://github.com/wytamma/with-cloudflared) to create a public link that will redirect public traffic to the local beastiary server. The public link will only work while beastiary is running. If you close the beastiary server you will have to generate a new public link.
 
-!!! warning 
+!!! note 
     
-    We strongly recommend against disabling security when using the `--share` flag. We try to make Beastiary as secure as possible, but it is still a public link and there are bad actors.
-    
-    
+    Some firewalls and antivirus software may block public link sharing.
+
 If you want to access beastiary on a remote server without creating a public link then you will have to use an SSH tunnel.
 
 ## SSH tunnel
