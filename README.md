@@ -18,6 +18,8 @@ Beastiary is designed for visualising and analysing MCMC trace files generated f
 **Source Code**: <a href="https://github.com/Wytamma/beastiary" target="_blank">https://github.com/Wytamma/beastiary</a>
 
 ---
+## Web version (no installation)
+A web version is available at <a href="here" target="_blank">https://sebastianduchene.github.io/beastiary-web</a>. Note that this version does not automatically update log files as the MCMC runs and does not work on a server (no remote inspection). However, it does not require installation of the software, as it runs from your browser. It is useful for inspecting log files on your local machine.
 
 ## Install
 ```bash
