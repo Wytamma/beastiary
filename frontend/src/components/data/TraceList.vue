@@ -14,18 +14,35 @@
       <v-list-group
         v-for="trace in traces"
         :key="trace.id"
+        class="trace-group"
         @click="setAcitveTrace(trace)"
         color="primary"
         :disabled="isLoading"
       >
         <template v-slot:activator>
           <v-list-item-content class="mb-0 px-0">
-            <v-list-item-title class="text-h6 font-weight-regular">
-              {{ fileName(trace.path) }}
-            </v-list-item-title>
-            <v-list-item-subtitle style="word-break: break-all;" class="wrap-text text-caption overflow-x-scroll">
-              {{ trace.path }}
-            </v-list-item-subtitle>
+            <div class="d-flex align-start">
+              <div class="trace-leading-icon mr-0 mt-2 flex-shrink-0">
+                <v-icon medium class="trace-file-icon">mdi-file-outline</v-icon>
+                <v-btn
+                  icon
+                  small
+                  class="trace-close-btn"
+                  title="Close trace"
+                  @click.stop="removeTrace(trace)"
+                >
+                  <v-icon small>mdi-close</v-icon>
+                </v-btn>
+              </div>
+              <div class="min-width-0 flex-grow-1">
+                <v-list-item-title class="text-h6 font-weight-regular">
+                  {{ fileName(trace.path) }}
+                </v-list-item-title>
+                <v-list-item-subtitle style="word-break: break-all;" class="wrap-text text-caption overflow-x-scroll">
+                  {{ trace.path }}
+                </v-list-item-subtitle>
+              </div>
+            </div>
             <v-list-item-content class="pb-0">
               <div class="d-flex align-center" v-if="Object.keys(trace.parameters).length > 0">
                 <v-chip-group column>
@@ -156,6 +173,48 @@
   width: 1.2em;
   text-align: right;
 }
+
+.trace-group > .v-list-group__header {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.trace-leading-icon {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+
+.trace-file-icon,
+.trace-close-btn {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  transition: opacity 0.15s ease-in-out;
+  color: inherit !important;
+}
+
+.trace-file-icon {
+  opacity: 1;
+}
+
+.trace-close-btn {
+  opacity: 0;
+}
+
+.trace-close-btn .v-icon {
+  color: inherit !important;
+}
+
+.trace-group > .v-list-group__header:hover .trace-close-btn,
+.trace-group > .v-list-group__header:focus-within .trace-close-btn {
+  opacity: 1;
+}
+
+.trace-group > .v-list-group__header:hover .trace-file-icon,
+.trace-group > .v-list-group__header:focus-within .trace-file-icon {
+  opacity: 0;
+}
 </style>
 
 <script lang="ts">
@@ -165,6 +224,7 @@ import {
   dispatchGetSamples,
   dispatchGetTraces,
   dispatchPollTraces,
+  dispatchRemoveTrace,
   dispatchReloadLocalTrace,
   dispatchSetActiveParams,
   dispatchSetActiveTrace,
@@ -236,6 +296,16 @@ export default class TraceList extends Vue {
     const input = this.$refs.reloadFileInput as HTMLInputElement;
     input.value = '';
     input.click();
+  }
+
+  public async removeTrace(trace: Trace) {
+    if (this.openTraceID === trace.id) {
+      this.openTraceID = null;
+    }
+    if (this.reloadingTraceID === trace.id) {
+      this.reloadingTraceID = null;
+    }
+    await dispatchRemoveTrace(this.$store, { traceID: trace.id });
   }
 
   public async onReloadFileInputChange(event: Event) {

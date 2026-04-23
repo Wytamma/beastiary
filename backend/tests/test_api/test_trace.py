@@ -93,3 +93,23 @@ def test_change_delimiter() -> None:
         json["headers_line"]
         == "state,joint,prior,likelihood,treeModel.rootHeight,age(root),treeLength,tmrca(B117),tmrca(B1351),tmrca(P1),tmrca(B16172),age(B117),age(B1351),age(P1),age(B16172),exponential.popSize,exponential.growthRate,gtr.rates.rateAC,gtr.rates.rateAG,gtr.rates.rateAT,gtr.rates.rateCG,gtr.rates.rateCT,gtr.rates.rateGT,alpha,clock.rate,B117.rate,B1351.rate,P1.rate,B16172.rate,meanRate,coefficientOfVariation,covariance,treeLikelihood,branchRates,coalescent"
     )
+
+
+def test_delete_trace() -> None:
+    trace = crud.trace.create(
+        client.app.db,
+        obj_in=TraceCreate(path=path),
+        headers_line=headers_line,
+        last_byte=last_byte,
+    )
+    response = client.delete(f"/api/traces/{trace['id']}", headers=headers)
+    assert response.status_code == 200
+    assert response.json()["id"] == trace["id"]
+    response = client.get(f"/api/traces/{trace['id']}", headers=headers)
+    assert response.status_code == 404
+
+
+def test_delete_missing_trace() -> None:
+    response = client.delete("/api/traces/9999", headers=headers)
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Trace not found!"}

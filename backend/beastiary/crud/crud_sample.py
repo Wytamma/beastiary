@@ -17,5 +17,8 @@ class CRUDSample(CRUDBase[Sample, SampleCreate, SampleUpdate]):
     ) -> List[Sample]:
         return db.query(self.model.__name__, skip=skip, limit=limit, trace_id=trace_id)
 
+    def remove_multi_by_trace(self, db: Database, *, trace_id: int) -> List[Sample]:
+        return db.remove_where(self.model.__name__, trace_id=trace_id)
+
 
 sample = CRUDSample(Sample)

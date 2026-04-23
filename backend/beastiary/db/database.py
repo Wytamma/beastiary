@@ -11,16 +11,16 @@ class Database:
         self.data[name] = []
 
     def query(self, table_name: str, *, id: int = None, skip=0, limit=100, **kwargs):
-        # the id will change if i remove any elements from the list...
         if not id is None:
             try:
-                return self.data[table_name][id]
+                row = self.data[table_name][id]
+                return row
             except IndexError:
                 return None
         return [
             row
             for row in self.data[table_name]
-            if all(row[k] == v for k, v in kwargs.items())
+            if row is not None and all(row[k] == v for k, v in kwargs.items())
         ][skip : skip + limit]
 
     def add(self, table_name: str, obj):
@@ -28,3 +28,19 @@ class Database:
 
     def add_all(self, table_name, objs: list):
         self.data[table_name].extend(objs)
+
+    def remove(self, table_name: str, *, id: int):
+        try:
+            row = self.data[table_name][id]
+        except IndexError:
+            return None
+        self.data[table_name][id] = None
+        return row
+
+    def remove_where(self, table_name: str, **kwargs):
+        removed = []
+        for index, row in enumerate(self.data[table_name]):
+            if row is not None and all(row[k] == v for k, v in kwargs.items()):
+                removed.append(row)
+                self.data[table_name][index] = None
+        return removed

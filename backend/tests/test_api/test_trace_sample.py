@@ -84,3 +84,15 @@ def test_get_csv_sample() -> None:
     assert json[0]["trace_id"] == csv_trace["id"]
     print(json[0]["data"])
     assert json[0]["data"] == csv_first_sample
+
+
+def test_delete_trace_removes_samples() -> None:
+    response = client.get(f"/api/traces/{trace['id']}/samples", headers=headers)
+    assert response.status_code == 200
+    assert len(response.json()) > 0
+
+    delete_response = client.delete(f"/api/traces/{trace['id']}", headers=headers)
+    assert delete_response.status_code == 200
+
+    response = client.get(f"/api/traces/{trace['id']}/samples", headers=headers)
+    assert response.status_code == 404

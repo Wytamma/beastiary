@@ -20,6 +20,7 @@ import {
     commitSetBurnIn,
     commitSetLocalTraceState,
     commitSetLoadingSamples,
+    commitRemoveTrace,
     commitSetSamples,
     commitSetTrace,
     commitSetTraces,
@@ -211,6 +212,25 @@ export const actions = {
     async actionSetLoadingSamples(context: MainContext, payload: {traceID: number, loading: boolean}) {
         commitSetLoadingSamples(context, payload);
     },
+    async actionRemoveTrace(context: MainContext, payload: {traceID: number}) {
+        const trace = context.state.traces[payload.traceID];
+        if (!trace) {
+            return;
+        }
+        if (trace.source === 'server') {
+            try {
+                await api.deleteTrace(context.rootState.main.token, trace);
+            } catch (error) {
+                await dispatchCheckApiError(context, error);
+                return;
+            }
+        }
+        commitRemoveTrace(context, payload);
+        commitAddNotification(context, {
+            content: `${trace.path} closed`,
+            color: 'success',
+        });
+    },
 };
 
 const { dispatch } = getStoreAccessors<DataState | any, State>('');
@@ -222,6 +242,7 @@ export const dispatchSetActiveTrace = dispatch(actions.actionSetActiveTrace);
 export const dispatchGetSamples = dispatch(actions.actionGetSamples);
 export const dispatchReloadLocalTrace = dispatch(actions.actionReloadLocalTrace);
 export const dispatchPollTraces = dispatch(actions.actionPollTraces);
+export const dispatchRemoveTrace = dispatch(actions.actionRemoveTrace);
 export const dispatchSetActiveParams = dispatch(actions.actionSetActiveParams);
 export const dispatchSetBurnIn = dispatch(actions.actionSetBurnIn);
 export const dispatchSetLoadingSamples = dispatch(actions.actionSetLoadingSamples);

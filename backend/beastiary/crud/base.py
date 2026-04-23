@@ -41,3 +41,6 @@ class CRUDBase(Generic[InDBSchemaType, CreateSchemaType, UpdateSchemaType]):
     ) -> InDBSchemaType:
         db_obj.update(obj_in)
         return db_obj
+
+    def remove(self, db: Database, *, id: int) -> Optional[InDBSchemaType]:
+        return db.remove(self.model.__name__, id=id)

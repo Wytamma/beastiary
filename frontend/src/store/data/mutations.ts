@@ -119,6 +119,9 @@ export const mutations = {
             ...payload.localFile,
         };
     },
+    removeTrace(state: DataState, payload: {traceID: number}) {
+        Vue.delete(state.traces, payload.traceID);
+    },
 };
 
 const {commit} = getStoreAccessors<DataState | any, State>('');
@@ -133,3 +136,4 @@ export const commitSetActiveParams = commit(mutations.setActiveParams);
 export const commitSetBurnIn = commit(mutations.setBurnIn);
 export const commitSetLoadingSamples = commit(mutations.setLoadingSamples);
 export const commitSetLocalTraceState = commit(mutations.setLocalTraceState);
+export const commitRemoveTrace = commit(mutations.removeTrace);

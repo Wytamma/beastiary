@@ -25,6 +25,9 @@ export const api = {
   async createTrace(token: string,  data: TraceCreate) {
     return axios.post<Trace>(`${apiUrl}/api/traces/`, data, authHeaders(token));
   },
+  async deleteTrace(token: string, trace: Trace) {
+    return axios.delete(`${apiUrl}/api/traces/${trace.id}`, authHeaders(token));
+  },
   async getSamples(token: string, trace: Trace, skip: number = 0, limit: number = 100) {
     const options = authHeaders(token);
     options.params = {skip, limit};

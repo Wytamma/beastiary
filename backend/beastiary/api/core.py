@@ -103,3 +103,14 @@ def check_for_new_samples(db: Database, trace: schemas.Trace) -> None:
         crud.sample.create_multi(db, objs_in=in_samples)
     # update the trace byte
     crud.trace.update(db, db_obj=trace, obj_in={"last_byte": last_byte})
+
+
+def remove_trace(db: Database, trace_id: int) -> dict:
+    trace = crud.trace.get(db, id=trace_id)
+    if not trace:
+        raise ValueError("Trace not found!")
+    crud.sample.remove_multi_by_trace(db, trace_id=trace_id)
+    removed_trace = crud.trace.remove(db, id=trace_id)
+    if not removed_trace:
+        raise ValueError("Trace not found!")
+    return removed_trace

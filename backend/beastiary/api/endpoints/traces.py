@@ -1,6 +1,6 @@
 import errno
 import os
-from beastiary.api.core import add_trace, check_for_new_samples
+from beastiary.api.core import add_trace, check_for_new_samples, remove_trace
 from beastiary.log import logger
 
 from typing import Any, List
@@ -92,3 +92,15 @@ def get_samples(
         )
     logger.debug(f"Returning {len(samples)} samples")
     return samples
+
+
+@router.delete("/{trace_id}", response_model=schemas.Trace)
+def delete_trace(request: Request, trace_id: int) -> dict:
+    """
+    Delete a trace and all of its samples.
+    """
+    try:
+        trace = remove_trace(request.app.db, trace_id=trace_id)
+    except ValueError:
+        raise HTTPException(404, detail="Trace not found!")
+    return trace
