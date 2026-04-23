@@ -1,10 +1,12 @@
 import { actions } from './actions';
 import { getters } from './getters';
 import { mutations } from './mutations';
+import { runtimeCapabilities } from '@/runtime';
 import { MainState } from './state';
 
 const defaultState: MainState = {
-  isLoggedIn: null,
+  authEnabled: runtimeCapabilities.supportsAuth,
+  isLoggedIn: runtimeCapabilities.supportsAuth ? null : true,
   token: '',
   logInError: false,
   disconnected: false,

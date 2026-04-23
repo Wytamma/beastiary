@@ -6,6 +6,7 @@ export interface AppNotification {
 }
 
 export interface MainState {
+    authEnabled: boolean;
     token: string;
     isLoggedIn: boolean | null;
     logInError: boolean;

@@ -49,6 +49,11 @@ async def test_token() -> Any:
     return {"token": api.token}
 
 
+@api.get("/api/security/config", tags=["security"])
+async def security_config() -> Any:
+    return {"security": api.security}
+
+
 api_router = APIRouter(prefix="/api")
 api_router.include_router(traces.router, prefix="/traces", tags=["traces"])
 api_router.include_router(explorer.router, prefix="/explorer", tags=["explorer"])

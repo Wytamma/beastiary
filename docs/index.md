@@ -8,6 +8,12 @@
 
 Beastiary is designed for visualising and analysing MCMC trace files generated from Bayesian phylogenetic analyses. Beastiary works in real-time and on remote servers (e.g. a HPC). Its goal is to be a beautiful and simple, yet powerful tool for Bayesian phylogenetic inference.
 
+## Static web version
+
+A browser-only version of Beastiary is available at [http://beastiary.wytamma.com/web](http://beastiary.wytamma.com/web).
+
+Use the static version when you want to inspect local log files without installing Beastiary or starting a server. It supports loading files directly from your browser, but it does not provide remote server browsing, token-based login, or live server-backed monitoring.
+
 ## Installation
 
 <div class="termy">

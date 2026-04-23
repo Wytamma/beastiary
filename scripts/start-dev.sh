@@ -1,4 +1,6 @@
-cd backend && poetry run beastiary --debug --no-security &
+set -e
+
+cd backend && poetry run beastiary --debug --no-security --port 5001 &
 cd frontend && npm run serve &
 watchmedo shell-command \
     --patterns="*.py" \

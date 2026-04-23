@@ -1,4 +1,4 @@
-import pkg_resources
+import importlib
 import uuid
 import typer
 import uvicorn
@@ -55,7 +55,8 @@ def main(
     db.create_table("Sample")
     setattr(api, "db", db)
     if version:
-        typer.echo(f"Beastiary {pkg_resources.get_distribution('beastiary').version}")
+        version_info = importlib.metadata.version("beastiary")
+        typer.echo(f"Beastiary {version_info}")
         return typer.Exit()
     if not address_is_available(host, port):
         typer.secho(
@@ -78,17 +79,22 @@ def main(
                 typer.echo(f"❌ - {path}: {e}")
         typer.echo("")
 
-    setattr(api, "token", token)
-    url = typer.style(
-        f"http://{host}:{port}/login?token={token}", fg=typer.colors.GREEN, bold=False
-    )
-    typer.echo(f"Go to: {url}\n")
     if no_security:
         warning = typer.style("WARNING", fg=typer.colors.YELLOW, bold=True)
         typer.echo(f"{warning}: Security disabled!")
         setattr(api, "security", False)
-    else:
+    setattr(api, "token", token)
+    destination = (
+        f"http://{host}:{port}/"
+        if no_security
+        else f"http://{host}:{port}/login?token={token}"
+    )
+    url = typer.style(destination, fg=typer.colors.GREEN, bold=False)
+    typer.echo(f"Go to: {url}\n")
+    if not no_security:
         typer.echo(f"If prompted enter token: {token}\n")
+    else:
+        typer.echo("Authentication is disabled.\n")
     log_level = "warning"
     if debug:
         log_level = "debug"
@@ -97,8 +103,13 @@ def main(
     if share:
         typer.echo("Creating public shareable link...")
         with cloudflared(port=port) as cloudflared_url:
+            public_destination = (
+                f"{cloudflared_url}/"
+                if no_security
+                else f"{cloudflared_url}/login?token={token}"
+            )
             url_with_token = typer.style(
-                f"{cloudflared_url}/login?token={token}",
+                public_destination,
                 fg=typer.colors.GREEN,
                 bold=False,
             )

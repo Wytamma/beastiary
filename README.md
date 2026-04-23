@@ -17,9 +17,11 @@ Beastiary is designed for visualising and analysing MCMC trace files generated f
 
 **Source Code**: <a href="https://github.com/Wytamma/beastiary" target="_blank">https://github.com/Wytamma/beastiary</a>
 
----
-## Web version (no installation)
-A web version is available at <a href="here" target="_blank">https://sebastianduchene.github.io/beastiary-web</a>. Note that this version does not automatically update log files as the MCMC runs and does not work on a server (no remote inspection). However, it does not require installation of the software, as it runs from your browser. It is useful for inspecting log files on your local machine.
+## Static web version
+
+A browser-only version of Beastiary is available at <a href="http://beastiary.wytamma.com/web" target="_blank">http://beastiary.wytamma.com/web</a>.
+
+Use the static version when you want to inspect local log files without installing Beastiary or starting a server. It supports loading files directly from your browser, but it does not provide remote server browsing, token-based login, or live server-backed monitoring.
 
 ## Install
 ```bash
@@ -40,4 +42,3 @@ For more information read the [docs](https://beastiary.wytamma.com/).
 ## Cite
 
 > Wytamma Wirth, Sebastian Duchene, Real-Time and Remote MCMC Trace Inspection with Beastiary, Molecular Biology and Evolution, Volume 39, Issue 5, May 2022, msac095, https://doi.org/10.1093/molbev/msac095
-

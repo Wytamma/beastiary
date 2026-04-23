@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
-    "build": "VUE_APP_ENV=production vue-cli-service build",
+    "serve": "VUE_APP_MODE=server NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
+    "serve:static": "VUE_APP_MODE=static NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
+    "build": "VUE_APP_MODE=server VUE_APP_ENV=production vue-cli-service build",
+    "build:static": "VUE_APP_MODE=static VUE_APP_ENV=static VUE_APP_PUBLIC_PATH=/web/ vue-cli-service build",
     "analyze": "ANALYZE=true npm run build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"

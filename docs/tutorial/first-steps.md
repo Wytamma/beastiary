@@ -19,7 +19,10 @@ Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/) and log in with the token
 
 ![](../images/login_screen_shot.png)
 
-Add a log file using the `ADD` button. 
+Add trace files to beastiary. There are two options for adding trace files to beastiary:
+
+- load a local log file from your browser by dragging it into the dialog or choosing it from your machine. If your are using a Chrome-based browser you can choose local files that will auto-reload when they are updated on your machine. 
+- browse for a log file that already exists on the Beastiary server and add it from the `Server files` section. Files added from the server will auto-reload when they are updated on the server.
 
 ![](../images/add_screen_shot.png)
 

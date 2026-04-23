@@ -13,6 +13,9 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async getSecurityConfig() {
+    return axios.get(`${apiUrl}/api/security/config`);
+  },
   async getToken(token: string) {
     return axios.get(`${apiUrl}/api/security/token`, authHeaders(token));
   },

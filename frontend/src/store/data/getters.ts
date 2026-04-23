@@ -6,10 +6,11 @@ export const getters = {
     traces: (state: DataState) => state.traces,
     loadingSamples: (state: DataState) => state.loadingSamples,
     activeTraceIDs: (state: DataState) => Object.values(state.traces).filter((t) => t.isActive).map((t) => t.id),
+    activeTraces: (state: DataState) => Object.values(state.traces).filter((t) => t.isActive),
 };
 const {read} = getStoreAccessors<DataState, State>('');
 
 export const readTraces = read(getters.traces);
 export const readLoadingSamples = read(getters.loadingSamples);
 export const readActiveTraceIDs = read(getters.activeTraceIDs);
-
+export const readActiveTraces = read(getters.activeTraces);

@@ -37,8 +37,8 @@
 
 <script lang="ts">
 import { appName } from '@/env';
-import { dispatchCheckToken } from '@/store/main/actions';
-import { readLoginError } from '@/store/main/getters';
+import { dispatchCheckLoggedIn, dispatchCheckToken } from '@/store/main/actions';
+import { readLoginError, readSupportsAuth } from '@/store/main/getters';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
 
@@ -68,7 +68,12 @@ export default class Login extends Vue {
     // @ts-ignore
     return this.$router.history.current.query.token;
   }
-  private mounted() {
+  private async mounted() {
+    await dispatchCheckLoggedIn(this.$store);
+    if (!readSupportsAuth(this.$store)) {
+      this.$router.replace('/main/dashboard');
+      return;
+    }
     this.token = this.getTokenFromUrl();
     if (this.token) {
       this.submit();

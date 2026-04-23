@@ -163,6 +163,7 @@ import Parallel from '@/components/data/graphs/Parallel.vue';
 import Trace from '@/components/data/graphs/Trace.vue';
 import Violin from '@/components/data/graphs/Violin.vue';
 import ParamsPanel from '@/components/data/ParamsPanel.vue';
+import { runtimeCapabilities } from '@/runtime';
 import StatsTable from '@/components/data/StatsTable.vue';
 import TraceList from '@/components/data/TraceList.vue';
 
@@ -192,6 +193,7 @@ export default class Dashboard extends Vue {
   public tab = null;
   public tabHeight = 450;
   public tabWidth = null;
+  public supportsServerFiles = runtimeCapabilities.supportsServerFiles;
 
   public eHandler(data) {
       this.tabHeight = data.height;
@@ -202,7 +204,7 @@ export default class Dashboard extends Vue {
   }
 
   get isDisconnected() {
-    return readDisconnected(this.$store);
+    return this.supportsServerFiles && readDisconnected(this.$store);
   }
 
   get activeTraceIDs() {

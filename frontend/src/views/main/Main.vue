@@ -38,7 +38,7 @@
           Wytamma Wirth, Sebastian Duchene, Real-Time and Remote MCMC Trace Inspection with Beastiary, Molecular Biology and Evolution, Volume 39, Issue 5, May 2022, msac095, https://doi.org/10.1093/molbev/msac095
         </code>
         <v-divider></v-divider>
-        <v-list>
+        <v-list v-if="supportsAuth">
           <v-list-item @click="logout">
             <v-list-item-action>
               <v-icon>close</v-icon>
@@ -69,7 +69,7 @@
 <script lang="ts">
 import { appName } from '@/env';
 import { dispatchUserLogOut } from '@/store/main/actions';
-import { readDashboardMiniDrawer, readDashboardShowDrawer } from '@/store/main/getters';
+import { readDashboardMiniDrawer, readDashboardShowDrawer, readSupportsAuth } from '@/store/main/getters';
 import { commitSetDashboardMiniDrawer, commitSetDashboardShowDrawer } from '@/store/main/mutations';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
@@ -101,6 +101,10 @@ export default class Main extends Vue {
     return readDashboardShowDrawer(this.$store);
   }
 
+  get supportsAuth() {
+    return readSupportsAuth(this.$store);
+  }
+
   set showDrawer(value) {
     commitSetDashboardShowDrawer(this.$store, value);
   }
@@ -120,7 +124,9 @@ export default class Main extends Vue {
   }
 
   public async logout() {
-    await dispatchUserLogOut(this.$store);
+    if (this.supportsAuth) {
+      await dispatchUserLogOut(this.$store);
+    }
   }
 
   @Watch('$vuetify.theme.dark') 

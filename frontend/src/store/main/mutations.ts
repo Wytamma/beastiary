@@ -4,6 +4,9 @@ import { AppNotification, MainState } from './state';
 
 
 export const mutations = {
+    setAuthEnabled(state: MainState, payload: boolean) {
+        state.authEnabled = payload;
+    },
     setToken(state: MainState, payload: string) {
         state.token = payload;
     },
@@ -32,6 +35,7 @@ export const mutations = {
 
 const {commit} = getStoreAccessors<MainState | any, State>('');
 
+export const commitSetAuthEnabled = commit(mutations.setAuthEnabled);
 export const commitSetDashboardMiniDrawer = commit(mutations.setDashboardMiniDrawer);
 export const commitSetDashboardShowDrawer = commit(mutations.setDashboardShowDrawer);
 export const commitSetLoggedIn = commit(mutations.setLoggedIn);

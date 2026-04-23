@@ -4,7 +4,24 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 module.exports = {
   // Fix Vuex-typescript in prod: https://github.com/istrib/vuex-typescript/issues/13#issuecomment-409869231
 
-  outputDir: process.env.NODE_ENV === 'production' ? path.resolve(__dirname, "../backend/beastiary/webapp-dist") : path.resolve(__dirname, "/dist"),
+  publicPath: process.env.VUE_APP_PUBLIC_PATH || '/',
+
+  outputDir: process.env.VUE_APP_MODE === 'static'
+    ? path.resolve(__dirname, '../docs/web')
+      : process.env.NODE_ENV === 'production'
+      ? path.resolve(__dirname, '../backend/beastiary/webapp-dist')
+      : path.resolve(__dirname, 'dist'),
+
+  devServer: process.env.VUE_APP_MODE === 'static'
+    ? undefined
+    : {
+        proxy: {
+          '^/api': {
+            target: process.env.VUE_APP_DOMAIN_DEV || 'http://127.0.0.1:5001',
+            changeOrigin: true,
+          },
+        },
+      },
 
   configureWebpack: (config) => {
     if (process.env.NODE_ENV === 'production') {
