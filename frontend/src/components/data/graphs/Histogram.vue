@@ -114,6 +114,9 @@ export default class Histogram extends Vue {
             meanline: {
                 visible: true,
             },
+            marker: {
+                color: colours[count],
+            },
             fillcolor: colours[count],
             name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             hovertemplate: '%{y}',
