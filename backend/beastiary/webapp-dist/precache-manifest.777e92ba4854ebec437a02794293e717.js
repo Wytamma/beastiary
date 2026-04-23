@@ -12,11 +12,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/apple-touch-icon.png"
   },
   {
+    "revision": "a8144356beaa833c6dad",
+    "url": "/css/app.cc56ceed.css"
+  },
+  {
     "revision": "85d47ad6d1fa1aa81a14",
     "url": "/css/chunk-vendors.849dd7d0.css"
   },
   {
-    "revision": "3e43b54c2c6cec1f7fa7",
+    "revision": "b75c751de053bd95a168",
     "url": "/css/login.e537a9fa.css"
   },
   {
@@ -28,8 +32,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/login~main~main-dashboard.3c9c6613.css"
   },
   {
-    "revision": "45adde4236ceeb4560f0",
-    "url": "/css/main-dashboard.1e627fee.css"
+    "revision": "eb4a2100515a9f0a2786",
+    "url": "/css/main-dashboard.65b8ccee.css"
   },
   {
     "revision": "2ed19607219c50b0f901",
@@ -48,20 +52,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon-32x32.png"
   },
   {
-    "revision": "83d36326f9de78a84f3477cecaa16546",
+    "revision": "842dd6c9e19e5c63eafb6691b3cd55a0",
     "url": "/index.html"
   },
   {
-    "revision": "6d3d88ff4950bd284f3c",
-    "url": "/js/app.5b1ff107.js"
+    "revision": "a8144356beaa833c6dad",
+    "url": "/js/app.5947bcc2.js"
   },
   {
     "revision": "85d47ad6d1fa1aa81a14",
     "url": "/js/chunk-vendors.7036c64b.js"
   },
   {
-    "revision": "3e43b54c2c6cec1f7fa7",
-    "url": "/js/login.588b28f5.js"
+    "revision": "b75c751de053bd95a168",
+    "url": "/js/login.98875e95.js"
   },
   {
     "revision": "9d3b90471dc1dd69f463",
@@ -72,8 +76,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/login~main~main-dashboard.a4d6d9bd.js"
   },
   {
-    "revision": "45adde4236ceeb4560f0",
-    "url": "/js/main-dashboard.7e629c05.js"
+    "revision": "eb4a2100515a9f0a2786",
+    "url": "/js/main-dashboard.a47429ed.js"
   },
   {
     "revision": "2ed19607219c50b0f901",
@@ -88,8 +92,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/not-found.dc4ceb25.js"
   },
   {
-    "revision": "18468aae118f44863056",
-    "url": "/js/start.0ff5cb86.js"
+    "revision": "f11bde2fe0f1c81a2832",
+    "url": "/js/start.9ce9e247.js"
   },
   {
     "revision": "fd935ca478ed666508e7dcf2ffb96750",
