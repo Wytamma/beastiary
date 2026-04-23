@@ -8,6 +8,7 @@
 </template>
 
 <script lang="ts">
+import { urlFileName } from '@/logParser';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
@@ -213,7 +214,7 @@ export default class CumulativeESS extends Vue {
     this.CumulativeESSdata.push({id, data});
   }
   public fileName(path) {
-    return path.substring(path.lastIndexOf('/') + 1);
+    return urlFileName(path);
   }
 
   public updateCumulativeESS() {

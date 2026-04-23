@@ -25,12 +25,13 @@
       max-width="760px"
     >
       <v-card>
-        <v-card-title>
-          <span class="text-h5">Add trace to Beastiary</span>
+        <v-card-title class="add-trace-title">
+          <span class="text-h5 add-trace-title__text">Add trace to Beastiary</span>
           <v-spacer></v-spacer>
           <v-btn
             color="red lighten-3"
             text
+            class="add-trace-title__close"
             @click="dialog = false"
           >
             Close
@@ -141,6 +142,29 @@
               </v-list-item>
             </v-list>
           </div>
+          <v-divider class="mb-4"></v-divider>
+          <div class="section-header">
+            <div class="section-title">URL files</div>
+            <div class="section-subtitle">Fetch and parse log files directly from a shareable URL.</div>
+          </div>
+          <v-form @submit.prevent="submitUrlTrace">
+            <div class="server-input-row">
+              <v-text-field
+                required
+                label="URL to a log file"
+                v-model="traceUrl"
+                class="server-path-field"
+              ></v-text-field>
+              <v-btn
+                color="primary"
+                text
+                class="server-add-btn"
+                @click="submitUrlTrace"
+              >
+                Add URL trace
+              </v-btn>
+            </div>
+          </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -152,7 +176,7 @@ import { api } from '@/api';
 import { pickFilesWithHandles } from '@/logParser';
 import { LocalTraceState } from '@/interfaces';
 import { runtimeCapabilities, supportsFileSystemAccessApi } from '@/runtime';
-import { dispatchCreateLocalTrace, dispatchCreateTrace } from '@/store/data/actions';
+import { dispatchCreateLocalTrace, dispatchCreateTrace, dispatchCreateUrlTrace } from '@/store/data/actions';
 import { commitAddNotification } from '@/store/main/mutations';
 import { readDisconnected, readToken } from '@/store/main/getters';
 import { AxiosResponse } from 'axios';
@@ -169,6 +193,7 @@ export default class AddTraceButton extends Vue {
   public dialog = false;
   public dragging = false;
   public path = '';
+  public traceUrl = '';
   public currentPath = '';
   public parentDir = '';
   public files: ServerFileEntry[] = [];
@@ -183,6 +208,7 @@ export default class AddTraceButton extends Vue {
   public async openDialog() {
     this.dialog = true;
     this.dragging = false;
+    this.traceUrl = '';
     if (this.supportsServerFiles && !this.serverFilesDisabled) {
       await this.resetServerBrowser();
     }
@@ -219,6 +245,14 @@ export default class AddTraceButton extends Vue {
       return;
     }
     await dispatchCreateTrace(this.$store, { path: this.path });
+    this.dialog = false;
+  }
+
+  public async submitUrlTrace() {
+    if (!this.traceUrl) {
+      return;
+    }
+    await dispatchCreateUrlTrace(this.$store, { url: this.traceUrl });
     this.dialog = false;
   }
 
@@ -309,6 +343,19 @@ export default class AddTraceButton extends Vue {
 
 .server-add-btn {
   margin-bottom: 18px;
+  white-space: nowrap;
+}
+
+.add-trace-title {
+  flex-wrap: nowrap;
+}
+
+.add-trace-title__text {
+  min-width: 0;
+}
+
+.add-trace-title__close {
+  flex-shrink: 0;
   white-space: nowrap;
 }
 

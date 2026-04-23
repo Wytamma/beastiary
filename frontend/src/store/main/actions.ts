@@ -96,12 +96,12 @@ export const actions = {
     actionRouteLogOut(context: MainContext) {
         if (!context.state.authEnabled) {
             if (router.currentRoute.path !== runtimeCapabilities.defaultRoute) {
-                router.push(runtimeCapabilities.defaultRoute);
+                router.push({ path: runtimeCapabilities.defaultRoute, query: router.currentRoute.query });
             }
             return;
         }
         if (router.currentRoute.path !== '/login') {
-            router.push('/login');
+            router.push({ path: '/login', query: router.currentRoute.query });
         }
     },
     async actionCheckApiError(context: MainContext, payload: AxiosError) {
@@ -128,12 +128,12 @@ export const actions = {
     actionRouteLoggedIn(context: MainContext) {
         if (!context.state.authEnabled) {
             if (router.currentRoute.path === '/' || router.currentRoute.path === '/login') {
-                router.push(runtimeCapabilities.defaultRoute);
+                router.push({ path: runtimeCapabilities.defaultRoute, query: router.currentRoute.query });
             }
             return;
         }
         if (router.currentRoute.path === '/login' || router.currentRoute.path === '/') {
-            router.push('/main/dashboard');
+            router.push({ path: '/main/dashboard', query: router.currentRoute.query });
         }
     },
     async removeNotification(context: MainContext, payload: { notification: AppNotification, timeout: number }) {

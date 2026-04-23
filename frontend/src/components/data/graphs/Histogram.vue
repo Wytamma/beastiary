@@ -8,6 +8,7 @@
 </template>
 
 <script lang="ts">
+import { urlFileName } from '@/logParser';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -130,7 +131,7 @@ export default class Histogram extends Vue {
     return data;
   }
   public fileName(path) {
-    return path.substring(path.lastIndexOf('/') + 1);
+    return urlFileName(path);
   }
 }
 </script>

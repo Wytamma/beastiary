@@ -1,8 +1,10 @@
 import { api } from '@/api';
 import {
-    parseLogFile,
+    parseLogFileAsync,
+    parseLogTextAsync,
     readFileAsText,
     readRegisteredFile,
+    urlFileName,
 } from '@/logParser';
 import { runtimeCapabilities } from '@/runtime';
 import { Trace, TraceCreate } from '@/interfaces';
@@ -31,7 +33,26 @@ type MainContext = ActionContext<DataState, State>;
 
 async function readLocalTracePayload(payload: { file: File; localFile?: Trace['localFile'] }) {
     const content = await readFileAsText(payload.file);
-    return parseLogFile(payload.file, content, payload.localFile);
+    return parseLogFileAsync(payload.file, content, payload.localFile);
+}
+
+async function readUrlTracePayload(url: string) {
+    let response: Response;
+    try {
+        response = await fetch(url);
+    } catch (error) {
+        throw new Error(`Could not fetch ${url}`);
+    }
+
+    if (!response.ok) {
+        throw new Error(`Could not fetch ${url}: ${response.status} ${response.statusText}`);
+    }
+
+    const content = await response.text();
+    return parseLogTextAsync(urlFileName(url), content, {
+        path: url,
+        source: 'url',
+    });
 }
 
 export const actions = {
@@ -75,6 +96,30 @@ export const actions = {
             commitAddParsedTrace(context, trace);
             commitSetActiveTrace(context, trace);
             commitAddNotification(context, { content: `${payload.file.name} loaded`, color: 'success' });
+        } catch (error) {
+            commitAddNotification(context, { content: `Error: ${(error as Error).message}`, color: 'error' });
+        }
+        commitRemoveNotification(context, loadingNotification);
+    },
+    async actionCreateUrlTrace(context: MainContext, payload: { url: string }) {
+        const url = payload.url.trim();
+        if (!url) {
+            return;
+        }
+
+        const existingTrace = Object.values(context.state.traces).find((trace) => trace.source === 'url' && trace.path === url);
+        if (existingTrace) {
+            commitSetActiveTrace(context, existingTrace);
+            return;
+        }
+
+        const loadingNotification = { content: `Loading ${url}...`, showProgress: true };
+        commitAddNotification(context, loadingNotification);
+        try {
+            const trace = await readUrlTracePayload(url);
+            commitAddParsedTrace(context, trace);
+            commitSetActiveTrace(context, trace);
+            commitAddNotification(context, { content: `${url} loaded`, color: 'success' });
         } catch (error) {
             commitAddNotification(context, { content: `Error: ${(error as Error).message}`, color: 'error' });
         }
@@ -238,6 +283,7 @@ const { dispatch } = getStoreAccessors<DataState | any, State>('');
 export const dispatchGetTraces = dispatch(actions.actionGetTraces);
 export const dispatchCreateTrace = dispatch(actions.actionCreateTrace);
 export const dispatchCreateLocalTrace = dispatch(actions.actionCreateLocalTrace);
+export const dispatchCreateUrlTrace = dispatch(actions.actionCreateUrlTrace);
 export const dispatchSetActiveTrace = dispatch(actions.actionSetActiveTrace);
 export const dispatchGetSamples = dispatch(actions.actionGetSamples);
 export const dispatchReloadLocalTrace = dispatch(actions.actionReloadLocalTrace);

@@ -2,7 +2,7 @@ export interface TraceCreate {
     path: string;
 }
 
-export type TraceSource = 'local' | 'server';
+export type TraceSource = 'local' | 'server' | 'url';
 
 export interface LocalTraceState {
     handleId?: string;

@@ -61,6 +61,16 @@ function preserveLocalTraceState(existingTrace: Trace, payload: Trace) {
     };
 }
 
+function freezeParsedParameters(trace: Trace) {
+    const frozenParameters = Object.keys(trace.parameters).reduce((parameters, key) => {
+        parameters[key] = Object.freeze(trace.parameters[key].slice()) as Data[];
+        return parameters;
+    }, {} as Trace['parameters']);
+
+    trace.parameters = Object.freeze(frozenParameters) as Trace['parameters'];
+    return trace;
+}
+
 export const mutations = {
     setTraces(state: DataState, payload: Trace[]) {
         state.traces = mergeTraces(state.traces, payload);
@@ -73,11 +83,13 @@ export const mutations = {
     },
     setParsedTrace(state: DataState, payload: Trace) {
         setTraceDefaults(payload);
-        payload.source = 'local';
+        payload.source = payload.source || 'local';
+        freezeParsedParameters(payload);
         Vue.set(state.traces, payload.id, payload);
     },
     reloadParsedTrace(state: DataState, payload: Trace) {
         const existing = state.traces[payload.id];
+        freezeParsedParameters(payload);
         Vue.set(state.traces, payload.id, preserveLocalTraceState(existing, payload));
     },
     setActiveTrace(state: DataState, payload: Trace) {

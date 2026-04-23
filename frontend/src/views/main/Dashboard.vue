@@ -167,10 +167,11 @@ import { runtimeCapabilities } from '@/runtime';
 import StatsTable from '@/components/data/StatsTable.vue';
 import TraceList from '@/components/data/TraceList.vue';
 
+import { dispatchCreateUrlTrace } from '@/store/data/actions';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
 import { readDisconnected } from '@/store/main/getters';
 import { Plotly } from 'vue-plotly';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import VueResizable from 'vue-resizable';
 
 @Component({
@@ -224,8 +225,27 @@ export default class Dashboard extends Vue {
     return '';
   }
 
-  private mounted() {
+  get urlTracePaths() {
+    return Object.values(this.traces)
+      .filter((trace) => trace.source === 'url')
+      .map((trace) => trace.path)
+      .sort();
+  }
+
+  @Watch('urlTracePaths')
+  private onUrlTracePathsChanged() {
+    this.syncRouteTraceUrls();
+  }
+
+  @Watch('$route.query.traces')
+  private async onRouteTraceQueryChanged() {
+    await this.importRouteTraceUrls();
+  }
+
+  private async mounted() {
     window.addEventListener('resize', this.setPlotWidth);
+    this.setPlotWidth();
+    await this.importRouteTraceUrls();
   }
   private unmounted() {
     window.removeEventListener('resize', this.setPlotWidth);
@@ -236,6 +256,37 @@ export default class Dashboard extends Vue {
       // @ts-ignore
       this.tabWidth = this.$refs.tabItems.clientWidth;
     }
+  }
+
+  private normalizeRouteTraceUrls(queryValue: unknown) {
+    const values = Array.isArray(queryValue) ? queryValue : (typeof queryValue === 'string' ? [queryValue] : []);
+    return [...new Set(values.map((value) => value.trim()).filter(Boolean))].sort();
+  }
+
+  private async importRouteTraceUrls() {
+    const traceUrls = this.normalizeRouteTraceUrls(this.$route.query.traces);
+    for (const url of traceUrls) {
+      const exists = Object.values(this.traces).some((trace) => trace.source === 'url' && trace.path === url);
+      if (!exists) {
+        await dispatchCreateUrlTrace(this.$store, { url });
+      }
+    }
+  }
+
+  private syncRouteTraceUrls() {
+    const existingUrls = this.normalizeRouteTraceUrls(this.$route.query.traces);
+    if (existingUrls.length === this.urlTracePaths.length && existingUrls.every((url, index) => url === this.urlTracePaths[index])) {
+      return;
+    }
+
+    const query = { ...this.$route.query };
+    if (this.urlTracePaths.length > 0) {
+      query.traces = this.urlTracePaths;
+    } else {
+      delete query.traces;
+    }
+
+    this.$router.replace({ query }).catch(() => undefined);
   }
 
 }

@@ -65,7 +65,7 @@
                   <v-tooltip color="black" bottom>
                     <template #activator="{ on }">
                       <v-chip
-                        :color="trace.source === 'local' ? 'deep-purple' : 'blue-grey'"
+                        :color="traceSourceColor(trace.source)"
                         text-color="white"
                         v-on="on"
                         small
@@ -219,6 +219,7 @@
 
 <script lang="ts">
 import ParamsPanel from '@/components/data/ParamsPanel.vue';
+import { urlFileName } from '@/logParser';
 import { runtimeCapabilities } from '@/runtime';
 import {
   dispatchGetSamples,
@@ -260,6 +261,16 @@ export default class TraceList extends Vue {
 
   public setActiveParams(trace: Trace) {
     dispatchSetActiveParams(this.$store, { traceID: trace.id, params: [] });
+  }
+
+  public traceSourceColor(source: Trace['source']) {
+    if (source === 'local') {
+      return 'deep-purple';
+    }
+    if (source === 'url') {
+      return 'indigo';
+    }
+    return 'blue-grey';
   }
 
   public setBurnIn(value: number, traceID: number) {
@@ -329,7 +340,7 @@ export default class TraceList extends Vue {
   }
 
   public fileName(path: string) {
-    return path.substring(path.lastIndexOf('/') + 1);
+    return urlFileName(path);
   }
 
   private syncBurnIn(trace: Trace) {

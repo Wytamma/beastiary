@@ -71,7 +71,7 @@ export default class Login extends Vue {
   private async mounted() {
     await dispatchCheckLoggedIn(this.$store);
     if (!readSupportsAuth(this.$store)) {
-      this.$router.replace('/main/dashboard');
+      this.$router.replace({ path: '/main/dashboard', query: this.$route.query });
       return;
     }
     this.token = this.getTokenFromUrl();

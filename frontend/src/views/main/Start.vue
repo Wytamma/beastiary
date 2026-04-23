@@ -13,7 +13,7 @@ const startRouteGuard = async (to, from, next) => {
   await dispatchCheckLoggedIn(store);
   if (!readSupportsAuth(store)) {
     if (to.path === '/' || to.path === '/login') {
-      next(runtimeCapabilities.defaultRoute);
+      next({ path: runtimeCapabilities.defaultRoute, query: to.query });
     } else {
       next();
     }
@@ -21,13 +21,13 @@ const startRouteGuard = async (to, from, next) => {
   }
   if (readIsLoggedIn(store)) {
     if (to.path === '/login' || to.path === '/') {
-      next('/main');
+      next({ path: '/main', query: to.query });
     } else {
       next();
     }
   } else if (readIsLoggedIn(store) === false) {
     if (to.path === '/' || (to.path as string).startsWith('/main')) {
-      next({ path: '/login' });
+      next({ path: '/login', query: to.query });
     } else {
       next();
     }
