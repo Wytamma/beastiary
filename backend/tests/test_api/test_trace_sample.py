@@ -10,7 +10,6 @@ from beastiary import crud
 from beastiary.schemas import TraceCreate
 from beastiary.api.core import get_headers
 
-
 client = TestClient(app)
 
 path = "tests/data/hcv_coal.log"

@@ -1,7 +1,6 @@
 from beastiary.api import api as app
 from beastiary.db.database import Database
 
-
 app.security = True
 app.token = "testing"
 app.debug = True
