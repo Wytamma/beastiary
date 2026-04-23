@@ -22,7 +22,7 @@ nav:
   - plots/pairwise.md
   - plots/Cumulative-ESS.md
   - plots/parallel-coordinates.md
-- Web App: web.md
+- Web App: static-web-app.md
 - Design and Implementation: design.md
 - Citation: citation.md
 
