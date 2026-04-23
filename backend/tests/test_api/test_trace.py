@@ -17,10 +17,6 @@ def test_read_wrong_trace_id() -> None:
 
 
 def test_get_trace() -> None:
-    try:
-        crud.trace.remove(db=client.app.db, id=1)
-    except:
-        pass
     trace = crud.trace.create(
         client.app.db,
         obj_in=TraceCreate(path=path),
