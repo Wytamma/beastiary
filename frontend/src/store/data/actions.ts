@@ -207,6 +207,35 @@ export const actions = {
             commitRemoveNotification(context, loadingNotification);
         }
     },
+    async actionReloadUrlTrace(
+        context: MainContext,
+        payload: { traceID: number; suppressNotification?: boolean },
+    ) {
+        const trace = context.state.traces[payload.traceID];
+        if (!trace || trace.source !== 'url') {
+            return;
+        }
+
+        const loadingNotification = { content: `Reloading ${trace.path}...`, showProgress: true };
+        if (!payload.suppressNotification) {
+            commitAddNotification(context, loadingNotification);
+        }
+        commitSetLoadingSamples(context, { traceID: trace.id, loading: true });
+        try {
+            const parsed = await readUrlTracePayload(trace.path);
+            parsed.id = trace.id;
+            commitReloadParsedTrace(context, parsed);
+            if (!payload.suppressNotification) {
+                commitAddNotification(context, { content: `${trace.path} reloaded`, color: 'success' });
+            }
+        } catch (error) {
+            commitAddNotification(context, { content: `Error: ${(error as Error).message}`, color: 'error' });
+        }
+        commitSetLoadingSamples(context, { traceID: trace.id, loading: false });
+        if (!payload.suppressNotification) {
+            commitRemoveNotification(context, loadingNotification);
+        }
+    },
     async actionPollTraces(context: MainContext) {
         for (const trace of Object.values(context.state.traces)) {
             if (trace.source === 'server') {
@@ -287,6 +316,7 @@ export const dispatchCreateUrlTrace = dispatch(actions.actionCreateUrlTrace);
 export const dispatchSetActiveTrace = dispatch(actions.actionSetActiveTrace);
 export const dispatchGetSamples = dispatch(actions.actionGetSamples);
 export const dispatchReloadLocalTrace = dispatch(actions.actionReloadLocalTrace);
+export const dispatchReloadUrlTrace = dispatch(actions.actionReloadUrlTrace);
 export const dispatchPollTraces = dispatch(actions.actionPollTraces);
 export const dispatchRemoveTrace = dispatch(actions.actionRemoveTrace);
 export const dispatchSetActiveParams = dispatch(actions.actionSetActiveParams);

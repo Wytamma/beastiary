@@ -126,11 +126,11 @@
               ></v-slider>
               <span class="fixed-width">{{ burnIn[trace.id] }}</span>%
               <v-btn
-                v-if="trace.source === 'local'"
+                v-if="trace.source === 'local' || trace.source === 'url'"
                 icon
                 small
                 class="ml-2"
-                title="Reload file"
+                :title="trace.source === 'url' ? 'Reload URL' : 'Reload file'"
                 @click.stop="reloadTrace(trace)"
               >
                 <v-icon small>mdi-refresh</v-icon>
@@ -227,6 +227,7 @@ import {
   dispatchPollTraces,
   dispatchRemoveTrace,
   dispatchReloadLocalTrace,
+  dispatchReloadUrlTrace,
   dispatchSetActiveParams,
   dispatchSetActiveTrace,
   dispatchSetBurnIn,
@@ -284,7 +285,7 @@ export default class TraceList extends Vue {
       return;
     }
 
-    if (trace.source === 'local') {
+    if (trace.source === 'local' || trace.source === 'url') {
       await dispatchSetActiveTrace(this.$store, trace);
       return;
     }
@@ -299,6 +300,10 @@ export default class TraceList extends Vue {
   }
 
   public async reloadTrace(trace: Trace) {
+    if (trace.source === 'url') {
+      await dispatchReloadUrlTrace(this.$store, { traceID: trace.id });
+      return;
+    }
     if (trace.localFile?.handleId) {
       await dispatchReloadLocalTrace(this.$store, { traceID: trace.id });
       return;
