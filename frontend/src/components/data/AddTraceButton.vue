@@ -311,4 +311,12 @@ export default class AddTraceButton extends Vue {
   margin-bottom: 18px;
   white-space: nowrap;
 }
+
+.theme--dark .section-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.theme--dark .drop-zone {
+  color: rgba(255, 255, 255, 0.7);
+}
 </style>
