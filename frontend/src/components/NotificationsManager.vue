@@ -1,11 +1,13 @@
 <template>
     <div >
         <v-snackbar  :color="currentNotificationColor" v-model="show">
-        <div class="d-flex justify-space-between align-center " >
+        <div class="notification-content d-flex justify-space-between align-center" >
             <v-progress-circular class="ma-1" indeterminate v-show="showProgress"></v-progress-circular>
             <v-icon large class="ma-1" v-show="notFound">mdi-cancel</v-icon>
-            {{ currentNotificationContent }}
-            <v-btn text @click.native="close">Close</v-btn>
+            <div class="notification-message">
+                {{ currentNotificationContent }}
+            </div>
+            <v-btn text class="notification-close" @click.native="close">Close</v-btn>
         </div>
         </v-snackbar>
     </div>
@@ -81,3 +83,21 @@ export default class NotificationsManager extends Vue {
     }
 }
 </script>
+
+<style scoped>
+.notification-content {
+    width: 100%;
+    gap: 8px;
+}
+
+.notification-message {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.notification-close {
+    flex-shrink: 0;
+}
+</style>
