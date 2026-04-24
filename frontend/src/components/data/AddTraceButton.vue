@@ -38,33 +38,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <div class="section-header">
-            <div class="section-title">Local files</div>
-            <div class="section-subtitle">Load traces directly from this browser session.</div>
-          </div>
-          <div class="drop-zone mb-4" :class="{ 'drop-zone--active': dragging }"
-            @dragover.prevent="dragging = true"
-            @dragleave.prevent="dragging = false"
-            @drop.prevent="onDrop">
-            <v-icon large color="teal lighten-2">mdi-file-upload-outline</v-icon>
-            <div class="mt-2">Drop local log files here</div>
-          </div>
-          <div class="d-flex flex-wrap align-center mb-4">
-            <v-btn color="teal lighten-2" dark class="mr-2 mb-2" @click="openFileInput" v-if="!supportsLocalAutoReload">
-              Choose local files
-            </v-btn>
-            <v-btn
-              v-else
-              outlined
-              color="teal lighten-2"
-              class="mb-2"
-              @click="pickFilesWithAutoReload"
-            >
-              Choose with auto-reload
-            </v-btn>
-          </div>
           <div v-if="supportsServerFiles">
-            <v-divider class="mb-4"></v-divider>
             <div class="section-header" :class="{ 'section-header--disabled': serverFilesDisabled }">
               <div class="section-title">Server files</div>
               <div class="section-subtitle">Browse and add traces that exist on the Beastiary server.</div>
@@ -141,6 +115,32 @@
                 </v-list-item-action>
               </v-list-item>
             </v-list>
+            <v-divider class="mb-4"></v-divider>
+          </div>
+          <div class="section-header">
+            <div class="section-title">Local files</div>
+            <div class="section-subtitle">Load traces directly from this browser session.</div>
+          </div>
+          <div class="drop-zone mb-4" :class="{ 'drop-zone--active': dragging }"
+            @dragover.prevent="dragging = true"
+            @dragleave.prevent="dragging = false"
+            @drop.prevent="onDrop">
+            <v-icon large color="teal lighten-2">mdi-file-upload-outline</v-icon>
+            <div class="mt-2">Drop local log files here</div>
+          </div>
+          <div class="d-flex flex-wrap align-center mb-4">
+            <v-btn color="teal lighten-2" dark class="mr-2 mb-2" @click="openFileInput" v-if="!supportsLocalAutoReload">
+              Choose local files
+            </v-btn>
+            <v-btn
+              v-else
+              outlined
+              color="teal lighten-2"
+              class="mb-2"
+              @click="pickFilesWithAutoReload"
+            >
+              Choose with auto-reload
+            </v-btn>
           </div>
           <v-divider class="mb-4"></v-divider>
           <div class="section-header">
@@ -352,6 +352,9 @@ export default class AddTraceButton extends Vue {
 
 .add-trace-title__text {
   min-width: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: normal;
 }
 
 .add-trace-title__close {
