@@ -206,13 +206,13 @@
   color: inherit !important;
 }
 
-.trace-group > .v-list-group__header:hover .trace-close-btn,
-.trace-group > .v-list-group__header:focus-within .trace-close-btn {
+.trace-leading-icon:hover .trace-close-btn,
+.trace-leading-icon:focus-within .trace-close-btn {
   opacity: 1;
 }
 
-.trace-group > .v-list-group__header:hover .trace-file-icon,
-.trace-group > .v-list-group__header:focus-within .trace-file-icon {
+.trace-leading-icon:hover .trace-file-icon,
+.trace-leading-icon:focus-within .trace-file-icon {
   opacity: 0;
 }
 
