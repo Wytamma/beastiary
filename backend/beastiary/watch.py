@@ -57,6 +57,42 @@ def _trace_exists(db: Database, path: Path) -> bool:
     return bool(db.query("Trace", path=path))
 
 
+def _iter_existing_target_files(target: WatchTarget):
+    for candidate in target.root.glob(target.pattern):
+        if candidate.is_file():
+            yield candidate
+
+
+def add_existing_watch_files(
+    db: Database,
+    watch_specs: List[Path],
+    delimiter: str,
+) -> None:
+    targets = [_parse_watch_target(spec) for spec in watch_specs]
+    missing_roots = [target.root for target in targets if not target.root.is_dir()]
+    if missing_roots:
+        missing_root_list = ", ".join(str(path) for path in missing_roots)
+        raise typer.BadParameter(
+            f"Watch path root must exist and be a directory: {missing_root_list}"
+        )
+
+    typer.echo("Adding watched log files:")
+    seen_paths: Set[Path] = set()
+    for target in targets:
+        for candidate in _iter_existing_target_files(target):
+            resolved_candidate = candidate.resolve()
+            if resolved_candidate in seen_paths:
+                continue
+            seen_paths.add(resolved_candidate)
+            try:
+                add_trace_from_path(db, resolved_candidate, delimiter)
+            except ValueError as e:
+                typer.echo(f"❌ - {candidate}: {e}")
+            except FileNotFoundError as e:
+                typer.echo(f"❌ - {candidate}: {e.strerror}")
+    typer.echo("")
+
+
 def add_startup_files(db: Database, paths: List[Path], delimiter: str) -> None:
     typer.echo("Adding log files:")
     for path in paths:
@@ -137,13 +173,8 @@ def start_watch_observer(
     watch_specs: List[Path],
     delimiter: str,
 ) -> Observer:
+    add_existing_watch_files(db, watch_specs, delimiter)
     targets = [_parse_watch_target(spec) for spec in watch_specs]
-    missing_roots = [target.root for target in targets if not target.root.is_dir()]
-    if missing_roots:
-        missing_root_list = ", ".join(str(path) for path in missing_roots)
-        raise typer.BadParameter(
-            f"Watch path root must exist and be a directory: {missing_root_list}"
-        )
 
     observer = Observer()
     for root in sorted({target.root for target in targets}):
