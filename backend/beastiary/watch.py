@@ -29,7 +29,9 @@ def _parse_watch_target(spec: Path) -> WatchTarget:
     expanded_spec = Path(spec).expanduser()
     if not _has_glob_magic(expanded_spec):
         if expanded_spec.exists() and expanded_spec.is_dir():
-            return WatchTarget(root=expanded_spec.resolve(), pattern="*", recursive=False)
+            return WatchTarget(
+                root=expanded_spec.resolve(), pattern="*", recursive=False
+            )
         return WatchTarget(
             root=expanded_spec.parent.resolve(),
             pattern=expanded_spec.name,
@@ -81,7 +83,9 @@ def add_trace_from_path(db: Database, path: Path, delimiter: str) -> bool:
 
 
 class TraceWatchHandler(FileSystemEventHandler):
-    def __init__(self, db: Database, delimiter: str, targets: List[WatchTarget]) -> None:
+    def __init__(
+        self, db: Database, delimiter: str, targets: List[WatchTarget]
+    ) -> None:
         self.db = db
         self.delimiter = delimiter
         self.targets = targets

@@ -121,7 +121,9 @@ def main(
                     fg=typer.colors.GREEN,
                     bold=False,
                 )
-                typer.echo(f"\nBeastiary is now publicly accessible at: {url_with_token}")
+                typer.echo(
+                    f"\nBeastiary is now publicly accessible at: {url_with_token}"
+                )
                 uvicorn.run(api, host=host, port=port, log_level=log_level)
         else:
             uvicorn.run(api, host=host, port=port, log_level=log_level)
