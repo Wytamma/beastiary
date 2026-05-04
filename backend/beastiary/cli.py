@@ -1,16 +1,15 @@
 import importlib
 import uuid
+from pathlib import Path
+from typing import List, Optional
+
 import typer
 import uvicorn
 from with_cloudflared import cloudflared
 
-from pathlib import Path
-from typing import List, Optional
-
-from beastiary.api.core import add_trace, check_for_new_samples
 from beastiary.api import api
 from beastiary.db import Database
-from beastiary import schemas
+from beastiary.watch import add_startup_files, start_watch_observer
 
 app = typer.Typer()
 
@@ -28,6 +27,14 @@ def main(
         None,
         metavar="[LOG_FILE]...",
         help="Optional path to log file(s) to add at start up.",
+    ),
+    watch: Optional[List[Path]] = typer.Option(
+        None,
+        "--watch",
+        help=(
+            "Watch a directory or glob pattern for new log files, "
+            "for example --watch logs --watch logs/*.log."
+        ),
     ),
     version: bool = typer.Option(
         False, "--version", "-v", help="Display version number."
@@ -67,16 +74,13 @@ def main(
     msg = typer.style("STARTING BEASTIARY", fg=typer.colors.BLUE, bold=True)
     typer.echo(f"\n🐙🐁 {msg} 🐁🐙\n")
     if log_files:
-        typer.echo(f"Adding log files:")
-        for path in log_files:
-            try:
-                trace = add_trace(
-                    api.db, schemas.TraceCreate(path=str(path), delimiter=delimiter)
-                )
-                check_for_new_samples(api.db, trace=trace)
-                typer.echo(f"✅ - {trace['path']}")
-            except ValueError as e:
-                typer.echo(f"❌ - {path}: {e}")
+        add_startup_files(api.db, log_files, delimiter)
+    observer = None
+    if watch:
+        observer = start_watch_observer(api.db, watch, delimiter)
+        typer.echo("Watching for new log files:")
+        for spec in watch:
+            typer.echo(f"👀 - {spec}")
         typer.echo("")
 
     if no_security:
@@ -99,21 +103,29 @@ def main(
     if debug:
         log_level = "debug"
     if testing:
+        if observer:
+            observer.stop()
+            observer.join()
         return typer.Exit()
-    if share:
-        typer.echo("Creating public shareable link...")
-        with cloudflared(port=port) as cloudflared_url:
-            public_destination = (
-                f"{cloudflared_url}/"
-                if no_security
-                else f"{cloudflared_url}/login?token={token}"
-            )
-            url_with_token = typer.style(
-                public_destination,
-                fg=typer.colors.GREEN,
-                bold=False,
-            )
-            typer.echo(f"\nBeastiary is now publicly accessible at: {url_with_token}")
+    try:
+        if share:
+            typer.echo("Creating public shareable link...")
+            with cloudflared(port=port) as cloudflared_url:
+                public_destination = (
+                    f"{cloudflared_url}/"
+                    if no_security
+                    else f"{cloudflared_url}/login?token={token}"
+                )
+                url_with_token = typer.style(
+                    public_destination,
+                    fg=typer.colors.GREEN,
+                    bold=False,
+                )
+                typer.echo(f"\nBeastiary is now publicly accessible at: {url_with_token}")
+                uvicorn.run(api, host=host, port=port, log_level=log_level)
+        else:
             uvicorn.run(api, host=host, port=port, log_level=log_level)
-    else:
-        uvicorn.run(api, host=host, port=port, log_level=log_level)
+    finally:
+        if observer:
+            observer.stop()
+            observer.join()
