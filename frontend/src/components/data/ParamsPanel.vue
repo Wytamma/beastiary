@@ -17,12 +17,12 @@
       <v-list-item-group >
         <div v-for="param in parameterNames"
             :key="param">
-          <v-list-item v-show="visibleParamSet.has(param)" class="ma-0" >
+          <v-list-item v-show="visibleParamSet.has(param)" @click="setActiveParams([param])"  class="ma-0" >
             <template>
-              <v-list-item-action class="my-1">
-                <v-checkbox v-model="activeParams" multiple :value="param" ></v-checkbox>
+              <v-list-item-action class="my-1" @click.stop>
+                <v-checkbox v-model="activeParams" multiple :value="param" @click.stop></v-checkbox>
               </v-list-item-action>
-              <v-list-item-content @click="setActiveParams([param])" class="mt-0">
+              <v-list-item-content class="mt-0">
                 <v-list-item-title>{{param}}</v-list-item-title>
               </v-list-item-content>
               <v-list-item-icon class="mb-1 mt-2 d-flex align-center ">
