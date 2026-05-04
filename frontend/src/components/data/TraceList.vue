@@ -34,11 +34,11 @@
                   <v-icon small>mdi-close</v-icon>
                 </v-btn>
               </div>
-              <div class="min-width-0 flex-grow-1">
-                <v-list-item-title class="text-h6 font-weight-regular">
+              <div class="min-width-0 flex-grow-1 trace-text">
+                <v-list-item-title class="text-h6 font-weight-regular trace-title">
                   {{ fileName(trace.path) }}
                 </v-list-item-title>
-                <v-list-item-subtitle style="word-break: break-all;" class="wrap-text text-caption overflow-x-scroll">
+                <v-list-item-subtitle class="wrap-text text-caption trace-subtitle">
                   {{ trace.path }}
                 </v-list-item-subtitle>
               </div>
@@ -214,6 +214,24 @@
 .trace-group > .v-list-group__header:hover .trace-file-icon,
 .trace-group > .v-list-group__header:focus-within .trace-file-icon {
   opacity: 0;
+}
+
+.trace-text {
+  min-width: 0;
+}
+
+.trace-title {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  word-break: break-word;
+}
+
+.trace-subtitle {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  word-break: break-all;
 }
 </style>
 
