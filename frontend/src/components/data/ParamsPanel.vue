@@ -1,10 +1,23 @@
 <template>
     <v-list style="max-height: 55vh;overflow: auto;" dense class="my-0 py-0" >
+      <div class="px-2 py-2">
+        <div class="d-flex align-center">
+          <v-text-field
+            append-icon="mdi-magnify"
+            clearable
+            dense
+            hide-details
+            outlined
+            placeholder="Filter parameters"
+            @input="queueFilterUpdate"
+            @click:clear="clearFilter"
+          ></v-text-field>
+        </div>
+      </div>
       <v-list-item-group >
-        <div v-for="(data, param) in trace.parameters"
-            :key="param"
-            v-if="param != 'state'">
-          <v-list-item class="ma-0" >
+        <div v-for="param in parameterNames"
+            :key="param">
+          <v-list-item v-show="visibleParamSet.has(param)" class="ma-0" >
             <template>
               <v-list-item-action class="my-1">
                 <v-checkbox v-model="activeParams" multiple :value="param" ></v-checkbox>
@@ -13,12 +26,11 @@
                 <v-list-item-title>{{param}}</v-list-item-title>
               </v-list-item-content>
               <v-list-item-icon class="mb-1 mt-2 d-flex align-center ">
-                <ESSChip :data="data" :burnIn="trace.burnIn"/>
+                <ESSChip :data="trace.parameters[param]" :burnIn="trace.burnIn"/>
               </v-list-item-icon>
             </template>
           </v-list-item>
-          </div>
-          
+        </div>
       </v-list-item-group>
     </v-list>
 </template>
@@ -38,6 +50,8 @@ export default class ParamsPanel extends Vue {
     @Prop(Trace) public trace;
 
     public isActive = false;
+    public paramFilter = '';
+    public filterTimer: number | null = null;
 
     get height() {
         switch (this.$vuetify.breakpoint.name) {
@@ -56,8 +70,47 @@ export default class ParamsPanel extends Vue {
       dispatchSetActiveParams(this.$store, {traceID: this.trace.id, params});
     }
 
+    get parameterNames() {
+      return Object.keys(this.trace.parameters)
+        .filter((param) => param !== 'state');
+    }
+
+    get visibleParamNames() {
+      const filter = this.paramFilter.trim().toLowerCase();
+      return !filter
+        ? this.parameterNames
+        : this.parameterNames.filter((param) => param.toLowerCase().includes(filter));
+    }
+
+    get visibleParamSet() {
+      return new Set(this.visibleParamNames);
+    }
+
     public setActiveParams(params) {
       dispatchSetActiveParams(this.$store, {traceID: this.trace.id, params});
+    }
+
+    public queueFilterUpdate(value: string) {
+      if (this.filterTimer !== null) {
+        window.clearTimeout(this.filterTimer);
+      }
+      if (!value) {
+        this.paramFilter = '';
+        this.filterTimer = null;
+        return;
+      }
+      this.filterTimer = window.setTimeout(() => {
+        this.paramFilter = value;
+        this.filterTimer = null;
+      }, 250);
+    }
+
+    public clearFilter() {
+      if (this.filterTimer !== null) {
+        window.clearTimeout(this.filterTimer);
+        this.filterTimer = null;
+      }
+      this.paramFilter = '';
     }
 
     public paramMean(param) {
@@ -70,6 +123,12 @@ export default class ParamsPanel extends Vue {
           return format(mean(data), {precision: 4});
       }
       return null;
+    }
+
+    public beforeDestroy() {
+      if (this.filterTimer !== null) {
+        window.clearTimeout(this.filterTimer);
+      }
     }
 
 }
