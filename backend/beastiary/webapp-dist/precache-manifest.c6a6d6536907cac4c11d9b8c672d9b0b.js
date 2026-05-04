@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/apple-touch-icon.png"
   },
   {
-    "revision": "a8144356beaa833c6dad",
+    "revision": "fa1b1d241d600ff659e6",
     "url": "/css/app.cc56ceed.css"
   },
   {
@@ -32,8 +32,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/login~main~main-dashboard.3c9c6613.css"
   },
   {
-    "revision": "eb4a2100515a9f0a2786",
-    "url": "/css/main-dashboard.65b8ccee.css"
+    "revision": "e415429b2ddde112c9e4",
+    "url": "/css/main-dashboard.d7c210e3.css"
   },
   {
     "revision": "2ed19607219c50b0f901",
@@ -52,12 +52,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon-32x32.png"
   },
   {
-    "revision": "842dd6c9e19e5c63eafb6691b3cd55a0",
+    "revision": "2f48e5e6e44084946b5b579b7369e81b",
     "url": "/index.html"
   },
   {
-    "revision": "a8144356beaa833c6dad",
-    "url": "/js/app.5947bcc2.js"
+    "revision": "fa1b1d241d600ff659e6",
+    "url": "/js/app.c3dfd4b2.js"
   },
   {
     "revision": "85d47ad6d1fa1aa81a14",
@@ -76,8 +76,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/login~main~main-dashboard.a4d6d9bd.js"
   },
   {
-    "revision": "eb4a2100515a9f0a2786",
-    "url": "/js/main-dashboard.a47429ed.js"
+    "revision": "e415429b2ddde112c9e4",
+    "url": "/js/main-dashboard.7e4b54b1.js"
   },
   {
     "revision": "2ed19607219c50b0f901",
