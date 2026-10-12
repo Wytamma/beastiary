@@ -39,6 +39,9 @@
                   Histogram
                 </v-tab>
                 <v-tab>
+                  Density
+                </v-tab>
+                <v-tab>
                   Pairwise
                 </v-tab>
                 <v-tab>
@@ -97,6 +100,21 @@
                 </v-card>
               </v-tab-item>
               <v-tab-item>
+                <v-card flat class="pa-2"  fill-height>
+                  <vue-resizable
+                    :active='["b"]'
+                    @mount="eHandler"
+                    @resize:move="eHandler"
+                    @resize:start="eHandler"
+                    @resize:end="eHandler"
+                    :width="tabWidth"
+                    :height="tabHeight"
+                  >
+                    <KernelDensity v-if="tab === 3" :height="tabHeight" :width="tabWidth" />
+                  </vue-resizable>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
                 <v-card flat class="pa-2"  fill-height >
                   <vue-resizable 
                     :active='["b"]'
@@ -107,7 +125,7 @@
                     :width="tabWidth"
                     :height="tabHeight"
                   >
-                    <Pairwise v-if="tab === 3" :height="tabHeight" :width="tabWidth" />
+                    <Pairwise v-if="tab === 4" :height="tabHeight" :width="tabWidth" />
                   </vue-resizable>
                 </v-card>
               </v-tab-item>
@@ -122,7 +140,7 @@
                     :width="tabWidth"
                     :height="tabHeight"
                   >
-                    <Parallel v-if="tab === 4" :height="tabHeight" :width="tabWidth" />
+                    <Parallel v-if="tab === 5" :height="tabHeight" :width="tabWidth" />
                   </vue-resizable>
                 </v-card>
               </v-tab-item>
@@ -137,7 +155,7 @@
                     :width="tabWidth"
                     :height="tabHeight"
                   >
-                    <CumulativeESS v-if="tab === 5" :height="tabHeight" :width="tabWidth" />
+                    <CumulativeESS v-if="tab === 6" :height="tabHeight" :width="tabWidth" />
                     
                   </vue-resizable>
                 </v-card>
@@ -158,6 +176,7 @@ import '@/assets/css/custom.css';
 import AddTraceButton from '@/components/data/AddTraceButton.vue';
 import CumulativeESS from '@/components/data/graphs/ESS.vue';
 import Histogram from '@/components/data/graphs/Histogram.vue';
+import KernelDensity from '@/components/data/graphs/KernelDensity.vue';
 import Pairwise from '@/components/data/graphs/Pairwise.vue';
 import Parallel from '@/components/data/graphs/Parallel.vue';
 import Trace from '@/components/data/graphs/Trace.vue';
@@ -182,6 +201,7 @@ import VueResizable from 'vue-resizable';
     Trace,
     Violin,
     Histogram,
+    KernelDensity,
     Parallel,
     AddTraceButton,
     StatsTable,
