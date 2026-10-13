@@ -45,8 +45,8 @@ These settings control the [combined parameters](combining-parameters.md) sectio
 
 | Setting | Options | Description |
 | --- | --- | --- |
-| Combine | `Don't combine` (default), `Combine all (same name parameters)` | Whether parameters with the same name in different traces are combined. |
-| Thinning | `Automatic` (default), `Custom interval`, `Off` | How each trace is thinned before the traces are joined. |
+| Combine | `Combine all (same name parameters)` (default), `Don't combine` | Whether parameters with the same name in different traces are combined. |
+| Thinning | `Automatic`, `Custom interval`, `Off` (default) | How each trace is thinned before the traces are joined. |
 | Thinning interval | 2 | The interval used when thinning is `Custom interval`. It must be a positive integer and is only enabled for the custom option. |
 
 # Plots

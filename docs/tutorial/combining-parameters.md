@@ -4,11 +4,9 @@ Often the same analysis is run several times (multiple chains, or independent ru
 
 This works like BEAST's [LogCombiner](https://beast.community/logcombiner): the burn-in is removed from each log, each log is thinned, and the logs are joined end to end.
 
-# Turn on combining
+# Combining is on by default
 
-Combining is off by default. Open the settings (the cog button at the top right) and, under **Combine parameters**, set **Combine** to `Combine all (same name parameters)`. See [Settings](settings.md) for the other options.
-
-Then load two or more log files that share parameter names (for example `joint`, `likelihood` or `treeLength`).
+Parameters with the same name are combined as soon as two or more loaded log files share them (for example `joint`, `likelihood` or `treeLength`). To turn this off, open the settings (the cog button at the top right) and, under **Combine parameters**, set **Combine** to `Don't combine`. See [Settings](settings.md) for the other options.
 
 # The combined trace
 
@@ -46,7 +44,7 @@ The **Thinning** setting controls the interval `k`:
 | --- | --- |
 | Automatic | `k` is the number of traces combined into that parameter. If the traces are the same length, the combined parameter is about as long as a single trace. A parameter found in 2 traces uses `k = 2` and one found in 3 traces uses `k = 3`, so the `k` shown can be a list when parameters differ. |
 | Custom interval | Use the interval you enter, for every combined parameter. |
-| Off | `k = 1`, so every sample after burn-in is kept. The combined trace is as long as all the traces added together. |
+| Off (default) | `k = 1`, so every sample after burn-in is kept. The combined trace is as long as all the traces added together. |
 
 !!! tip
 
@@ -57,7 +55,7 @@ The **Thinning** setting controls the interval `k`:
 You have run three chains of the same analysis, `run1.log`, `run2.log` and `run3.log`, each with 10,000 samples and a 10% burn-in.
 
 1. Load the three logs.
-2. In the settings, set **Combine** to `Combine all (same name parameters)`.
+2. In the settings, set **Thinning** to `Automatic`.
 3. Open `Combined parameters` at the top of the trace list and select `posterior`.
 
-With automatic thinning, 9,000 samples from each trace remain after the burn-in and every third is kept, giving 3,000 samples per trace and 9,000 in the combined `posterior`. The plots then show all three chains as one trace, and the ESS reflects the three chains together.
+With automatic thinning, 9,000 samples from each trace remain after the burn-in and every third is kept, giving 3,000 samples per trace and 9,000 in the combined `posterior`. The plots then show all three chains as one trace, and the ESS reflects the three chains together. With thinning off, the combined `posterior` keeps all 27,000 samples.
