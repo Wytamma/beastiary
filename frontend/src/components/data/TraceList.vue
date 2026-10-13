@@ -86,6 +86,7 @@
             v-if="openTraceID === trace.id"
             style="overflow-x: hidden !important; overflow-y: auto !important;"
           >
+            <v-divider class="my-0"></v-divider>
             <div style="overflow-x:hidden">
               <ParamsPanel :trace="trace" height="400px" />
             </div>
