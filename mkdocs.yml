@@ -12,6 +12,8 @@ nav:
 - Tutorial - User Guide:
   - tutorial/index.md
   - tutorial/first-steps.md
+  - tutorial/settings.md
+  - tutorial/combining-parameters.md
   - tutorial/logs-from-the-command-line.md
   - tutorial/log-file-format.md
   - tutorial/remote-beastiary.md
