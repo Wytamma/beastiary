@@ -169,10 +169,10 @@ describe("mergeSettings", () => {
     expect(mergeSettings(defaultSettings(), "x")).toEqual(defaultSettings());
   });
 
-  it("doesn't combine traces, and thins automatically when it does, by default", () => {
+  it("combines same-name parameters without thinning them, by default", () => {
     const defaults = defaultSettings();
-    expect(defaults.combineMode).toBe("off");
-    expect(defaults.combineThinning).toBe("auto");
+    expect(defaults.combineMode).toBe("all");
+    expect(defaults.combineThinning).toBe("off");
   });
 
   it("accepts the known combine options and ignores anything else", () => {

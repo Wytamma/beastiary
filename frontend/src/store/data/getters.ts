@@ -1,4 +1,4 @@
-import { combineTraces } from "@/combine";
+import { combineTraces, withActiveParams } from "@/combine";
 import { Trace, Traces } from "@/interfaces";
 import { getStoreAccessors } from "typesafe-vuex";
 import { State } from "../state";
@@ -13,16 +13,17 @@ export const getters = {
       .map((t) => t.id),
   activeTraces: (state: DataState) =>
     Object.values(state.traces).filter((t) => t.isActive),
-  // Traces made by combining parameters that share a name (see combine.ts and the combine settings).
-  combinedTraces: (
+  // The combined traces' data (see combine.ts and the combine settings). This doesn't depend on the selected
+  // parameters, so selecting one doesn't rebuild the combined data.
+  combinedTracesData: (
     state: DataState,
     _getters: any,
     rootState: State,
-  ): Trace[] =>
-    combineTraces(
-      Object.values(state.traces),
-      rootState.settings,
-      state.combinedActiveParams,
+  ): Trace[] => combineTraces(Object.values(state.traces), rootState.settings),
+  // The combined traces with their selected parameters.
+  combinedTraces: (state: DataState, getters: any): Trace[] =>
+    (getters.combinedTracesData as Trace[]).map((trace) =>
+      withActiveParams(trace, state.combinedActiveParams),
     ),
   // Every trace the plots and statistics should show: the loaded traces plus the combined ones.
   displayTraces: (state: DataState, getters: any): Traces => {

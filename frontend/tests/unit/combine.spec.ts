@@ -3,6 +3,7 @@ import {
   combineThinningInterval,
   combineTraces,
   CombineSettings,
+  withActiveParams,
 } from "@/combine";
 import { Trace } from "@/interfaces";
 import Vue from "vue";
@@ -110,9 +111,29 @@ describe("combineTraces grouping", () => {
       makeTrace(1, "a.log", 10, { activeParams: ["a", "x"] }, ["a", "x"]),
       makeTrace(2, "b.log", 10, { activeParams: ["a", "x"] }, ["a", "x"]),
     ];
-    const [combined] = combineTraces(traces, AUTO, ["x", "gone"]);
+    const [base] = combineTraces(traces, AUTO);
+    const combined = withActiveParams(base, ["x", "gone"]);
     expect(combined.activeParams).toEqual(["x"]);
-    expect(combineTraces(traces, AUTO)[0].activeParams).toEqual([]);
+    expect(base.activeParams).toEqual([]);
+  });
+
+  it("selecting parameters reuses the combined data instead of rebuilding it", () => {
+    const traces = [
+      makeTrace(1, "a.log", 100, {}, ["a", "x"]),
+      makeTrace(2, "b.log", 100, {}, ["a", "x"]),
+    ];
+    const [base] = combineTraces(traces, AUTO);
+    const rows = base.parameters.a;
+    const state = base.parameters.state;
+    const selected = withActiveParams(base, ["a"]);
+    expect(selected.activeParams).toEqual(["a"]);
+    expect(selected.parameters.a).toBe(rows);
+    expect(selected.parameters.state).toBe(state);
+    const deselected = withActiveParams(selected, []);
+    expect(deselected.activeParams).toEqual([]);
+    expect(deselected.parameters.a).toBe(rows);
+    // Nothing to change: the same trace comes back.
+    expect(withActiveParams(base, [])).toBe(base);
   });
 });
 
@@ -252,55 +273,83 @@ describe("combined trace data", () => {
     expect(Object.isFrozen(combined.parameters)).toBe(true);
   });
 
+  // The store builds the combined trace in a getter (a Vue computed), so it is rebuilt when a member changes.
   describe("reactivity", () => {
     const setup = () => {
       const members = Vue.observable({
         list: [makeTrace(1, "a.log", 10), makeTrace(2, "b.log", 10)],
       }).list;
-      const [combined] = combineTraces(members, {
-        ...AUTO,
-        combineThinning: "off",
+      const getter = new Vue({
+        computed: {
+          combined: () =>
+            combineTraces(members, { ...AUTO, combineThinning: "off" })[0],
+        },
       });
-      return { members, combined };
+      const reader = () =>
+        new Vue({
+          computed: { value: () => (getter as any).combined.parameters.a.length },
+        });
+      // Adding samples replaces every parameter's array, `state` included.
+      const addSample = (member: Trace) => {
+        member.parameters.state = member.parameters.state.concat([
+          { state: 10000, value: 10000 },
+        ]);
+        member.parameters.a = member.parameters.a.concat([
+          { state: 10000, value: 1 },
+        ]);
+      };
+      return { members, reader, addSample };
     };
 
     it("updates readers when a member trace gets more samples", () => {
-      const { members, combined } = setup();
-      const length = new Vue({
-        computed: { value: () => combined.parameters.a.length },
-      });
+      const { members, reader, addSample } = setup();
+      const length = reader();
       expect(length.value).toBe(20);
-      members[0].parameters.a = members[0].parameters.a.concat([
-        { state: 10000, value: 1 },
-      ]);
+      addSample(members[0]);
       expect(length.value).toBe(21);
     });
 
     it("updates every reader, including ones that read the cached data", () => {
-      const { members, combined } = setup();
-      const first = new Vue({
-        computed: { value: () => combined.parameters.a.length },
-      });
-      const second = new Vue({
-        computed: { value: () => combined.parameters.a.length },
-      });
+      const { members, reader, addSample } = setup();
+      const first = reader();
+      const second = reader();
       expect(first.value).toBe(20);
       expect(second.value).toBe(20);
-      members[1].parameters.a = members[1].parameters.a.concat([
-        { state: 10000, value: 1 },
-      ]);
+      addSample(members[1]);
       expect(first.value).toBe(21);
       expect(second.value).toBe(21);
     });
 
     it("updates readers when a member's burn-in changes", () => {
-      const { members, combined } = setup();
-      const length = new Vue({
-        computed: { value: () => combined.parameters.a.length },
-      });
+      const { members, reader } = setup();
+      const length = reader();
       expect(length.value).toBe(20);
       members[0].burnIn = 50;
       expect(length.value).toBe(15);
+    });
+
+    it("doesn't read the members again when the combined data is read again", () => {
+      const traces = [makeTrace(1, "a.log", 10), makeTrace(2, "b.log", 10)];
+      let reads = 0;
+      for (const trace of traces) {
+        const rows = trace.parameters.a;
+        Object.defineProperty(trace.parameters, "a", {
+          enumerable: true,
+          get: () => {
+            reads++;
+            return rows;
+          },
+        });
+      }
+      const [combined] = combineTraces(traces, AUTO);
+      combined.parameters.a;
+      const readsToBuild = reads;
+      expect(readsToBuild).toBeGreaterThan(0);
+      for (let i = 0; i < 5; i++) {
+        combined.parameters.a;
+        combined.parameters.state;
+      }
+      expect(reads).toBe(readsToBuild);
     });
   });
 });

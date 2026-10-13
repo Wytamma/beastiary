@@ -58,14 +58,19 @@ interface ParameterGroup {
 //   thinned samples.
 // - `state` counts the samples up (each trace advances it by its own thinned step) so it is increasing across the
 //   joins. The combined trace's own burn-in is 0 because the traces' burn-ins have already been applied.
-// - Parameters are built lazily, the first time they are read, since a trace can have hundreds of them. Reading one
-//   always reads the member traces too so whatever is reading it stays reactive to changes in them.
+// - Parameters are built lazily, the first time they are read, since a trace can have hundreds of them. The combined
+//   trace is a snapshot: it is made inside a reactive getter (see the store), which depends on each member's
+//   `state` samples and burn-in (every mutation that adds samples replaces `state` too), so a change in a member
+//   makes a new combined trace. Reading a parameter does NOT read the members again. Reading a reactive array makes
+//   Vue visit every element, so doing that on every read made selecting a parameter very slow.
+//
+// The selection is not part of the combined trace: it is applied with `withActiveParams` so that selecting and
+// deselecting parameters doesn't throw away the (expensive) combined data.
 //
 // Returns an empty array when nothing can be combined.
 export function combineTraces(
   traces: Trace[],
   settings: CombineSettings,
-  activeParams: string[] = [],
 ): Trace[] {
   if (settings.combineMode === "off") {
     return [];
@@ -76,6 +81,8 @@ export function combineTraces(
     if (trace.source === "combined" || !hasSamples(trace)) {
       continue;
     }
+    // Depend on the burn-in (hasSamples depends on the samples).
+    void trace.burnIn;
     for (const param of Object.keys(trace.parameters)) {
       if (param === "state") {
         continue;
@@ -102,30 +109,31 @@ export function combineTraces(
   if (groups.length === 0) {
     return [];
   }
-  return [makeCombinedTrace(groups, activeParams)];
+  return [makeCombinedTrace(groups)];
 }
 
-function makeCombinedTrace(
-  groups: ParameterGroup[],
-  activeParams: string[],
-): Trace {
-  const cache = new Map<string, { inputs: unknown[]; result: any }>();
-  const cached = <T>(key: string, inputs: unknown[], build: () => T): T => {
-    const hit = cache.get(key);
-    if (
-      hit &&
-      hit.inputs.length === inputs.length &&
-      hit.inputs.every((input, i) => input === inputs[i])
-    ) {
-      return hit.result;
-    }
-    const result = build();
-    cache.set(key, { inputs, result });
-    return result;
-  };
+// The combined trace with `activeParams` selected (those that are not combined parameters are dropped). It shares
+// the combined trace's parameters, so nothing is rebuilt.
+export function withActiveParams(trace: Trace, activeParams: string[]): Trace {
+  const available = trace.combined ? trace.combined.parameters : {};
+  const selected = activeParams.filter((param) => param in available);
+  if (
+    selected.length === trace.activeParams.length &&
+    selected.every((param, i) => param === trace.activeParams[i])
+  ) {
+    return trace;
+  }
+  return { ...trace, activeParams: selected };
+}
 
-  const groupByParam = new Map<string, ParameterGroup>();
-  groups.forEach((group) => groupByParam.set(group.param, group));
+function makeCombinedTrace(groups: ParameterGroup[]): Trace {
+  const cache = new Map<string, any>();
+  const cached = <T>(key: string, build: () => T): T => {
+    if (!cache.has(key)) {
+      cache.set(key, build());
+    }
+    return cache.get(key);
+  };
 
   const memberIDs: number[] = [];
   const info: NonNullable<Trace["combined"]>["parameters"] = {};
@@ -142,38 +150,40 @@ function makeCombinedTrace(
   }
 
   // The combined state counter for a set of traces. Many parameters share the same set, so it is built once per set.
-  // Reading it registers the traces' state arrays and burn-ins as dependencies of the reader.
   const axisKey = (group: ParameterGroup) =>
     `${group.interval}:${group.members.map((member) => member.id).join(",")}`;
   const axis = (group: ParameterGroup): number[] =>
-    cached(
-      `axis:${axisKey(group)}`,
-      [
-        ...group.members.map((member) => member.parameters.state),
-        ...group.members.map((member) => member.burnIn),
-      ],
-      () => {
-        const values: number[] = [];
-        let counter = 0;
-        for (const member of group.members) {
-          const rows = memberRows(member, "state", group.interval);
-          const step =
-            rows.length > 1 && rows[1].state > rows[0].state
-              ? rows[1].state - rows[0].state
-              : 1;
-          for (let i = 0; i < rows.length; i++) {
-            counter += step;
-            values.push(counter);
-          }
+    cached(`axis:${axisKey(group)}`, () => {
+      const values: number[] = [];
+      let counter = 0;
+      for (const member of group.members) {
+        const rows = memberRows(member, "state", group.interval);
+        const step =
+          rows.length > 1 && rows[1].state > rows[0].state
+            ? rows[1].state - rows[0].state
+            : 1;
+        for (let i = 0; i < rows.length; i++) {
+          counter += step;
+          values.push(counter);
         }
-        return values;
-      },
-    );
+      }
+      return values;
+    });
 
   // `state` is the longest of the parameters' counters.
+  // Most parameters share a set of traces, so only one group per set is looked at.
+  const axisGroups: ParameterGroup[] = [];
+  const seenAxes = new Set<string>();
+  groups.forEach((group) => {
+    const key = axisKey(group);
+    if (!seenAxes.has(key)) {
+      seenAxes.add(key);
+      axisGroups.push(group);
+    }
+  });
   const stateRows = (): Data[] => {
     let longest: number[] = [];
-    groups.forEach((group) => {
+    axisGroups.forEach((group) => {
       const states = axis(group);
       if (states.length > longest.length) {
         longest = states;
@@ -181,7 +191,6 @@ function makeCombinedTrace(
     });
     return cached(
       "state-rows",
-      [longest],
       () =>
         Object.freeze(
           longest.map((state) => ({ state, value: state })),
@@ -189,13 +198,9 @@ function makeCombinedTrace(
     );
   };
 
-  const parameterRows = (group: ParameterGroup): Data[] => {
-    const states = axis(group);
-    const inputs = [
-      states,
-      ...group.members.map((member) => member.parameters[group.param]),
-    ];
-    return cached(`param:${group.param}`, inputs, () => {
+  const parameterRows = (group: ParameterGroup): Data[] =>
+    cached(`param:${group.param}`, () => {
+      const states = axis(group);
       const rows: Data[] = [];
       for (const member of group.members) {
         for (const row of memberRows(member, group.param, group.interval)) {
@@ -208,7 +213,6 @@ function makeCombinedTrace(
       }
       return Object.freeze(rows) as Data[];
     });
-  };
 
   const parameters = {} as Trace["parameters"];
   Object.defineProperty(parameters, "state", {
@@ -232,7 +236,7 @@ function makeCombinedTrace(
     last_byte: 0,
     source: "combined",
     parameters,
-    activeParams: activeParams.filter((param) => groupByParam.has(param)),
+    activeParams: [],
     isActive: true,
     burnIn: 0,
     isLoading: groups.some((group) =>
