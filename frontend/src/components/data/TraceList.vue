@@ -12,7 +12,6 @@
       style="overflow-x: hidden;"
     >
       <template v-if="combinedTraces.length > 0">
-        <v-subheader class="text-overline">Combined</v-subheader>
         <v-list-group
           v-for="trace in combinedTraces"
           :key="trace.id"
