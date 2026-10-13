@@ -78,7 +78,7 @@ export function defaultSettings(): SettingsState {
     pollingBatchSize: 2500,
     thinningInterval: 1,
     combineMode: "all",
-    combineThinning: "auto",
+    combineThinning: "off",
     combineThinningInterval: 2,
     essStep: 100,
     essLowThreshold: 100,
