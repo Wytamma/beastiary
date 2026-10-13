@@ -29,7 +29,7 @@
             <div class="d-flex flex-wrap mb-2">
               <v-menu
                 v-for="(colour, index) in settings.palette"
-                :key="index"
+                :key="`${paletteVersion}-${index}`"
                 :close-on-content-click="false"
                 offset-y
               >
@@ -44,17 +44,40 @@
                     :aria-label="`Edit colour ${index + 1}`"
                   ></v-btn>
                 </template>
-                <v-color-picker
-                  :value="colour"
-                  mode="hexa"
-                  hide-mode-switch
-                  show-swatches
-                  @input="setColour(index, $event)"
-                ></v-color-picker>
+                <v-card>
+                  <v-color-picker
+                    :value="colour"
+                    mode="hexa"
+                    hide-mode-switch
+                    show-swatches
+                    @input="setColour(index, $event)"
+                  ></v-color-picker>
+                  <v-btn
+                    block
+                    text
+                    color="error"
+                    :disabled="settings.palette.length <= 1"
+                    @click="removeColour(index)"
+                  >
+                    <v-icon left>mdi-delete</v-icon>Remove colour
+                  </v-btn>
+                </v-card>
               </v-menu>
+              <v-btn
+                fab
+                x-small
+                outlined
+                class="ma-1"
+                title="Add colour"
+                aria-label="Add colour"
+                @click="addColour"
+              >
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
             </div>
             <div class="text-caption">
-              Colours are assigned to parameters in order and repeat if there are more parameters than colours.
+              Click a colour to change or remove it, or use + to add one. Colours are assigned to parameters in order
+              and repeat if there are more parameters than colours.
             </div>
           </div>
 
@@ -105,7 +128,7 @@
 </template>
 
 <script lang="ts">
-import { isValidNumber, PALETTE_PRESETS, SETTING_LIMITS } from '@/store/settings/defaults';
+import { isValidNumber, nextPaletteColour, PALETTE_PRESETS, SETTING_LIMITS } from '@/store/settings/defaults';
 import { readSettings } from '@/store/settings/getters';
 import { commitResetSettings, commitUpdateSettings } from '@/store/settings/mutations';
 import { NumericSettingKey } from '@/store/settings/state';
@@ -139,6 +162,9 @@ const COLOUR_DEBOUNCE_MS = 150;
 export default class SettingsDialog extends Vue {
   public dialog = false;
   public limits = SETTING_LIMITS;
+  // Bumped when a colour is removed so the colour menus are recreated (closing any open one) instead of being
+  // reused with shifted indices.
+  public paletteVersion = 0;
 
   // The plot groups follow the order of the tabs on the dashboard (Trace, Violin, Histogram, Density, Pairwise,
   // Parallel, ESS). Trace, Violin and Parallel have no settings of their own.
@@ -313,6 +339,25 @@ export default class SettingsDialog extends Vue {
       window.clearTimeout(this.colourTimer);
     }
     this.colourTimer = window.setTimeout(this.flushColour, COLOUR_DEBOUNCE_MS);
+  }
+
+  public addColour() {
+    this.flushColour();
+    const palette = [...this.settings.palette];
+    palette.push(nextPaletteColour(palette));
+    commitUpdateSettings(this.$store, { palette });
+  }
+
+  // The palette can't be empty (it would be rejected by the settings validation), so the last colour stays.
+  public removeColour(index: number) {
+    this.flushColour();
+    if (this.settings.palette.length <= 1) {
+      return;
+    }
+    const palette = [...this.settings.palette];
+    palette.splice(index, 1);
+    commitUpdateSettings(this.$store, { palette });
+    this.paletteVersion++;
   }
 
   public flushColour() {

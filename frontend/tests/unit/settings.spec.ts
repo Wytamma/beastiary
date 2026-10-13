@@ -1,10 +1,40 @@
 import {
+  DEFAULT_PALETTE,
   defaultSettings,
   isValidNumber,
   loadSettings,
   mergeSettings,
+  nextPaletteColour,
   saveSettings,
 } from "@/store/settings/defaults";
+
+describe("nextPaletteColour", () => {
+  it("picks the first default colour that isn't already in the palette", () => {
+    expect(nextPaletteColour(["#ff0000"])).toBe(DEFAULT_PALETTE[0]);
+    expect(nextPaletteColour([DEFAULT_PALETTE[0]])).toBe(DEFAULT_PALETTE[1]);
+    expect(nextPaletteColour([DEFAULT_PALETTE[1]])).toBe(DEFAULT_PALETTE[0]);
+  });
+
+  it("ignores case when checking for used colours", () => {
+    expect(nextPaletteColour([DEFAULT_PALETTE[0].toUpperCase()])).toBe(
+      DEFAULT_PALETTE[1],
+    );
+  });
+
+  it("cycles through the defaults once they are all in use", () => {
+    const full = [...DEFAULT_PALETTE];
+    expect(nextPaletteColour(full)).toBe(DEFAULT_PALETTE[0]);
+    expect(nextPaletteColour([...full, "#000000"])).toBe(DEFAULT_PALETTE[1]);
+  });
+
+  it("always returns a colour the settings validation accepts", () => {
+    const palette = nextPaletteColour(["#123456"]);
+    expect(
+      mergeSettings(defaultSettings(), { palette: ["#123456", palette] })
+        .palette,
+    ).toEqual(["#123456", palette]);
+  });
+});
 
 describe("isValidNumber", () => {
   it("accepts values within limits", () => {

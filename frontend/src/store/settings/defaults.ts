@@ -10,7 +10,6 @@ export const DEFAULT_PALETTE = [
   "#e74c3c",
   "#1abc9c",
   "#8e44ad",
-  "#1f77b4",
   "#ff7f0e",
   "#2ca02c",
   "#d62728",
@@ -18,7 +17,6 @@ export const DEFAULT_PALETTE = [
   "#8c564b",
   "#e377c2",
   "#7f7f7f",
-  "#bcbd22",
   "#17becf",
 ];
 
@@ -38,6 +36,14 @@ export const PALETTE_PRESETS: Array<{ name: string; colours: string[] }> = [
   { name: "Default", colours: DEFAULT_PALETTE },
   { name: "Colour-blind safe (Okabe-Ito)", colours: COLOURBLIND_PALETTE },
 ];
+
+// The colour to append when the user adds one to the palette: the first default colour that isn't already used, or
+// (once they all are) the default colours again in order.
+export function nextPaletteColour(palette: string[]): string {
+  const used = new Set(palette.map((c) => c.toLowerCase()));
+  const unused = DEFAULT_PALETTE.find((c) => !used.has(c.toLowerCase()));
+  return unused || DEFAULT_PALETTE[palette.length % DEFAULT_PALETTE.length];
+}
 
 export const SETTING_LIMITS: Record<
   NumericSettingKey,
