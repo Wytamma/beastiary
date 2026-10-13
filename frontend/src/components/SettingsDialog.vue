@@ -84,6 +84,19 @@
           <div v-for="group in section.groups" :key="group.title" class="mb-4">
             <div class="text-subtitle-1 font-weight-medium mb-1">{{ group.title }}</div>
             <div v-if="group.note" class="text-caption mb-3">{{ group.note }}</div>
+            <v-select
+              v-for="choice in group.choices"
+              :key="choice.key"
+              :label="choice.label"
+              :hint="choice.hint"
+              :items="choice.items"
+              :value="settings[choice.key]"
+              dense
+              outlined
+              persistent-hint
+              class="mb-2"
+              @change="updateChoice(choice.key, $event)"
+            ></v-select>
             <template v-for="field in group.fields">
               <v-slider
                 v-if="field.step"
@@ -106,6 +119,7 @@
                 :hint="field.hint"
                 :value="settings[field.key]"
                 :rules="rules(field.key)"
+                :disabled="isDisabled(field)"
                 type="number"
                 dense
                 outlined
@@ -131,7 +145,7 @@
 import { isValidNumber, nextPaletteColour, PALETTE_PRESETS, SETTING_LIMITS } from '@/store/settings/defaults';
 import { readSettings } from '@/store/settings/getters';
 import { commitResetSettings, commitUpdateSettings } from '@/store/settings/mutations';
-import { NumericSettingKey } from '@/store/settings/state';
+import { ChoiceSettingKey, NumericSettingKey } from '@/store/settings/state';
 import { Component, Vue } from 'vue-property-decorator';
 
 interface Field {
@@ -140,11 +154,22 @@ interface Field {
   hint: string;
   // Fields with a step are shown as sliders, the rest as number inputs.
   step?: number;
+  // The field is only editable while this choice setting has this value.
+  enabledWhen?: { key: ChoiceSettingKey; value: string };
+}
+
+interface Choice {
+  key: ChoiceSettingKey;
+  label: string;
+  hint: string;
+  items: Array<{ text: string; value: string }>;
 }
 
 interface Group {
   title: string;
   note?: string;
+  // Settings that pick one of a fixed set of options, shown above the fields.
+  choices?: Choice[];
   fields: Field[];
 }
 
@@ -198,6 +223,41 @@ export default class SettingsDialog extends Vue {
             {
               key: 'thinningInterval', label: 'Thinning interval (k)',
               hint: 'Only samples k, 2k, 3k, ... are drawn, e.g. k = 5 keeps samples 5, 10, 15. 1 keeps every sample.',
+            },
+          ],
+        },
+        {
+          title: 'Combine parameters',
+          note: 'Parameters with the same name in different traces (e.g. joint in two logs) are merged into one '
+            + 'parameter in the combined trace at the top of the trace list. Like BEAST\'s LogCombiner, each trace has '
+            + 'its own burn-in removed and is then thinned on its own, before the traces are joined end to end and used for '
+            + 'plots, ESS and statistics.',
+          choices: [
+            {
+              key: 'combineMode', label: 'Combine',
+              hint: 'Combine all merges every parameter that two or more loaded traces have, selected or not. '
+                + 'Off doesn\'t create a combined trace.',
+              items: [
+                { text: 'Combine all (same name parameters)', value: 'all' },
+                { text: 'Don\'t combine', value: 'off' },
+              ],
+            },
+            {
+              key: 'combineThinning', label: 'Thinning',
+              hint: 'Automatic keeps every k-th sample of each trace, where k is the number of traces combined into '
+                + 'that parameter, so traces of equal length give a combined parameter as long as one trace.',
+              items: [
+                { text: 'Automatic (k = number of traces)', value: 'auto' },
+                { text: 'Custom interval', value: 'custom' },
+                { text: 'Off (keep every sample)', value: 'off' },
+              ],
+            },
+          ],
+          fields: [
+            {
+              key: 'combineThinningInterval', label: 'Custom thinning interval (k)',
+              hint: 'Only samples k, 2k, 3k, ... of each trace are kept. Used when thinning is set to custom.',
+              enabledWhen: { key: 'combineThinning', value: 'custom' },
             },
           ],
         },
@@ -295,6 +355,14 @@ export default class SettingsDialog extends Vue {
 
   public update(key: NumericSettingKey, value: number) {
     commitUpdateSettings(this.$store, { [key]: value });
+  }
+
+  public updateChoice(key: ChoiceSettingKey, value: string) {
+    commitUpdateSettings(this.$store, { [key]: value });
+  }
+
+  public isDisabled(field: Field) {
+    return !!field.enabledWhen && this.settings[field.enabledWhen.key] !== field.enabledWhen.value;
   }
 
   public updateFromText(key: NumericSettingKey, value: string) {

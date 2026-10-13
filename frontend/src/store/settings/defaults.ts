@@ -1,4 +1,4 @@
-import { NumericSettingKey, SettingsState } from "./state";
+import { ChoiceSettingKey, NumericSettingKey, SettingsState } from "./state";
 
 const STORAGE_KEY = "beastiary-settings";
 
@@ -52,6 +52,7 @@ export const SETTING_LIMITS: Record<
   pollingInterval: { min: 1, max: 3600, integer: true },
   pollingBatchSize: { min: 100, max: 100000, integer: true },
   thinningInterval: { min: 1, max: 100000, integer: true },
+  combineThinningInterval: { min: 1, max: 100000, integer: true },
   essStep: { min: 10, max: 10000, integer: true },
   essLowThreshold: { min: 1, max: 100000, integer: true },
   essHighThreshold: { min: 2, max: 100000, integer: true },
@@ -65,12 +66,20 @@ export const SETTING_LIMITS: Record<
   credibleInterval: { min: 0.5, max: 0.999 },
 };
 
+export const CHOICE_OPTIONS: Record<ChoiceSettingKey, readonly string[]> = {
+  combineMode: ["all", "off"],
+  combineThinning: ["auto", "off", "custom"],
+};
+
 export function defaultSettings(): SettingsState {
   return {
     palette: [...DEFAULT_PALETTE],
     pollingInterval: 5,
     pollingBatchSize: 2500,
     thinningInterval: 1,
+    combineMode: "all",
+    combineThinning: "auto",
+    combineThinningInterval: 2,
     essStep: 100,
     essLowThreshold: 100,
     essHighThreshold: 200,
@@ -101,6 +110,10 @@ export function isValidNumber(
   );
 }
 
+export function isValidChoice(key: ChoiceSettingKey, value: unknown): boolean {
+  return typeof value === "string" && CHOICE_OPTIONS[key].includes(value);
+}
+
 // Returns `current` with every valid entry of `partial` applied. Invalid entries are ignored rather than
 // clamped, so a bad value never silently turns into a different one. Unknown keys are ignored.
 export function mergeSettings(
@@ -122,6 +135,12 @@ export function mergeSettings(
   for (const key of Object.keys(SETTING_LIMITS) as NumericSettingKey[]) {
     if (key in input && isValidNumber(key, input[key])) {
       next[key] = input[key] as number;
+    }
+  }
+
+  for (const key of Object.keys(CHOICE_OPTIONS) as ChoiceSettingKey[]) {
+    if (key in input && isValidChoice(key, input[key])) {
+      (next as unknown as Record<string, unknown>)[key] = input[key];
     }
   }
 

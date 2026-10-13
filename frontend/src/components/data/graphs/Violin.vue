@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { urlFileName } from '@/logParser';
-import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readActiveTraceIDs, readDisplayTraces } from '@/store/data/getters';
 import { readSettings } from '@/store/settings/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -41,7 +41,7 @@ export default class Violin extends Vue {
       ];
     }
     get traces() {
-      return readTraces(this.$store);
+      return readDisplayTraces(this.$store);
     }
     get activeTraceIDs() {
       return readActiveTraceIDs(this.$store);

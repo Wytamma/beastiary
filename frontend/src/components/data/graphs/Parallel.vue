@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Data } from '@/interfaces';
-import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readActiveTraceIDs, readDisplayTraces } from '@/store/data/getters';
 import { readSettings } from '@/store/settings/getters';
 import { thin } from '@/utils';
 import { Plotly } from 'vue-plotly';
@@ -42,7 +42,7 @@ export default class Parallel extends Vue {
       ];
     }
     get traces() {
-      return readTraces(this.$store);
+      return readDisplayTraces(this.$store);
     }
     get activeTraceIDs() {
       return readActiveTraceIDs(this.$store);

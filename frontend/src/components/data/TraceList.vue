@@ -11,6 +11,93 @@
       class="col mb-0 py-0 my-0 rounded-b-lg no-scrollbar"
       style="overflow-x: hidden;"
     >
+      <template v-if="combinedTraces.length > 0">
+        <v-subheader class="text-overline">Combined</v-subheader>
+        <v-list-group
+          v-for="trace in combinedTraces"
+          :key="trace.id"
+          class="trace-group"
+          color="primary"
+          @click="openCombinedTrace(trace)"
+        >
+          <template v-slot:activator>
+            <v-list-item-content class="mb-0 px-0">
+              <div class="d-flex align-start">
+                <div class="mr-0 mt-2 flex-shrink-0">
+                  <v-icon medium>mdi-call-merge</v-icon>
+                </div>
+                <div class="min-width-0 flex-grow-1 trace-text">
+                  <v-list-item-title class="text-h6 font-weight-regular trace-title">
+                    Combined parameters
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="wrap-text text-caption trace-subtitle">
+                    {{ Object.keys(trace.parameters).length - 1 }} parameters from
+                    {{ trace.combined.memberIDs.length }} traces
+                  </v-list-item-subtitle>
+                </div>
+              </div>
+              <v-list-item-content class="pb-0">
+                <div class="d-flex align-center">
+                  <v-chip-group column>
+                    <v-tooltip color="black" bottom>
+                      <template #activator="{ on }">
+                        <v-chip color="green" text-color="white" v-on="on" small>
+                          {{ trace.parameters.state.length }}
+                        </v-chip>
+                      </template>
+                      <span>Samples</span>
+                    </v-tooltip>
+                    <v-tooltip color="black" bottom>
+                      <template #activator="{ on }">
+                        <v-chip color="orange" text-color="white" v-on="on" small>
+                          k = {{ combinedThinning(trace) }}
+                        </v-chip>
+                      </template>
+                      <span>Thinning interval applied to each trace (see settings)</span>
+                    </v-tooltip>
+                    <v-tooltip color="black" bottom v-if="trace.activeParams.length">
+                      <template #activator="{ on }">
+                        <v-chip
+                          color="red"
+                          text-color="white"
+                          v-on="on"
+                          @click:close="clearCombinedActiveParams()"
+                          small
+                          close
+                        >
+                          {{ trace.activeParams.length }}
+                        </v-chip>
+                      </template>
+                      <span>Active</span>
+                    </v-tooltip>
+                  </v-chip-group>
+                  <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    size="20"
+                    class="pl-1"
+                    v-if="trace.isLoading"
+                  ></v-progress-circular>
+                </div>
+              </v-list-item-content>
+            </v-list-item-content>
+          </template>
+          <div
+            v-if="openTraceID === trace.id"
+            style="overflow-x: hidden !important; overflow-y: auto !important;"
+          >
+            <div class="my-3 mx-2 text-caption">
+              Uses the burn-in set on each trace, removed from each trace before they are joined.
+            </div>
+            <v-divider class="my-0"></v-divider>
+            <div style="overflow-x:hidden">
+              <ParamsPanel :trace="trace" height="400px" />
+            </div>
+          </div>
+          <v-divider></v-divider>
+        </v-list-group>
+        <v-subheader class="text-overline">Traces</v-subheader>
+      </template>
       <v-list-group
         v-for="trace in traces"
         :key="trace.id"
@@ -248,9 +335,10 @@ import {
   dispatchSetActiveParams,
   dispatchSetActiveTrace,
   dispatchSetBurnIn,
+  dispatchSetCombinedActiveParams,
   dispatchSetLoadingSamples,
 } from '@/store/data/actions';
-import { readActiveTraceIDs, readLoadingSamples, readTraces } from '@/store/data/getters';
+import { readActiveTraceIDs, readCombinedTraces, readLoadingSamples, readTraces } from '@/store/data/getters';
 import { readSettings } from '@/store/settings/getters';
 import { Trace } from '@/interfaces';
 import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -268,6 +356,25 @@ export default class TraceList extends Vue {
 
   get traces() {
     return readTraces(this.$store);
+  }
+
+  get combinedTraces() {
+    return readCombinedTraces(this.$store);
+  }
+
+  // The combined trace has no burn-in of its own: each trace's burn-in is removed before they are joined.
+  public openCombinedTrace(trace: Trace) {
+    this.openTraceID = trace.id;
+  }
+
+  public clearCombinedActiveParams() {
+    dispatchSetCombinedActiveParams(this.$store, { params: [] });
+  }
+
+  // The thinning interval(s) in use: each parameter is thinned by the number of traces it combines, which can differ.
+  public combinedThinning(trace: Trace) {
+    const intervals = Object.values(trace.combined ? trace.combined.parameters : {}).map((param) => param.thinning);
+    return Array.from(new Set(intervals)).sort((a, b) => a - b).join(', ');
   }
 
   get activeTraceIDs() {

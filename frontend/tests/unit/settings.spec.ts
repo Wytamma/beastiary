@@ -168,6 +168,45 @@ describe("mergeSettings", () => {
     expect(mergeSettings(defaultSettings(), null)).toEqual(defaultSettings());
     expect(mergeSettings(defaultSettings(), "x")).toEqual(defaultSettings());
   });
+
+  it("doesn't combine traces, and thins automatically when it does, by default", () => {
+    const defaults = defaultSettings();
+    expect(defaults.combineMode).toBe("off");
+    expect(defaults.combineThinning).toBe("auto");
+  });
+
+  it("accepts the known combine options and ignores anything else", () => {
+    const defaults = defaultSettings();
+    expect(mergeSettings(defaults, { combineMode: "all" }).combineMode).toBe(
+      "all",
+    );
+    expect(mergeSettings(defaults, { combineMode: "off" }).combineMode).toBe(
+      "off",
+    );
+    expect(
+      mergeSettings(defaults, { combineThinning: "custom" }).combineThinning,
+    ).toBe("custom");
+    expect(mergeSettings(defaults, { combineMode: "some" }).combineMode).toBe(
+      defaults.combineMode,
+    );
+    // "selected" is no longer a mode, so a value saved by an older version falls back to the default.
+    expect(
+      mergeSettings(defaults, { combineMode: "selected" }).combineMode,
+    ).toBe(defaults.combineMode);
+    expect(mergeSettings(defaults, { combineMode: 1 }).combineMode).toBe(
+      defaults.combineMode,
+    );
+    expect(
+      mergeSettings(defaults, { combineThinning: "selected" }).combineThinning,
+    ).toBe(defaults.combineThinning);
+  });
+
+  it("requires the custom combine thinning interval to be a positive whole number", () => {
+    expect(isValidNumber("combineThinningInterval", 1)).toBe(true);
+    expect(isValidNumber("combineThinningInterval", 4)).toBe(true);
+    expect(isValidNumber("combineThinningInterval", 0)).toBe(false);
+    expect(isValidNumber("combineThinningInterval", 2.5)).toBe(false);
+  });
 });
 
 describe("persistence", () => {

@@ -23,6 +23,7 @@ import {
   commitSetActiveParams,
   commitSetActiveTrace,
   commitSetBurnIn,
+  commitSetCombinedActiveParams,
   commitSetLocalTraceState,
   commitSetLoadingSamples,
   commitRemoveTrace,
@@ -167,6 +168,12 @@ export const actions = {
     payload: { traceID: number; params: string[] },
   ) {
     commitSetActiveParams(context, payload);
+  },
+  async actionSetCombinedActiveParams(
+    context: MainContext,
+    payload: { params: string[] },
+  ) {
+    commitSetCombinedActiveParams(context, payload);
   },
   async actionGetSamples(
     context: MainContext,
@@ -414,6 +421,9 @@ export const dispatchReloadUrlTrace = dispatch(actions.actionReloadUrlTrace);
 export const dispatchPollTraces = dispatch(actions.actionPollTraces);
 export const dispatchRemoveTrace = dispatch(actions.actionRemoveTrace);
 export const dispatchSetActiveParams = dispatch(actions.actionSetActiveParams);
+export const dispatchSetCombinedActiveParams = dispatch(
+  actions.actionSetCombinedActiveParams,
+);
 export const dispatchSetBurnIn = dispatch(actions.actionSetBurnIn);
 export const dispatchSetLoadingSamples = dispatch(
   actions.actionSetLoadingSamples,

@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { readTraces } from '@/store/data/getters';
+import { readDisplayTraces } from '@/store/data/getters';
 import { readSettings } from '@/store/settings/getters';
 import { format, median, quantileSeq, sqrt, std, variance } from 'mathjs';
 import VueJsonToCsv from 'vue-json-to-csv';
@@ -52,7 +52,7 @@ export default class StatsTable extends Vue {
     }
 
     get traces() {
-        return readTraces(this.$store);
+        return readDisplayTraces(this.$store);
     }
 
     get credibleInterval(): number {

@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import ESSChip from '@/components/data/ESSChip.vue';
-import { dispatchSetActiveParams } from '@/store/data/actions';
+import { dispatchSetActiveParams, dispatchSetCombinedActiveParams } from '@/store/data/actions';
 import { format, mean } from 'mathjs';
 import { Component, Prop, Vue} from 'vue-property-decorator';
 import { Trace } from '../../interfaces';
@@ -67,7 +67,7 @@ export default class ParamsPanel extends Vue {
     }
 
     set activeParams(params) {
-      dispatchSetActiveParams(this.$store, {traceID: this.trace.id, params});
+      this.setActiveParams(params);
     }
 
     get parameterNames() {
@@ -87,6 +87,11 @@ export default class ParamsPanel extends Vue {
     }
 
     public setActiveParams(params) {
+      // The combined trace is derived from other traces, so its selection is stored separately.
+      if (this.trace.combined) {
+        dispatchSetCombinedActiveParams(this.$store, {params});
+        return;
+      }
       dispatchSetActiveParams(this.$store, {traceID: this.trace.id, params});
     }
 

@@ -187,7 +187,7 @@ import StatsTable from '@/components/data/StatsTable.vue';
 import TraceList from '@/components/data/TraceList.vue';
 
 import { dispatchCreateUrlTrace } from '@/store/data/actions';
-import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readActiveTraceIDs, readDisplayTraces } from '@/store/data/getters';
 import { readDisconnected } from '@/store/main/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -233,7 +233,7 @@ export default class Dashboard extends Vue {
     return IDs;
   }
   get traces() {
-    return readTraces(this.$store);
+    return readDisplayTraces(this.$store);
   }
 
   get activeParams() {
