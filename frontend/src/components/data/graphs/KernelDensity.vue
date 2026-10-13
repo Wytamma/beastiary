@@ -10,10 +10,10 @@
 <script lang="ts">
 import { urlFileName } from '@/logParser';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readSettings } from '@/store/settings/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-const GRID_SIZE = 512;
 // Evaluate the density this many bandwidths beyond the min / max sample.
 const TAIL_BANDWIDTHS = 3;
 // Gaussian kernel contribution is negligible beyond this many bandwidths.
@@ -27,8 +27,9 @@ function quantile(sorted: number[], q: number) {
 }
 
 // Gaussian KDE with Silverman's rule-of-thumb bandwidth. Samples are binned onto a
-// fixed grid first so the cost depends on GRID_SIZE rather than on the chain length.
-function gaussianKDE(values: number[]) {
+// fixed grid first so the cost depends on gridSize rather than on the chain length.
+// bandwidthScale multiplies Silverman's bandwidth (1 = rule of thumb).
+function gaussianKDE(values: number[], gridSize: number, bandwidthScale: number) {
   const sorted = values.filter((v) => Number.isFinite(v)).sort((a, b) => a - b);
   const n = sorted.length;
   if (n === 0) {
@@ -45,25 +46,26 @@ function gaussianKDE(values: number[]) {
     // All samples identical (or a single sample): fall back to a narrow arbitrary bandwidth.
     h = Math.abs(mean) * 0.01 || 0.1;
   }
+  h *= bandwidthScale;
 
   const lo = sorted[0] - TAIL_BANDWIDTHS * h;
   const hi = sorted[n - 1] + TAIL_BANDWIDTHS * h;
-  const dx = (hi - lo) / (GRID_SIZE - 1);
+  const dx = (hi - lo) / (gridSize - 1);
 
-  const counts = new Array(GRID_SIZE).fill(0);
+  const counts = new Array(gridSize).fill(0);
   for (const v of sorted) {
     counts[Math.round((v - lo) / dx)]++;
   }
 
-  const x: number[] = new Array(GRID_SIZE);
-  const y: number[] = new Array(GRID_SIZE).fill(0);
+  const x: number[] = new Array(gridSize);
+  const y: number[] = new Array(gridSize).fill(0);
   const norm = 1 / (n * h * Math.sqrt(2 * Math.PI));
   const reach = Math.ceil((KERNEL_CUTOFF * h) / dx);
-  for (let j = 0; j < GRID_SIZE; j++) {
+  for (let j = 0; j < gridSize; j++) {
     x[j] = lo + j * dx;
     let sum = 0;
     const from = Math.max(0, j - reach);
-    const to = Math.min(GRID_SIZE - 1, j + reach);
+    const to = Math.min(gridSize - 1, j + reach);
     for (let k = from; k <= to; k++) {
       if (counts[k] > 0) {
         const u = ((j - k) * dx) / h;
@@ -144,25 +146,8 @@ export default class KernelDensity extends Vue {
     }
     get DensityData() {
     const data: any[] = [];
-    const colours = [
-      '#2980b9',
-      '#2ecc71',
-      '#9b59b6',
-      '#f1c40f',
-      '#e74c3c',
-      '#1abc9c',
-      '#8e44ad',
-      '#1f77b4',
-      '#ff7f0e',
-      '#2ca02c',
-      '#d62728',
-      '#9467bd',
-      '#8c564b',
-      '#e377c2',
-      '#7f7f7f',
-      '#bcbd22',
-      '#17becf',
-    ];
+    const settings = readSettings(this.$store);
+    const colours = settings.palette;
     let count = 0;
     for (const trace of Object.values(this.traces)) {
       // @ts-ignore
@@ -173,7 +158,7 @@ export default class KernelDensity extends Vue {
         for (const param of trace.activeParams) {
           // @ts-ignore
           const values = trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value);
-          const kde = gaussianKDE(values);
+          const kde = gaussianKDE(values, settings.kdeGridSize, settings.kdeBandwidthScale);
           const colour = colours[count % colours.length];
           count++;
           if (!kde) {
@@ -189,7 +174,7 @@ export default class KernelDensity extends Vue {
                 color: colour,
                 width: 2,
             },
-            fillcolor: hexToRGBA(colour, 0.4),
+            fillcolor: hexToRGBA(colour, settings.kdeFillOpacity),
             name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             hovertemplate: '%{x:.4g}: %{y:.4g}',
             showlegend: true,

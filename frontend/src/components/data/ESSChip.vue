@@ -8,6 +8,7 @@
 </template>
 
 <script lang="ts">
+import { readSettings } from '@/store/settings/getters';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Data } from '../../interfaces';
 
@@ -24,9 +25,10 @@ export default class ESSChip extends Vue {
     if (this.ESS === null) {
       return 'red';
     }
-    if (this.ESS < 100) {
+    const { essLowThreshold, essHighThreshold } = readSettings(this.$store);
+    if (this.ESS < essLowThreshold) {
       return 'red';
-    } else if (this.ESS < 200) {
+    } else if (this.ESS < essHighThreshold) {
       return 'orange';
     } else {
       return 'green';

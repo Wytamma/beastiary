@@ -8,7 +8,10 @@
 </template>
 
 <script lang="ts">
+import { Data } from '@/interfaces';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readSettings } from '@/store/settings/getters';
+import { thin } from '@/utils';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -66,26 +69,7 @@ export default class Parallel extends Vue {
     get ParallelData() {
     const data: any = {};
     const dimensions: any[] = [];
-    const colours = [
-      '#2980b9',
-      '#2ecc71',
-      '#9b59b6',
-      '#f1c40f',
-      '#e74c3c',
-      '#1abc9c',
-      '#8e44ad',
-      '#1f77b4',
-      '#ff7f0e',
-      '#2ca02c',
-      '#d62728',
-      '#9467bd',
-      '#8c564b',
-      '#e377c2',
-      '#7f7f7f',
-      '#bcbd22',
-      '#17becf',
-    ];
-    const count = 0;
+    const interval = readSettings(this.$store).thinningInterval;
     let traceFound = null;
     let  burnIn = null;
     for (const trace of Object.values(this.traces)) {
@@ -99,11 +83,12 @@ export default class Parallel extends Vue {
         for (const param of trace.activeParams) {
           // found open tace break
           traceFound = trace;
+          // @ts-ignore
+          const rows: Data[] = trace.parameters[param].slice(trace.parameters.state.length * burnIn);
           dimensions.push(
             {
               label: param,
-              // @ts-ignore
-              values: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
+              values: thin(rows, interval).map((row) =>  row.value),
             },
           );
         }
@@ -118,10 +103,10 @@ export default class Parallel extends Vue {
       data.rangefont = {color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'};
 
       data.type = 'parcoords';
+      const found: any = traceFound;
       // @ts-ignore
-      const colorValues = traceFound.parameters[traceFound.activeParams[0]].slice(
-        // @ts-ignore
-        traceFound.parameters.state.length * burnIn).map((row) =>  row.value);
+      const colourRows: Data[] = found.parameters[found.activeParams[0]].slice(found.parameters.state.length * burnIn);
+      const colorValues = thin(colourRows, interval).map((row) =>  row.value);
       data.line = {
         showscale: true,
         reversescale: true,

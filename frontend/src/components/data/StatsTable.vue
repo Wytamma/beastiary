@@ -25,6 +25,7 @@
 
 <script lang="ts">
 import { readTraces } from '@/store/data/getters';
+import { readSettings } from '@/store/settings/getters';
 import { format, median, quantileSeq, sqrt, std, variance } from 'mathjs';
 import VueJsonToCsv from 'vue-json-to-csv';
 import { Component, Prop, Vue} from 'vue-property-decorator';
@@ -43,7 +44,7 @@ export default class StatsTable extends Vue {
             {text: 'STD', value: 'std'},
             {text: 'Var', value: 'variance'},
             {text: 'Median', value: 'median'},
-            {text: '95% HPDI', value: 'HPD'},
+            {text: `${this.credibleIntervalLabel} HPDI`, value: 'HPD'},
             {text: 'ESS', value: 'ESS'},
             {text: 'Samples', value: 'nSamples'},
 
@@ -52,6 +53,15 @@ export default class StatsTable extends Vue {
 
     get traces() {
         return readTraces(this.$store);
+    }
+
+    get credibleInterval(): number {
+        return readSettings(this.$store).credibleInterval;
+    }
+
+    get credibleIntervalLabel(): string {
+        // 0.95 -> "95%", 0.999 -> "99.9%"
+        return `${parseFloat((this.credibleInterval * 100).toFixed(2))}%`;
     }
 
 
@@ -217,7 +227,7 @@ export default class StatsTable extends Vue {
                 // @ts-ignore
                 quantile: quantileSeq(values, [0.025, 0.975]),
                 // @ts-ignore
-                HPD: this.HPDInterval(0.95, values),
+                HPD: this.HPDInterval(this.credibleInterval, values),
             };
     }
 }

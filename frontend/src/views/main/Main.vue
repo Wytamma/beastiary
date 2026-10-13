@@ -60,6 +60,7 @@
           inset
           color="teal darken-4"
       ></v-switch>
+      <SettingsDialog/>
     </v-app-bar>
     <router-view></router-view>
   </v-layout>
@@ -67,6 +68,7 @@
 </template>
 
 <script lang="ts">
+import SettingsDialog from '@/components/SettingsDialog.vue';
 import { appName } from '@/env';
 import { dispatchUserLogOut } from '@/store/main/actions';
 import { readDashboardMiniDrawer, readDashboardShowDrawer, readSupportsAuth } from '@/store/main/getters';
@@ -81,7 +83,11 @@ const routeGuardMain = async (to, from, next) => {
   }
 };
 
-@Component
+@Component({
+  components: {
+    SettingsDialog,
+  },
+})
 export default class Main extends Vue {
   public appName = appName;
 

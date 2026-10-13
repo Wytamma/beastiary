@@ -238,7 +238,6 @@
 <script lang="ts">
 import ParamsPanel from '@/components/data/ParamsPanel.vue';
 import { urlFileName } from '@/logParser';
-import { runtimeCapabilities } from '@/runtime';
 import {
   dispatchGetSamples,
   dispatchGetTraces,
@@ -252,8 +251,9 @@ import {
   dispatchSetLoadingSamples,
 } from '@/store/data/actions';
 import { readActiveTraceIDs, readLoadingSamples, readTraces } from '@/store/data/getters';
+import { readSettings } from '@/store/settings/getters';
 import { Trace } from '@/interfaces';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -312,7 +312,12 @@ export default class TraceList extends Vue {
     if (!readLoadingSamples(this.$store)) {
       dispatchSetLoadingSamples(this.$store, { traceID: trace.id, loading: true });
       await dispatchSetActiveTrace(this.$store, trace);
-      await dispatchGetSamples(this.$store, { trace, skip, limit: 2500, all: true });
+      await dispatchGetSamples(this.$store, {
+        trace,
+        skip,
+        limit: readSettings(this.$store).pollingBatchSize,
+        all: true,
+      });
       dispatchSetLoadingSamples(this.$store, { traceID: trace.id, loading: false });
     }
   }
@@ -353,17 +358,41 @@ export default class TraceList extends Vue {
   public async mounted() {
     await dispatchGetTraces(this.$store);
     Object.values(this.traces).forEach((trace) => this.syncBurnIn(trace));
-    this.interval = window.setInterval(async () => {
-      await dispatchPollTraces(this.$store);
-    }, runtimeCapabilities.supportsPolling ? 5000 : 4000);
+    this.startPolling();
   }
 
   public beforeDestroy() {
-    clearInterval(this.interval);
+    this.stopPolling();
+  }
+
+  // Restart the timer so a changed polling interval takes effect immediately.
+  @Watch('pollingIntervalMs')
+  public onPollingIntervalChange() {
+    if (this.interval !== undefined) {
+      this.startPolling();
+    }
+  }
+
+  get pollingIntervalMs() {
+    return readSettings(this.$store).pollingInterval * 1000;
   }
 
   public fileName(path: string) {
     return urlFileName(path);
+  }
+
+  private startPolling() {
+    this.stopPolling();
+    this.interval = window.setInterval(async () => {
+      await dispatchPollTraces(this.$store);
+    }, this.pollingIntervalMs);
+  }
+
+  private stopPolling() {
+    if (this.interval !== undefined) {
+      window.clearInterval(this.interval);
+      this.interval = undefined;
+    }
   }
 
   private syncBurnIn(trace: Trace) {

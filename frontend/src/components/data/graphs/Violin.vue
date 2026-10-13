@@ -10,6 +10,7 @@
 <script lang="ts">
 import { urlFileName } from '@/logParser';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readSettings } from '@/store/settings/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -70,25 +71,7 @@ export default class Violin extends Vue {
     }
     get ViolinData() {
     const data: any[] = [];
-    const colours = [
-      '#2980b9',
-      '#2ecc71',
-      '#9b59b6',
-      '#f1c40f',
-      '#e74c3c',
-      '#1abc9c',
-      '#8e44ad',
-      '#1f77b4',
-      '#ff7f0e',
-      '#2ca02c',
-      '#d62728',
-      '#9467bd',
-      '#8c564b',
-      '#e377c2',
-      '#7f7f7f',
-      '#bcbd22',
-      '#17becf',
-    ];
+    const colours = readSettings(this.$store).palette;
     let count = 0;
     for (const trace of Object.values(this.traces)) {
       // @ts-ignore
@@ -114,7 +97,7 @@ export default class Violin extends Vue {
             meanline: {
                 visible: true,
             },
-            fillcolor: colours[count],
+            fillcolor: colours[count % colours.length],
             name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
             hovertemplate: '%{y}',
             showlegend: true,

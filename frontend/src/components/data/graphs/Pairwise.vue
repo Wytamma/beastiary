@@ -9,7 +9,10 @@
 
 <script lang="ts">
 // @ts-ignore
+import { Data } from '@/interfaces';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readSettings } from '@/store/settings/getters';
+import { thin } from '@/utils';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -111,26 +114,7 @@ export default class Pairwise extends Vue {
     get JointData() {
       const data: any = {};
       const dimensions: any[] = [];
-      const colours = [
-        '#2980b9',
-        '#2ecc71',
-        '#9b59b6',
-        '#f1c40f',
-        '#e74c3c',
-        '#1abc9c',
-        '#8e44ad',
-        '#1f77b4',
-        '#ff7f0e',
-        '#2ca02c',
-        '#d62728',
-        '#9467bd',
-        '#8c564b',
-        '#e377c2',
-        '#7f7f7f',
-        '#bcbd22',
-        '#17becf',
-      ];
-      const count = 0;
+      const settings = readSettings(this.$store);
       let traceFound = null;
       let  burnIn = null;
       for (const trace of Object.values(this.traces)) {
@@ -144,11 +128,12 @@ export default class Pairwise extends Vue {
           for (const param of trace.activeParams) {
             // found open tace break
             traceFound = trace;
+            // @ts-ignore
+            const rows: Data[] = trace.parameters[param].slice(trace.parameters.state.length * burnIn);
             dimensions.push(
               {
                 label: param,
-                // @ts-ignore
-                values: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
+                values: thin(rows, settings.thinningInterval).map((row) =>  row.value),
               },
             );
           }
@@ -166,9 +151,9 @@ export default class Pairwise extends Vue {
         data.type = 'splom';
         // @ts-ignore
         data.marker = {
-          size: 5,
-          color: '#2980b9',
-          opacity: 0.4,
+          size: settings.pairwiseMarkerSize,
+          color: settings.palette[0],
+          opacity: settings.pairwiseMarkerOpacity,
         };
         return [data];
       }

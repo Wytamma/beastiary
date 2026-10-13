@@ -10,6 +10,7 @@
 <script lang="ts">
 import { urlFileName } from '@/logParser';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readSettings } from '@/store/settings/getters';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Trace, Traces } from '../../../interfaces';
@@ -41,6 +42,7 @@ export default class CumulativeESS extends Vue {
   }
 
   get layout() {
+    const { essLowThreshold, essHighThreshold } = readSettings(this.$store);
     return {
       xaxis: {showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
       yaxis: {showgrid: true, color: this.$vuetify.theme.dark ? 'white' : '#2c3e50'},
@@ -60,9 +62,9 @@ export default class CumulativeESS extends Vue {
           type: 'line',
           xref: 'paper',
           x0: 0.05,
-          y0: 200,
+          y0: essHighThreshold,
           x1: 0.95,
-          y1: 200,
+          y1: essHighThreshold,
           line: {
             color: '#4CAF50',
             dash: 'dot',
@@ -74,9 +76,9 @@ export default class CumulativeESS extends Vue {
           type: 'line',
           xref: 'paper',
           x0: 0.05,
-          y0: 100,
+          y0: essLowThreshold,
           x1: 0.95,
-          y1: 100,
+          y1: essLowThreshold,
           line: {
             color: '#ff9800',
             dash: 'dot',
@@ -91,25 +93,7 @@ export default class CumulativeESS extends Vue {
   }
   get cumulativeESSData() {
     const data: any[] = [];
-    const colours = [
-      '#2980b9',
-      '#2ecc71',
-      '#9b59b6',
-      '#f1c40f',
-      '#e74c3c',
-      '#1abc9c',
-      '#8e44ad',
-      '#1f77b4',
-      '#ff7f0e',
-      '#2ca02c',
-      '#d62728',
-      '#9467bd',
-      '#8c564b',
-      '#e377c2',
-      '#7f7f7f',
-      '#bcbd22',
-      '#17becf',
-    ];
+    const colours = readSettings(this.$store).palette;
     let count = 0;
     let trace: Trace;
     for (trace of Object.values(this.traces)) {
@@ -127,7 +111,7 @@ export default class CumulativeESS extends Vue {
               connectgaps: true,
               opacity: 0.8,
               name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${parameter}` : `${this.fileName(trace.path)} - ${parameter}`,
-              marker: {color: colours[count]},
+              marker: {color: colours[count % colours.length]},
               hovertemplate: '%{y}',
               showlegend: true,
             });
@@ -206,6 +190,10 @@ export default class CumulativeESS extends Vue {
     return readTraces(this.$store);
   }
 
+  get essStep(): number {
+    return readSettings(this.$store).essStep;
+  }
+
   public removeESSdata(id) {
     this.CumulativeESSdata = this.CumulativeESSdata.filter((data) => data.id !== id);
   }
@@ -225,7 +213,7 @@ export default class CumulativeESS extends Vue {
           const burnIn = trace.burnIn;
           const data = trace.parameters[parameter];
           const traceId = trace.id;
-          this.worker.postMessage('CumulativeESS', [data, burnIn, 100]) // compute ESS in worker
+          this.worker.postMessage('CumulativeESS', [data, burnIn, this.essStep]) // compute ESS in worker
           .then((res) => {
             this.addESSdata(`${traceId}-${parameter}`, res);
             })
@@ -237,6 +225,11 @@ export default class CumulativeESS extends Vue {
 
   @Watch('traces', { immediate: true, deep: true })
   public onTraceChange(val: Traces, oldVal: Traces) {
+    this.updateCumulativeESS();
+  }
+
+  @Watch('essStep')
+  public onEssStepChange() {
     this.updateCumulativeESS();
   }
 

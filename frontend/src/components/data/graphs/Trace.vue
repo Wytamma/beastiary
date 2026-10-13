@@ -11,8 +11,11 @@
 </template>
 
 <script lang="ts">
+import { Data } from '@/interfaces';
 import { urlFileName } from '@/logParser';
 import { readActiveTraceIDs, readTraces } from '@/store/data/getters';
+import { readSettings } from '@/store/settings/getters';
+import { thin } from '@/utils';
 import { Plotly } from 'vue-plotly';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -72,25 +75,8 @@ export default class Trace extends Vue {
   }
   get traceData() {
     const data: any[] = [];
-    const colours = [
-      '#2980b9',
-      '#2ecc71',
-      '#9b59b6',
-      '#f1c40f',
-      '#e74c3c',
-      '#1abc9c',
-      '#8e44ad',
-      '#1f77b4',
-      '#ff7f0e',
-      '#2ca02c',
-      '#d62728',
-      '#9467bd',
-      '#8c564b',
-      '#e377c2',
-      '#7f7f7f',
-      '#bcbd22',
-      '#17becf',
-    ];
+    const settings = readSettings(this.$store);
+    const colours = settings.palette;
     let count = 0;
     for (const trace of Object.values(this.traces)) {
       // @ts-ignore
@@ -98,25 +84,30 @@ export default class Trace extends Vue {
         // @ts-ignore
         const burnIn = trace.burnIn / 100;
         for (const param of trace.activeParams) {
+          const rows: Data[] = trace.parameters[param].slice(trace.parameters.state.length * burnIn);
+          // Only the line is thinned; the side histogram summarises every sample.
+          const lineRows = thin(rows, settings.thinningInterval);
           data.push({
-            x: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.state),
-            y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
+            x: lineRows.map((row) =>  row.state),
+            y: lineRows.map((row) =>  row.value),
             type: 'scatter',
             opacity: 0.8,
             name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
-            marker: {color: colours[count]},
+            marker: {color: colours[count % colours.length]},
             hovertemplate: '%{y}',
             showlegend: false,
           });
           data.push({
-            y: trace.parameters[param].slice(trace.parameters.state.length * burnIn).map((row) =>  row.value),
+            y: rows.map((row) =>  row.value),
             type: 'histogram',
             histnorm: 'probability',
+            // The histogram is drawn sideways (values on y), so the bin count is nbinsy.
+            nbinsy: settings.histogramBins,
             xaxis: 'x2',
             yaxis: 'y1',
-            opacity: 0.6,
+            opacity: settings.histogramOpacity,
             name: Object.values(this.traces).filter((t) => t.activeParams.length > 0).length === 1 ? `${param}` : `${this.fileName(trace.path)} - ${param}`,
-            marker: {color: colours[count]},
+            marker: {color: colours[count % colours.length]},
             hovertemplate: '%{y}',
           });
           count++;
